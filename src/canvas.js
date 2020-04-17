@@ -6,24 +6,52 @@ import {
   borderSize,
   getLocalSize,
   getGlobalSize,
-  drawSquare
+  drawSquare,
+  clearCanvas,
+  getPositionByIndex,
 } from "./config";
+import { configureCanvas } from "./config-canvas";
+import { canvasControl } from "./control-canvas";
 
-const canvas = document.getElementById("viewport");
+const obj = {
+  1: true,
+  10: true,
+  11: true,
+  12: true,
+};
 
-export function renderCanvas({ cellSize, borderSize }) {
-  if (canvas) {
-    const context = canvas.getContext("2d");
+export function renderCanvas(canvas, context) {
+  const localSize = getLocalSize(pageWidth, pageHeight);
+  const globalSize = getGlobalSize(localSize.w, localSize.h);
 
-    const gridData = buildGrid(context);
+  const gridData = buildGrid(context);
+  configureCanvas(canvas, globalSize);
 
-    gridData.applyStyles();
-    context.stroke(gridData.grid);
+  const drowWitListener = (event) => {
+    const { w, h } = getLocalSize(event.clientX, event.clientY);
 
-    // drawSquare({ context, position: [0, 0] });
-    // drawSquare({ context, position: [0, 1] });
-    // drawSquare({ context, position: [0, 2] });
-    // drawSquare({ context, position: [0, 3] });
+    drawSquare({
+      position: [w, h],
+      context,
+    });
+  };
+
+  canvasControl.registerClickEventToCanvas(canvas);
+  canvasControl.addMouseMoveEvent(drowWitListener);
+  canvasControl.addMouseClickEvent(drowWitListener);
+
+  clearCanvas(context, canvas);
+  gridData.applyStyles();
+  context.stroke(gridData.grid);
+
+  for (const key in obj) {
+    if (obj[key]) {
+      const [x, y] = getPositionByIndex(key);
+      drawSquare({
+        position: [x, y],
+        context,
+      });
+    }
   }
 }
 
@@ -48,22 +76,48 @@ function buildGrid(context) {
     applyStyles: () => {
       context.lineWidth = borderSize;
       context.strokeStyle = colorSchema.borderColor;
-    }
+    },
   };
+}
+
+const canvas = document.getElementById("viewport");
+
+if (canvas) {
+  const context = canvas.getContext("2d");
+
+  renderCanvas(canvas, context);
 }
 
 function getGraph() {
   const { w, h } = getLocalSize(pageWidth, pageHeight);
   const cellCount = w * h;
   const graph = {};
+  let positionWithHeight = 0;
+  let positionWithWidth = 0;
 
-  for (let i = 0; i < cellCount; i++) {
-    graph[i] = [
-      getRightNeigbour(i),
-      getLeftNeigbour(i),
-      getTopNeigbour(i),
-      getDownNeigbour(i)
-    ].filter(Boolean);
+  for (let index = 0; index < cellCount; index++) {
+    const hasNextLine = !Boolean((index + 1) % w);
+    const hasNextColumn = !hasNextLine;
+
+    graph[index] = {
+      index,
+      coordinates: [positionWithWidth, positionWithHeight],
+      neighbors: [
+        getLeftNeigbour(index),
+        getTopNeigbour(index),
+        getRightNeigbour(index),
+        getDownNeigbour(index),
+      ].filter((item) => typeof item !== "undefined"),
+    };
+
+    if (hasNextLine) {
+      positionWithHeight++;
+      positionWithWidth = 0;
+    }
+
+    if (hasNextColumn) {
+      positionWithWidth++;
+    }
   }
 
   return graph;
@@ -108,30 +162,3 @@ function getLeftNeigbour(index) {
     return index - 1;
   }
 }
-
-console.log(getGraph());
-
-// const graph = {
-//   0: [1, 3, 6, 2],
-//   1: [0, 2, 4],
-//   2: [1, 5],
-//   3: [0, 4],
-//   4: [1, 3, 5, 7],
-//   5: [2, 4, 8],
-//   6: [3, 7],
-//   7: [4, 6, 8],
-//   8: [5, 7],
-// }
-
-// function fillEmptyCell() {
-//   graph
-//     .getVertexes()
-//     .filter((v) => v.value.type === PLACE_TYPE.EMPTY)
-//     .forEach((v) => {
-//       drawSquare({
-//         context,
-//         position: getPositionByIndex(v.index),
-//         color: colorScheme.emptyCells,
-//       })
-//     })
-// }
