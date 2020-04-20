@@ -1,9 +1,6 @@
 import React from "react";
-import { useStore } from "effector-react";
 import "./styles.css";
 import { renderCanvas } from "./canvas";
-
-import { getLocalSize, drawSquare } from "./config";
 
 export default function App() {
   // const ref = React.useRef(null);
@@ -44,7 +41,3 @@ export default function App() {
 
   return <div className="App"></div>;
 }
-
-const Tree = () => {
-  return <h1>Tree</h1>;
-};

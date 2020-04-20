@@ -14,15 +14,15 @@ import {
 } from "./config";
 import { configureCanvas } from "./config-canvas";
 import { canvasControl } from "./control-canvas";
-import { setObstacle, $obstacle, start, removeObstacleByIndex } from "./model";
+import { setBarrier, $barrier, start, removeBarrierItem } from "./model";
 
 const $state = combine({
-  obstacle: $obstacle,
+  barrier: $barrier,
 });
 
-function renderObstacle(obstacle, context) {
-  for (const key in obstacle) {
-    if (obstacle[key]) {
+function renderBarrier(barrier, context) {
+  for (const key in barrier) {
+    if (barrier[key]) {
       const [x, y] = getPositionByIndex(key);
       drawSquare({
         position: [x, y],
@@ -38,8 +38,8 @@ function renderCeil(event) {
   const index = getIndexByPosition([w, h]);
 
   return {
-    renderForMove: () => setObstacle(index),
-    renderForClick: () => removeObstacleByIndex(index),
+    renderForMove: () => setBarrier(index),
+    renderForClick: () => removeBarrierItem(index),
   };
 }
 
@@ -57,7 +57,7 @@ export function renderCanvas(canvas, context) {
   function render(state) {
     clearCanvas(context, canvas);
 
-    renderObstacle(state.obstacle, context);
+    renderBarrier(state.barrier, context);
 
     gridData.applyStyles();
     context.stroke(gridData.grid);
