@@ -1,6 +1,7 @@
 class Controll {
   constructor() {
     this.isMouseDown = false;
+    this.isMouseMove = false;
     this.listeners = [];
   }
 
@@ -11,6 +12,7 @@ class Controll {
         .forEach((userEvent) => userEvent.eventListener());
 
       this.isMouseDown = true;
+      this.isMouseMove = false;
     });
 
     canvas.addEventListener("mouseup", () => {
@@ -20,11 +22,16 @@ class Controll {
     canvas.addEventListener("click", (event) => {
       this.listeners
         .filter((userEvent) => userEvent.type === "click")
-        .forEach((userEvent) => userEvent.eventListener(event));
+        .forEach((userEvent) => {
+          if (!this.isMouseMove) {
+            userEvent.eventListener(event);
+          }
+        });
     });
 
     canvas.addEventListener("mousemove", (event) => {
       if (this.isMouseDown) {
+        this.isMouseMove = true;
         this.listeners
           .filter((userEvent) => userEvent.type === "mousemove")
           .forEach((userEvent) => userEvent.eventListener(event));

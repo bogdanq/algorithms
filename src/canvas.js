@@ -1,3 +1,4 @@
+import { combine, sample } from "effector";
 import {
   colorSchema,
   cellSize,
@@ -9,50 +10,62 @@ import {
   drawSquare,
   clearCanvas,
   getPositionByIndex,
+  getIndexByPosition,
 } from "./config";
 import { configureCanvas } from "./config-canvas";
 import { canvasControl } from "./control-canvas";
+import { setObstacle, $obstacle, start, removeObstacleByIndex } from "./model";
 
-const obj = {
-  1: true,
-  10: true,
-  11: true,
-  12: true,
-};
+const $state = combine({
+  obstacle: $obstacle,
+});
 
-export function renderCanvas(canvas, context) {
-  const localSize = getLocalSize(pageWidth, pageHeight);
-  const globalSize = getGlobalSize(localSize.w, localSize.h);
-
-  const gridData = buildGrid(context);
-  configureCanvas(canvas, globalSize);
-
-  const drowWitListener = (event) => {
-    const { w, h } = getLocalSize(event.clientX, event.clientY);
-
-    drawSquare({
-      position: [w, h],
-      context,
-    });
-  };
-
-  canvasControl.registerClickEventToCanvas(canvas);
-  canvasControl.addMouseMoveEvent(drowWitListener);
-  canvasControl.addMouseClickEvent(drowWitListener);
-
-  clearCanvas(context, canvas);
-  gridData.applyStyles();
-  context.stroke(gridData.grid);
-
-  for (const key in obj) {
-    if (obj[key]) {
+function renderObstacle(obstacle, context) {
+  for (const key in obstacle) {
+    if (obstacle[key]) {
       const [x, y] = getPositionByIndex(key);
       drawSquare({
         position: [x, y],
         context,
+        color: colorSchema.blockColor,
       });
     }
   }
+}
+
+function renderCeil(event) {
+  const { w, h } = getLocalSize(event.clientX, event.clientY);
+  const index = getIndexByPosition([w, h]);
+
+  return {
+    renderForMove: () => setObstacle(index),
+    renderForClick: () => removeObstacleByIndex(index),
+  };
+}
+
+export function renderCanvas(canvas, context) {
+  const localSize = getLocalSize(pageWidth, pageHeight);
+  const globalSize = getGlobalSize(localSize.w, localSize.h);
+  const gridData = buildGrid(context);
+
+  configureCanvas(canvas, globalSize);
+
+  canvasControl.registerClickEventToCanvas(canvas);
+  canvasControl.addMouseMoveEvent((e) => renderCeil(e).renderForMove());
+  canvasControl.addMouseClickEvent((e) => renderCeil(e).renderForClick());
+
+  function render(state) {
+    clearCanvas(context, canvas);
+
+    renderObstacle(state.obstacle, context);
+
+    gridData.applyStyles();
+    context.stroke(gridData.grid);
+  }
+
+  sample($state, start).watch((state) => render(state));
+
+  start();
 }
 
 function buildGrid(context) {

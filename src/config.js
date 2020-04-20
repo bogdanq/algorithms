@@ -1,13 +1,12 @@
 export const cellSize = 35;
 export const pageWidth = window.innerWidth;
 export const pageHeight = window.innerHeight;
-export const borderSize = 1;
+export const borderSize = 0.5;
 export const boardLength = pageWidth * pageHeight;
 
 export const colorSchema = {
-  emptyCells: "#0080007d",
-  borderColor: "red",
-  // borderColor: "rgba(0, 0, 0, 0.2)"
+  borderColor: "#000",
+  blockColor: "#8080805c",
 };
 
 export function getLocalSize(w, h) {

@@ -2,7 +2,7 @@ import React from "react";
 import { useStore } from "effector-react";
 import "./styles.css";
 import { renderCanvas } from "./canvas";
-import { changeSellSize, $state, changeBorderSize } from "./model";
+
 import { getLocalSize, drawSquare } from "./config";
 
 export default function App() {
@@ -41,8 +41,6 @@ export default function App() {
   //     document.removeEventListener("mouseup", clearMove);
   //   };
   // }, []);
-
-  const { cellSize, borderSize } = useStore($state);
 
   return <div className="App"></div>;
 }

@@ -1,21 +1,20 @@
 import { createEvent, createStore } from "effector";
 import { cellSize, borderSize } from "./config";
 
-export const changeSellSize = createEvent();
+export const setObstacle = createEvent();
+export const removeObstacleByIndex = createEvent();
+export const $obstacle = createStore({});
+export const start = createEvent();
 
-export const changeBorderSize = createEvent();
-
-export const $state = createStore({
-  cellSize,
-  borderSize
-});
-
-$state
-  .on(changeSellSize, (state, payload) => ({
+$obstacle
+  .on(setObstacle, (state, index) => {
+    return {
+      ...state,
+      [index]: true,
+    };
+  })
+  .on(removeObstacleByIndex, (state, index) => ({
     ...state,
-    cellSize: payload
+    [index]: state[index] ? false : true,
   }))
-  .on(changeBorderSize, (state, payload) => ({
-    ...state,
-    borderSize: payload
-  }));
+  .watch(start);
