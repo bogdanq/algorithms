@@ -54,14 +54,8 @@ function renderCeil(event, state) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
 
-  const [startIndex, endIndex] = state.startEndPosition;
   return {
-    renderForMove: () => {
-      if (state.graph[index].type !== ceilType.START_POSITION) {
-        return setBarrier(index);
-      }
-      return null;
-    },
+    renderForMove: () => setBarrier(index),
     renderForClick: () => removeBarrierItem(index),
   };
 }
@@ -104,20 +98,14 @@ export function renderCanvas(canvas, context) {
 
   configureCanvas(canvas, globalSize);
 
-  setGraph(graphControll.getGraph());
-
   canvasControl.registerClickEventToCanvas(canvas);
   canvasControl.addMouseMoveEvent((e, state) =>
     renderCeil(e, state).renderForMove()
   );
   // canvasControl.addMouseMoveEvent(renderStart);
-  // canvasControl.addMouseMoveEvent((e, state) =>
-  //   renderCeil(e, state).renderForMove()
-  // );
-  // canvasControl.addMouseClickEvent((e) => renderCeil(e).renderForClick());
+  canvasControl.addMouseClickEvent((e) => renderCeil(e).renderForClick());
 
   function render(state) {
-    console.log(state);
     clearCanvas(context, canvas);
     canvasControl.setState(state);
 

@@ -20,18 +20,14 @@ class Graph {
         ].filter((item) => typeof item !== "undefined"),
       };
     }
+
+    return this;
   }
 
-  updateGraph({ startEndPosition: [start, end], barrier }) {
-    this.graph[start].type = ceilType.START_POSITION;
-
-    if (this.lastIndex) {
-      if (this.graph[this.lastIndex].type === ceilType.START_POSITION) {
-        // this.graph[this.lastIndex].type = ceilType.EMPTY;
-      }
+  updateGraph({ index, type }) {
+    if (this.graph[index]) {
+      this.graph[index] = { ...this.graph[index], type };
     }
-
-    this.lastIndex = start;
   }
 
   getDownSibling(index) {
@@ -75,10 +71,13 @@ class Graph {
   }
 
   getGraph() {
-    return Object.assign({}, this.graph);
+    return this.graph;
+  }
+
+  clear() {
+    this.graph = {};
+    return this;
   }
 }
 
 export const graphControll = new Graph(getLocalSize(pageWidth, pageHeight));
-
-graphControll.createGraph();

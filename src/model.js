@@ -19,7 +19,6 @@ export const triggerEndPosition = createEvent();
 
 export const $startEndPosition = createStore([startPosition, endPosition]);
 export const $barrier = createStore([0, 1]);
-export const $graph = restore(setGraph, {});
 
 $barrier
   .on(setBarrier, (state, index) => {
@@ -42,4 +41,34 @@ export const $state = combine({
   graph: $graph,
 });
 
-$state.watch((state) => graphControll.updateGraph(state));
+function setBarrierToGraph(graph, barriers) {
+  barriers.forEach((barrierIndex) =>
+    graph.updateGraph({ index: barrierIndex, type: ceilType.BARIER })
+  );
+}
+
+function setStartPositionToGraph(graph, startIndex) {
+  graph.updateGraph({ index: startIndex, type: ceilType.START_POSITION });
+}
+
+function setEndPositionToGraph(graph, endIndex) {
+  graph.updateGraph({ index: endIndex, type: ceilType.END_POSITION });
+}
+
+export const $graph = combine({
+  barrier: $barrier,
+  startEndPosition: $startEndPosition,
+}).map((state) => {
+  const [start, end] = state.startEndPosition;
+  graphControll.clear();
+
+  const graph = graphControll.createGraph();
+
+  setBarrierToGraph(graph, state.barrier);
+  setStartPositionToGraph(graph, start);
+  setEndPositionToGraph(graph, end);
+
+  return { ...state, graph: graph.graph };
+});
+
+$graph.watch((state) => console.log("watch", state));
