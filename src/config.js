@@ -9,13 +9,14 @@ export const endPosition = 514;
 export const colorSchema = {
   borderColor: "#000",
   blockColor: "#8080805c",
-  startEndColor: ["green", "red"],
+  startEndColor: ["red", "red"],
 };
 
 export const ceilType = {
   START_POSITION: "START_POSITION",
   END_POSITION: "END_POSITION",
   BARIER: "BARIER",
+  EMPTY: "EMPTY",
 };
 
 export function getLocalSize(w, h) {
@@ -64,4 +65,11 @@ export function getPositionByIndex(index) {
   const x = index - y * w;
 
   return [x, y];
+}
+
+export function getTargetIndex(event) {
+  const { w, h } = getLocalSize(event.clientX, event.clientY);
+  const index = getIndexByPosition([w, h]);
+
+  return index;
 }

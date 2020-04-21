@@ -1,5 +1,14 @@
-import { createEvent, createStore, combine, restore } from "effector";
-import { startPosition, endPosition } from "./config";
+import {
+  createEvent,
+  createStore,
+  combine,
+  restore,
+  sample,
+  merge,
+  forward,
+} from "effector";
+import { startPosition, endPosition, ceilType } from "./config";
+import { graphControll } from "./graph";
 
 export const setBarrier = createEvent();
 export const setGraph = createEvent();
@@ -11,16 +20,6 @@ export const triggerEndPosition = createEvent();
 export const $startEndPosition = createStore([startPosition, endPosition]);
 export const $barrier = createStore([0, 1]);
 export const $graph = restore(setGraph, {});
-export const $visitedCeils = combine(
-  $startEndPosition,
-  $barrier,
-  $graph,
-  (startEndPosition, barrier, graph) => ({
-    startEndPosition,
-    barrier,
-    graph,
-  })
-);
 
 $barrier
   .on(setBarrier, (state, index) => {
@@ -37,4 +36,10 @@ $startEndPosition
   .on(triggerEndPosition, (state, index) => [state[0], index])
   .watch(start);
 
-$visitedCeils.watch(console.log);
+export const $state = combine({
+  barrier: $barrier,
+  startEndPosition: $startEndPosition,
+  graph: $graph,
+});
+
+$state.watch((state) => graphControll.updateGraph(state));

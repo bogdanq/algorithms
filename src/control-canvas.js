@@ -1,9 +1,12 @@
+import { getTargetIndex } from "./config";
+
 class Controll {
   constructor() {
     this.isMouseDown = false;
     this.isMouseMove = false;
     this.listeners = [];
     this.state = {};
+    this.lastIndex = null;
   }
 
   registerClickEventToCanvas(canvas) {
@@ -34,11 +37,16 @@ class Controll {
     });
 
     canvas.addEventListener("mousemove", (event) => {
-      if (this.isMouseDown) {
+      const index = getTargetIndex(event);
+
+      if (this.isMouseDown && index !== this.lastIndex) {
+        this.lastIndex = index;
         this.isMouseMove = true;
         this.listeners
           .filter((userEvent) => userEvent.type === "mousemove")
-          .forEach((userEvent) => userEvent.eventListener(event, this.state));
+          .forEach((userEvent) =>
+            userEvent.eventListener(event, this.state, this.lastIndex)
+          );
       }
     });
   }

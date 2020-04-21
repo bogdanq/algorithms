@@ -13,24 +13,20 @@ import {
   getIndexByPosition,
   startPosition,
   endPosition,
+  ceilType,
 } from "./config";
 import { configureCanvas } from "./config-canvas";
 import { canvasControl } from "./control-canvas";
 import {
   setBarrier,
-  $barrier,
   start,
   removeBarrierItem,
-  $startEndPosition,
   triggerStartPosition,
   triggerEndPosition,
   setGraph,
+  $state,
 } from "./model";
-
-const $state = combine({
-  barrier: $barrier,
-  startEndPosition: $startEndPosition,
-});
+import { graphControll } from "./graph";
 
 function renderBarrier(barrier, context) {
   for (let i = 0; i < barrier.length; i++) {
@@ -54,12 +50,18 @@ function renderActionsCeil(startEndPosition, context) {
   }
 }
 
-function renderCeil(event) {
+function renderCeil(event, state) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
 
+  const [startIndex, endIndex] = state.startEndPosition;
   return {
-    renderForMove: () => setBarrier(index),
+    renderForMove: () => {
+      if (state.graph[index].type !== ceilType.START_POSITION) {
+        return setBarrier(index);
+      }
+      return null;
+    },
     renderForClick: () => removeBarrierItem(index),
   };
 }
@@ -67,18 +69,32 @@ function renderCeil(event) {
 function renderStart(event, state) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
-  triggerStartPosition(index);
-  if (index === state.startEndPosition[0]) {
+
+  const findIndex = state.barrier.includes(index);
+  const [startIndex, endIndex] = state.startEndPosition;
+
+  if (!findIndex && index !== endIndex) {
+    triggerStartPosition(index);
   }
 }
 
-function renderEnd(event, state) {
+function renderEnd(event, state, lastIndex) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
 
-  if (index === state.startEndPosition[1]) {
-    triggerEndPosition(index);
+  const findIndex = state.barrier.includes(index);
+  const [startIndex, endIndex] = state.startEndPosition;
+
+  if (!findIndex && index !== startIndex) {
+    if (index === endIndex) {
+      triggerEndPosition(index);
+    }
   }
+}
+
+function renderLogic(event, state) {
+  const { w, h } = getLocalSize(event.clientX, event.clientY);
+  const index = getIndexByPosition([w, h]);
 }
 
 export function renderCanvas(canvas, context) {
@@ -88,18 +104,25 @@ export function renderCanvas(canvas, context) {
 
   configureCanvas(canvas, globalSize);
 
+  setGraph(graphControll.getGraph());
+
   canvasControl.registerClickEventToCanvas(canvas);
-  // canvasControl.addMouseMoveEvent(renderEnd);
+  canvasControl.addMouseMoveEvent((e, state) =>
+    renderCeil(e, state).renderForMove()
+  );
   // canvasControl.addMouseMoveEvent(renderStart);
-  canvasControl.addMouseMoveEvent((e) => renderCeil(e).renderForMove());
-  canvasControl.addMouseClickEvent((e) => renderCeil(e).renderForClick());
+  // canvasControl.addMouseMoveEvent((e, state) =>
+  //   renderCeil(e, state).renderForMove()
+  // );
+  // canvasControl.addMouseClickEvent((e) => renderCeil(e).renderForClick());
 
   function render(state) {
-    canvasControl.setState(state);
+    console.log(state);
     clearCanvas(context, canvas);
+    canvasControl.setState(state);
 
-    renderBarrier(state.barrier, context);
     renderActionsCeil(state.startEndPosition, context);
+    renderBarrier(state.barrier, context);
 
     gridData.applyStyles();
     context.stroke(gridData.grid);
@@ -141,80 +164,3 @@ if (canvas) {
 
   renderCanvas(canvas, context);
 }
-
-function getGraph() {
-  const { w, h } = getLocalSize(pageWidth, pageHeight);
-  const cellCount = w * h;
-  const graph = {};
-  let positionWithHeight = 0;
-  let positionWithWidth = 0;
-
-  for (let index = 0; index < cellCount; index++) {
-    const hasNextLine = !Boolean((index + 1) % w);
-    const hasNextColumn = !hasNextLine;
-
-    graph[index] = {
-      index,
-      coordinates: [positionWithWidth, positionWithHeight],
-      neighbors: [
-        getLeftNeigbour(index),
-        getTopNeigbour(index),
-        getRightNeigbour(index),
-        getDownNeigbour(index),
-      ].filter((item) => typeof item !== "undefined"),
-    };
-
-    if (hasNextLine) {
-      positionWithHeight++;
-      positionWithWidth = 0;
-    }
-
-    if (hasNextColumn) {
-      positionWithWidth++;
-    }
-  }
-
-  return graph;
-}
-
-function getDownNeigbour(index) {
-  const { w, h } = getLocalSize(pageWidth, pageHeight);
-
-  const hasDownNeighbour = Math.floor(index / w) < h - 1;
-
-  if (hasDownNeighbour) {
-    return index + w;
-  }
-}
-
-function getTopNeigbour(index) {
-  const { w } = getLocalSize(pageWidth, pageHeight);
-
-  const hasTopNeighbour = Math.floor(index / w) > 0;
-
-  if (hasTopNeighbour) {
-    return index - w;
-  }
-}
-
-function getRightNeigbour(index) {
-  const { w } = getLocalSize(pageWidth, pageHeight);
-
-  const hasRightNeighbour = index % w < w - 1;
-
-  if (hasRightNeighbour) {
-    return index + 1;
-  }
-}
-
-function getLeftNeigbour(index) {
-  const { w } = getLocalSize(pageWidth, pageHeight);
-
-  const hasLeftNeighbour = index % w > 0;
-
-  if (hasLeftNeighbour) {
-    return index - 1;
-  }
-}
-
-setGraph(getGraph());
