@@ -3,10 +3,19 @@ export const pageWidth = window.innerWidth;
 export const pageHeight = window.innerHeight;
 export const borderSize = 0.5;
 export const boardLength = pageWidth * pageHeight;
+export const startPosition = 501;
+export const endPosition = 514;
 
 export const colorSchema = {
   borderColor: "#000",
   blockColor: "#8080805c",
+  startEndColor: ["green", "red"],
+};
+
+export const ceilType = {
+  START_POSITION: "START_POSITION",
+  END_POSITION: "END_POSITION",
+  BARIER: "BARIER",
 };
 
 export function getLocalSize(w, h) {

@@ -11,25 +11,46 @@ import {
   clearCanvas,
   getPositionByIndex,
   getIndexByPosition,
+  startPosition,
+  endPosition,
 } from "./config";
 import { configureCanvas } from "./config-canvas";
 import { canvasControl } from "./control-canvas";
-import { setBarrier, $barrier, start, removeBarrierItem } from "./model";
+import {
+  setBarrier,
+  $barrier,
+  start,
+  removeBarrierItem,
+  $startEndPosition,
+  triggerStartPosition,
+  triggerEndPosition,
+  setGraph,
+} from "./model";
 
 const $state = combine({
   barrier: $barrier,
+  startEndPosition: $startEndPosition,
 });
 
 function renderBarrier(barrier, context) {
-  for (const key in barrier) {
-    if (barrier[key]) {
-      const [x, y] = getPositionByIndex(key);
-      drawSquare({
-        position: [x, y],
-        context,
-        color: colorSchema.blockColor,
-      });
-    }
+  for (let i = 0; i < barrier.length; i++) {
+    const [x, y] = getPositionByIndex(barrier[i]);
+    drawSquare({
+      position: [x, y],
+      context,
+      color: colorSchema.blockColor,
+    });
+  }
+}
+
+function renderActionsCeil(startEndPosition, context) {
+  for (let i = 0; i < startEndPosition.length; i++) {
+    const index = getPositionByIndex(startEndPosition[i]);
+    drawSquare({
+      position: index,
+      context,
+      color: colorSchema.startEndColor[i],
+    });
   }
 }
 
@@ -43,6 +64,23 @@ function renderCeil(event) {
   };
 }
 
+function renderStart(event, state) {
+  const { w, h } = getLocalSize(event.clientX, event.clientY);
+  const index = getIndexByPosition([w, h]);
+  triggerStartPosition(index);
+  if (index === state.startEndPosition[0]) {
+  }
+}
+
+function renderEnd(event, state) {
+  const { w, h } = getLocalSize(event.clientX, event.clientY);
+  const index = getIndexByPosition([w, h]);
+
+  if (index === state.startEndPosition[1]) {
+    triggerEndPosition(index);
+  }
+}
+
 export function renderCanvas(canvas, context) {
   const localSize = getLocalSize(pageWidth, pageHeight);
   const globalSize = getGlobalSize(localSize.w, localSize.h);
@@ -51,20 +89,23 @@ export function renderCanvas(canvas, context) {
   configureCanvas(canvas, globalSize);
 
   canvasControl.registerClickEventToCanvas(canvas);
+  // canvasControl.addMouseMoveEvent(renderEnd);
+  // canvasControl.addMouseMoveEvent(renderStart);
   canvasControl.addMouseMoveEvent((e) => renderCeil(e).renderForMove());
   canvasControl.addMouseClickEvent((e) => renderCeil(e).renderForClick());
 
   function render(state) {
+    canvasControl.setState(state);
     clearCanvas(context, canvas);
 
     renderBarrier(state.barrier, context);
+    renderActionsCeil(state.startEndPosition, context);
 
     gridData.applyStyles();
     context.stroke(gridData.grid);
   }
 
   sample($state, start).watch((state) => render(state));
-
   start();
 }
 
@@ -175,3 +216,5 @@ function getLeftNeigbour(index) {
     return index - 1;
   }
 }
+
+setGraph(getGraph());
