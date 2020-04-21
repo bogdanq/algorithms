@@ -9,7 +9,7 @@ export const endPosition = 7;
 export const colorSchema = {
   borderColor: "#000",
   blockColor: "#8080805c",
-  startEndColor: ["red", "red"],
+  startEndColor: ["green", "red"],
 };
 
 export const ceilType = {
