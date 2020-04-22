@@ -24,7 +24,7 @@ import {
   triggerStartPosition,
   triggerEndPosition,
   setGraph,
-  $state,
+  $graph,
 } from "./model";
 import { graphControll } from "./graph";
 
@@ -54,41 +54,60 @@ function renderCeil(event, state) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
 
+  const [startIndex, endIndex] = state.startEndPosition;
+
   return {
-    renderForMove: () => setBarrier(index),
-    renderForClick: () => removeBarrierItem(index),
+    renderForMove: () => {
+      if (index !== startIndex && index !== endIndex) {
+        setBarrier(index);
+      }
+    },
+    renderForClick: () => {
+      if (index !== startIndex && index !== endIndex) {
+        removeBarrierItem(index);
+      }
+    },
   };
 }
 
-function renderStart(event, state) {
-  const { w, h } = getLocalSize(event.clientX, event.clientY);
-  const index = getIndexByPosition([w, h]);
-
+function renderStart(index, state) {
   const findIndex = state.barrier.includes(index);
-  const [startIndex, endIndex] = state.startEndPosition;
+  const [, endIndex] = state.startEndPosition;
 
   if (!findIndex && index !== endIndex) {
     triggerStartPosition(index);
   }
 }
 
-function renderEnd(event, state, lastIndex) {
-  const { w, h } = getLocalSize(event.clientX, event.clientY);
-  const index = getIndexByPosition([w, h]);
-
+function renderEnd(index, state, lastIndex) {
   const findIndex = state.barrier.includes(index);
-  const [startIndex, endIndex] = state.startEndPosition;
+  const [startIndex] = state.startEndPosition;
 
   if (!findIndex && index !== startIndex) {
-    if (index === endIndex) {
-      triggerEndPosition(index);
-    }
+    triggerEndPosition(index);
   }
 }
 
-function renderLogic(event, state) {
+let type = null;
+function renderLogic(event) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
+  const state = $graph.getState();
+
+  if (!type) {
+    type = state.graph[index].type;
+  }
+
+  switch (type) {
+    case ceilType.BARIER:
+      return renderCeil(event, state).renderForMove();
+    case ceilType.START_POSITION:
+      return renderStart(index, state);
+    case ceilType.END_POSITION:
+      return renderEnd(index, state);
+    case ceilType.EMPTY:
+      return renderCeil(event, state).renderForMove();
+  }
 }
 
 export function renderCanvas(canvas, context) {
@@ -99,11 +118,15 @@ export function renderCanvas(canvas, context) {
   configureCanvas(canvas, globalSize);
 
   canvasControl.registerClickEventToCanvas(canvas);
-  canvasControl.addMouseMoveEvent((e, state) =>
-    renderCeil(e, state).renderForMove()
-  );
+  canvasControl.addMouseMoveEvent((e, s) => {
+    return renderLogic(e, s);
+  });
+  canvasControl.addMouseUpEvent(() => (type = null));
+  // canvasControl.addMouseMoveEvent((e, state) =>
+  //   renderCeil(e, state).renderForMove()
+  // );
   // canvasControl.addMouseMoveEvent(renderStart);
-  canvasControl.addMouseClickEvent((e) => renderCeil(e).renderForClick());
+  canvasControl.addMouseClickEvent((e, s) => renderCeil(e, s).renderForClick());
 
   function render(state) {
     clearCanvas(context, canvas);
@@ -116,7 +139,7 @@ export function renderCanvas(canvas, context) {
     context.stroke(gridData.grid);
   }
 
-  sample($state, start).watch((state) => render(state));
+  sample($graph, start).watch((state) => render(state));
   start();
 }
 
