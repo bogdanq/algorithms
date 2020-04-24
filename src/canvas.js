@@ -29,6 +29,7 @@ import {
 } from "./model";
 import { graphControll } from "./graph";
 import { BFS } from "./algoritms/bred-first-search";
+import { $path } from "./ui/model";
 
 function renderBarrier(barrier, context) {
   for (let i = 0; i < barrier.length; i++) {
@@ -137,19 +138,16 @@ export function renderCanvas(canvas, context) {
     renderActionsCeil(state.startEndPosition, context);
     renderBarrier(state.barrier, context);
 
-    const path = BFS(0, 110, state.graph);
-
-    console.log(path);
-
-    renderPath({
-      context,
-      path,
-    });
-
     gridData.applyStyles();
     context.stroke(gridData.grid);
   }
 
+  $path.watch((s) =>
+    renderPath({
+      path: s,
+      context,
+    })
+  );
   sample($graph, start).watch((state) => render(state));
   start();
 }
@@ -171,6 +169,8 @@ export function renderPath({ context, path = [], color = "blue" }) {
 
     prev = [x + cellSize / 2, y + cellSize / 2];
   }
+
+  prev = null;
 }
 
 function buildGrid(context) {

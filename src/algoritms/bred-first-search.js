@@ -17,7 +17,7 @@ export function restorePath(endIndex, startIndex, parent) {
   return path;
 }
 
-export function BFS(startIndex, endIndex, graph) {
+export function breadthFirstSearch(startIndex, endIndex, graph) {
   let isWork = true;
   const queue = [startIndex];
   const visited = new Map([[startIndex, true]]);
@@ -43,6 +43,6 @@ export function BFS(startIndex, endIndex, graph) {
       }
     }
   }
-  console.log(count);
+  // console.log(count);
   return restorePath(endIndex, startIndex, parent);
 }
