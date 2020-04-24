@@ -2,9 +2,13 @@ import { createEvent, createStore, combine } from "effector";
 import { startPosition, endPosition, ceilType } from "./config";
 import { graphControll } from "./graph";
 
-export const setBarrier = createEvent();
+export const resetStore = createEvent();
+
 export const setGraph = createEvent();
+
+export const setBarrier = createEvent();
 export const removeBarrierItem = createEvent();
+
 export const start = createEvent();
 export const triggerStartPosition = createEvent();
 export const triggerEndPosition = createEvent();
@@ -19,11 +23,13 @@ $barrier
   })
   .on(removeBarrierItem, (state, index) =>
     state.filter((item) => item !== index)
-  );
+  )
+  .reset(resetStore);
 
 $startEndPosition
   .on(triggerStartPosition, (state, index) => [index, state[1]])
-  .on(triggerEndPosition, (state, index) => [state[0], index]);
+  .on(triggerEndPosition, (state, index) => [state[0], index])
+  .reset(resetStore);
 
 function setBarrierToGraph(graph, barriers) {
   barriers.forEach((barrierIndex) => {

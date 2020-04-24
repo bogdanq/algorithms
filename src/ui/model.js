@@ -1,5 +1,13 @@
-import { createEvent, createStore, sample, guard, restore } from "effector";
-import { $graph } from "../model";
+import {
+  createEvent,
+  createStore,
+  sample,
+  guard,
+  restore,
+  forward,
+  merge,
+} from "effector";
+import { $graph, resetStore } from "../model";
 import { breadthFirstSearch } from "../algoritms/bred-first-search";
 import { $searchAlgoritm } from "../algoritms/model";
 
@@ -7,15 +15,26 @@ export const gameStatus = {
   START: "START",
   PAUSE: "PAUSE",
   STOP: "STOP",
+  CLEAR: "CLEAR",
 };
 
 export const setGameStatus = createEvent();
 
 export const $path = createStore([]);
-const $gameState = restore(setGameStatus, gameStatus.STOP);
+export const $gameState = restore(setGameStatus, gameStatus.STOP).reset(
+  resetStore
+);
 export const $isValidGameState = $gameState.map(
   (state) => state === gameStatus.START
 );
+export const $clearGameState = $gameState.map(
+  (state) => state === gameStatus.CLEAR
+);
+
+forward({
+  from: $clearGameState,
+  to: resetStore,
+});
 
 const startGame = guard({
   source: $gameState,
@@ -25,13 +44,13 @@ const startGame = guard({
 sample({
   source: {
     graph: $graph,
-    algoritms: $searchAlgoritm,
+    algoritm: $searchAlgoritm,
   },
   clock: startGame,
   target: $path,
-  fn: ({ graph, algoritms }) => {
+  fn: ({ graph, algoritm }) => {
     const [start, end] = graph.startEndPosition;
 
-    return algoritms(start, end, graph.graph);
+    return algoritm.searchFunction(start, end, graph.graph);
   },
 });

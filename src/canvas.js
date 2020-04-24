@@ -1,4 +1,4 @@
-import { combine, sample } from "effector";
+import { guard, sample } from "effector";
 import {
   colorSchema,
   cellSize,
@@ -29,7 +29,7 @@ import {
 } from "./model";
 import { graphControll } from "./graph";
 import { BFS } from "./algoritms/bred-first-search";
-import { $path } from "./ui/model";
+import { $path, $gameState, $clearGameState } from "./ui/model";
 
 function renderBarrier(barrier, context) {
   for (let i = 0; i < barrier.length; i++) {
@@ -142,13 +142,23 @@ export function renderCanvas(canvas, context) {
     context.stroke(gridData.grid);
   }
 
+  sample($graph, start).watch((state) => render(state));
+
   $path.watch((s) =>
     renderPath({
       path: s,
       context,
     })
   );
-  sample($graph, start).watch((state) => render(state));
+
+  guard({
+    source: {
+      gameState: $gameState,
+      graph: $graph,
+    },
+    filter: $clearGameState,
+  }).watch(({ graph }) => render(graph));
+
   start();
 }
 
