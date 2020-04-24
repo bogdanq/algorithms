@@ -1,6 +1,7 @@
 import { createEvent, createStore, combine } from "effector";
 import { startPosition, endPosition, ceilType } from "./config";
 import { graphControll } from "./graph";
+import { BFS } from "./algoritms/bred-first-search";
 
 export const setBarrier = createEvent();
 export const setGraph = createEvent();
@@ -26,9 +27,9 @@ $startEndPosition
   .on(triggerEndPosition, (state, index) => [state[0], index]);
 
 function setBarrierToGraph(graph, barriers) {
-  barriers.forEach((barrierIndex) =>
-    graph.updateGraph({ index: barrierIndex, type: ceilType.BARIER })
-  );
+  barriers.forEach((barrierIndex) => {
+    graph.updateGraph({ index: barrierIndex, type: ceilType.BARIER });
+  });
 }
 
 function setStartPositionToGraph(graph, startIndex) {
@@ -51,6 +52,8 @@ export const $graph = combine({
   setBarrierToGraph(graph, state.barrier);
   setStartPositionToGraph(graph, start);
   setEndPositionToGraph(graph, end);
+
+  // console.log(BFS(0, 50, graph.graph));
 
   return { ...state, graph: graph.graph };
 });

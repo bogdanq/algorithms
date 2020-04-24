@@ -14,6 +14,7 @@ import {
   startPosition,
   endPosition,
   ceilType,
+  convertLocalPositionToGlobal,
 } from "./config";
 import { configureCanvas } from "./config-canvas";
 import { canvasControl } from "./control-canvas";
@@ -27,6 +28,7 @@ import {
   $graph,
 } from "./model";
 import { graphControll } from "./graph";
+import { BFS } from "./algoritms/bred-first-search";
 
 function renderBarrier(barrier, context) {
   for (let i = 0; i < barrier.length; i++) {
@@ -135,12 +137,40 @@ export function renderCanvas(canvas, context) {
     renderActionsCeil(state.startEndPosition, context);
     renderBarrier(state.barrier, context);
 
+    const path = BFS(0, 110, state.graph);
+
+    console.log(path);
+
+    renderPath({
+      context,
+      path,
+    });
+
     gridData.applyStyles();
     context.stroke(gridData.grid);
   }
 
   sample($graph, start).watch((state) => render(state));
   start();
+}
+
+let prev = null;
+export function renderPath({ context, path = [], color = "blue" }) {
+  for (let i = 0; i < path.length; i++) {
+    const position = getPositionByIndex(path[i]);
+    const [x, y] = convertLocalPositionToGlobal(position);
+
+    if (prev) {
+      context.beginPath();
+      context.strokeStyle = color;
+      context.lineWidth = 2;
+      context.moveTo(prev[0], prev[1]);
+      context.lineTo(x + cellSize / 2, y + cellSize / 2);
+      context.stroke();
+    }
+
+    prev = [x + cellSize / 2, y + cellSize / 2];
+  }
 }
 
 function buildGrid(context) {

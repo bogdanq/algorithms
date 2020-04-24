@@ -27,6 +27,9 @@ class Graph {
   updateGraph({ index, type }) {
     if (this.graph[index]) {
       this.graph[index] = { ...this.graph[index], type };
+      if (type === ceilType.BARIER) {
+        this.graph[index] = { ...this.graph[index], type, siblings: [] };
+      }
     }
   }
 
