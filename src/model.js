@@ -3,13 +3,13 @@ import { startPosition, endPosition, ceilType } from "./config";
 import { graphControll } from "./graph";
 
 export const resetStore = createEvent();
+export const resetPath = createEvent();
 
 export const setGraph = createEvent();
 
 export const setBarrier = createEvent();
 export const removeBarrierItem = createEvent();
 
-export const start = createEvent();
 export const triggerStartPosition = createEvent();
 export const triggerEndPosition = createEvent();
 
@@ -60,5 +60,3 @@ export const $graph = combine({
 
   return { ...state, graph: graph.graph };
 });
-
-$graph.watch(start);

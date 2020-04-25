@@ -1,4 +1,4 @@
-import { guard, sample } from "effector";
+import { guard, sample, merge, combine } from "effector";
 import {
   colorSchema,
   cellSize,
@@ -26,10 +26,13 @@ import {
   triggerEndPosition,
   setGraph,
   $graph,
+  resetStore,
 } from "./model";
 import { graphControll } from "./graph";
 import { BFS } from "./algoritms/bred-first-search";
 import { $path, $gameState, $clearGameState } from "./ui/model";
+
+const $state = combine($graph, $path);
 
 function renderBarrier(barrier, context) {
   for (let i = 0; i < barrier.length; i++) {
@@ -103,7 +106,7 @@ function renderLogic(event) {
 
   switch (type) {
     case ceilType.BARIER:
-      return renderCeil(event, state).renderForMove();
+      return renderCeil(event, state).renderForClick();
     case ceilType.START_POSITION:
       return renderStart(index, state);
     case ceilType.END_POSITION:
@@ -125,10 +128,6 @@ export function renderCanvas(canvas, context) {
     return renderLogic(e, s);
   });
   canvasControl.addMouseUpEvent(() => (type = null));
-  // canvasControl.addMouseMoveEvent((e, state) =>
-  //   renderCeil(e, state).renderForMove()
-  // );
-  // canvasControl.addMouseMoveEvent(renderStart);
   canvasControl.addMouseClickEvent((e, s) => renderCeil(e, s).renderForClick());
 
   function render(state) {
@@ -142,24 +141,13 @@ export function renderCanvas(canvas, context) {
     context.stroke(gridData.grid);
   }
 
-  sample($graph, start).watch((state) => render(state));
-
-  $path.watch((s) =>
+  $state.watch(([graph, path]) => {
+    render(graph);
     renderPath({
-      path: s,
+      path,
       context,
-    })
-  );
-
-  guard({
-    source: {
-      gameState: $gameState,
-      graph: $graph,
-    },
-    filter: $clearGameState,
-  }).watch(({ graph }) => render(graph));
-
-  start();
+    });
+  });
 }
 
 let prev = null;
