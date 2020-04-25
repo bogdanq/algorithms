@@ -31,16 +31,21 @@ import {
 import { graphControll } from "./graph";
 import { BFS } from "./algoritms/bred-first-search";
 import { $path, $gameState, $clearGameState } from "./ui/model";
+import {
+  $traversedVertices,
+  $isValidEndProcess,
+  $algoritState,
+} from "./algoritms/model";
 
 const $state = combine($graph, $path);
 
-function renderBarrier(barrier, context) {
+function renderBarrier(barrier, context, color = colorSchema.blockColor) {
   for (let i = 0; i < barrier.length; i++) {
     const [x, y] = getPositionByIndex(barrier[i]);
     drawSquare({
       position: [x, y],
       context,
-      color: colorSchema.blockColor,
+      color,
     });
   }
 }
@@ -148,6 +153,28 @@ export function renderCanvas(canvas, context) {
       context,
     });
   });
+
+  let count = 0;
+
+  function loop(state, numberOfPasses) {
+    if (count < numberOfPasses) {
+      renderBarrier(state[count], context, "#ffff0061");
+      requestAnimationFrame(() => loop(state, numberOfPasses));
+      count++;
+    }
+  }
+  function renderLoop(state, numberOfPasses) {
+    loop(state.vertices, numberOfPasses);
+  }
+
+  $algoritState.watch(
+    ({ isValidEndProcess, traversedVertices, numberOfPasses }) => {
+      if (isValidEndProcess) {
+        console.log(traversedVertices);
+        renderLoop(traversedVertices, numberOfPasses);
+      }
+    }
+  );
 }
 
 let prev = null;

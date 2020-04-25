@@ -1,4 +1,5 @@
-let count = 0;
+import { setVertices, endProcess, incrementStep } from "../index";
+
 export function restorePath(endIndex, startIndex, parent) {
   const path = [];
   let target = parent[endIndex];
@@ -22,15 +23,24 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
   const queue = [startIndex];
   const visited = new Map([[startIndex, true]]);
   const parent = {};
+  const bariers = [];
+
+  for (const key in graph) {
+    if (graph[key].type === "BARIER") {
+      bariers.push(parseInt(key));
+    }
+  }
 
   while (isWork && queue.length > 0) {
+    incrementStep();
+    setVertices(queue.map((item) => item));
+
     const currentIndex = queue.shift();
 
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
-      count++;
       const next = graph[currentIndex].siblings[i];
 
-      if (!visited.has(next)) {
+      if (!visited.has(next) && !bariers.includes(next)) {
         queue.push(next);
         visited.set(next, true);
 
@@ -43,6 +53,8 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
       }
     }
   }
-  // console.log(count);
+
+  endProcess();
+
   return restorePath(endIndex, startIndex, parent);
 }
