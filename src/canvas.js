@@ -148,7 +148,12 @@ export function renderCanvas(canvas, context) {
   function loop(state, numberOfPasses, count) {
     if (count < numberOfPasses) {
       renderBarrier(state[count], context, "#ffff0061");
-      requestAnimationFrame(() => loop(state, numberOfPasses, count));
+      const animateId = requestAnimationFrame(() =>
+        loop(state, numberOfPasses, count)
+      );
+
+      resetPath.watch(() => cancelAnimationFrame(animateId));
+
       count++;
     } else {
       const path = $path.getState();
@@ -160,7 +165,9 @@ export function renderCanvas(canvas, context) {
   }
   function renderLoop(state, numberOfPasses) {
     let count = 0;
-    loop(state, numberOfPasses, count);
+    let animateId = null;
+
+    loop(state, numberOfPasses, count, animateId);
   }
 
   $algoritState.watch(
