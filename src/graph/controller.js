@@ -1,5 +1,4 @@
-import { ceilType, pageWidth, getLocalSize, pageHeight } from "./config";
-import { setGraph } from "./model";
+import { ceilType, pageWidth, getLocalSize, pageHeight } from "../config";
 
 class Graph {
   constructor({ w, h }) {
@@ -9,6 +8,7 @@ class Graph {
   }
 
   createGraph() {
+    this.clear();
     for (let index = 0; index < this.cellCount; index++) {
       this.graph[index] = {
         type: ceilType.EMPTY,

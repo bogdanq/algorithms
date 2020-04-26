@@ -24,7 +24,7 @@ import {
   $graph,
   resetStore,
   resetPath,
-} from "./model";
+} from "./graph";
 
 import { $path, $isValidGameState } from "./ui/model";
 import { $algoritState } from "./algoritms/model";

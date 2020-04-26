@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 
-export * from "./model";
+export * from "./graph";
 export * from "./ui/model";
 export * from "./algoritms/model";
 

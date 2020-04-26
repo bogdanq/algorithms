@@ -5,10 +5,8 @@ import {
   guard,
   restore,
   forward,
-  merge,
 } from "effector";
-import { $graph, resetStore, resetPath } from "../model";
-import { breadthFirstSearch } from "../algoritms/bred-first-search";
+import { $graph, resetStore, resetPath } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
 
 export const gameStatus = {
@@ -21,6 +19,8 @@ export const gameStatus = {
 };
 
 export const setGameStatus = createEvent();
+export const resumeAnimated = createEvent();
+export const pauseAnimated = createEvent();
 
 export const $path = createStore([]).reset(resetStore, resetPath);
 

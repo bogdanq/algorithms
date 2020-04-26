@@ -7,8 +7,7 @@ import {
 } from "effector";
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";
-import { setGameStatus, gameStatus, $gameState, clearPath } from "../ui/model";
-import { resetPath, resetStore } from "../model";
+import { resetPath, resetStore } from "../graph";
 import { ceilType } from "../config";
 
 const algoritmsDomain = createDomain();
