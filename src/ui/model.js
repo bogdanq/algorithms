@@ -1,7 +1,6 @@
 import { sample, guard, restore, forward, createDomain } from "effector";
 import { $graph, resetStore, clearCanvas } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
-import { gameLoop, clearLoop } from "./loop";
 
 export const gameStatus = {
   START: "START",
@@ -15,32 +14,43 @@ export const gameStatus = {
 const gameDomain = createDomain("game");
 
 export const setGameStatus = gameDomain.event();
-export const resumeAnimated = gameDomain.event();
-export const pauseAnimated = gameDomain.event();
+export const setEndGame = gameDomain.event();
 
 export const $path = gameDomain.store([]).reset(resetStore, clearCanvas);
+export const $gameIsEnd = gameDomain
+  .store(false)
+  .on(setEndGame, () => true)
+  .reset(resetStore, clearCanvas);
 
-export const $gameState = restore(setGameStatus, {
-  ref: gameStatus.END_GAME,
-}).reset(resetStore);
+export const $gameState = restore(setGameStatus, gameStatus.END_GAME).reset(
+  resetStore
+);
 
 export const $isValidGameState = $gameState.map(
-  (state) => state.ref === gameStatus.START
+  (state) => state === gameStatus.START
 );
 
 export const $clearGameState = $gameState.map(
-  (state) => state.ref === gameStatus.CLEAR
+  (state) => state === gameStatus.CLEAR
+);
+
+export const $endGameState = $gameState.map(
+  (state) => state === gameStatus.END_GAME
 );
 
 export const startGame = guard({
   source: $gameState,
   filter: $isValidGameState,
 });
-// startGame.watch(clearLoop);
 
 const clearGame = guard({
   source: $gameState,
   filter: $clearGameState,
+});
+
+const endGame = guard({
+  source: $gameState,
+  filter: $endGameState,
 });
 
 // При остановке игры, нужно полностью очистить состояние приложения
@@ -55,6 +65,11 @@ forward({
   to: clearCanvas,
 });
 
+forward({
+  from: endGame,
+  to: setEndGame,
+});
+
 // При старте игры, нужно расчитать путь, взяв данные из состояния
 sample({
   source: {
@@ -65,7 +80,7 @@ sample({
   target: $path,
   fn: ({ graph, algoritm }) => {
     const [start, end] = graph.startEndPosition;
-    // clearLoop();
+
     return algoritm.searchFunction(start, end, graph.graph);
   },
 });

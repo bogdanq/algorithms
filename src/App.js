@@ -45,30 +45,30 @@ export default function App() {
         <div className="btn-wrapper">
           <button
             className="btn"
-            onClick={() => setGameStatus({ ref: gameStatus.START })}
+            onClick={() => setGameStatus(gameStatus.START)}
           >
             start
           </button>
           <button
             className="btn"
-            onClick={() => setGameStatus({ ref: gameStatus.PAUSE })}
+            onClick={() => setGameStatus(gameStatus.PAUSE)}
           >
             pause
           </button>
 
           <button
             className="btn"
-            onClick={() => setGameStatus({ ref: gameStatus.RESUME })}
+            onClick={() => setGameStatus(gameStatus.RESUME)}
           >
             resume
           </button>
 
-          {/* <button
+          <button
             className="btn"
             onClick={() => setGameStatus(gameStatus.CLEAR)}
           >
             clear
-          </button> */}
+          </button>
         </div>
       </div>
     </div>

@@ -167,9 +167,11 @@ export function renderCanvas(canvas, context) {
 
   $algoritState.watch(({ canDrowAnimated, gameState, ...state }) => {
     if (canDrowAnimated) {
-      if (gameState.ref === gameStatus.START) {
+      if (gameState === gameStatus.START) {
         gameLoop.clear();
       }
+
+      gameLoop.removeAnimation();
       gameLoop.start(state, context);
     }
   });
