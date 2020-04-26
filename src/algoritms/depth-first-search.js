@@ -1,4 +1,11 @@
 import { restorePath } from "./bred-first-search";
+import { graphControll } from "../graph";
+import {
+  setVertices,
+  endProcess,
+  incrementStep,
+  canVisitedVertex,
+} from "../index";
 
 export function depthFirstSearch(startIndex, endIndex, graph) {
   let isWork = true;
@@ -7,12 +14,16 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
   const parent = {};
 
   while (isWork && stack.length > 0) {
+    incrementStep();
+    setVertices(stack.map((item) => item));
+
     const currentIndex = stack.shift();
 
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
       const next = graph[currentIndex].siblings[i];
+      const vertex = graphControll.getVertexByIndex(next);
 
-      if (!visited.has(next)) {
+      if (!visited.has(next) && canVisitedVertex(vertex)) {
         stack.unshift(next);
         visited.set(next, true);
 
@@ -25,6 +36,6 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
       }
     }
   }
-
+  endProcess();
   return restorePath(endIndex, startIndex, parent);
 }

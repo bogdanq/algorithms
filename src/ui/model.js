@@ -60,7 +60,7 @@ sample({
   target: $path,
   fn: ({ graph, algoritm }) => {
     const [start, end] = graph.startEndPosition;
-
+    resetPath();
     return algoritm.searchFunction(start, end, graph.graph);
   },
 });

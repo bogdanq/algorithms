@@ -1,4 +1,4 @@
-import { guard, sample, merge, combine } from "effector";
+import { guard, sample, merge, combine, forward } from "effector";
 import {
   colorSchema,
   cellSize,
@@ -11,8 +11,6 @@ import {
   clearCanvas,
   getPositionByIndex,
   getIndexByPosition,
-  startPosition,
-  endPosition,
   ceilType,
   convertLocalPositionToGlobal,
 } from "./config";
@@ -20,24 +18,18 @@ import { configureCanvas } from "./config-canvas";
 import { canvasControl } from "./control-canvas";
 import {
   setBarrier,
-  start,
   removeBarrierItem,
   triggerStartPosition,
   triggerEndPosition,
-  setGraph,
   $graph,
   resetStore,
+  resetPath,
 } from "./model";
-import { graphControll } from "./graph";
-import { BFS } from "./algoritms/bred-first-search";
-import { $path, $gameState, $clearGameState } from "./ui/model";
-import {
-  $traversedVertices,
-  $isValidEndProcess,
-  $algoritState,
-} from "./algoritms/model";
 
-const $state = combine($graph, $path);
+import { $path, $isValidGameState } from "./ui/model";
+import { $algoritState } from "./algoritms/model";
+
+const $state = combine($isValidGameState, $graph);
 
 function renderBarrier(barrier, context, color = colorSchema.blockColor) {
   for (let i = 0; i < barrier.length; i++) {
@@ -146,31 +138,34 @@ export function renderCanvas(canvas, context) {
     context.stroke(gridData.grid);
   }
 
-  $state.watch(([graph, path]) => {
-    render(graph);
-    renderPath({
-      path,
-      context,
-    });
-  });
+  $graph.watch(render);
 
-  let count = 0;
+  sample({
+    source: $graph,
+    clock: merge([resetStore, resetPath]),
+  }).watch(render);
 
-  function loop(state, numberOfPasses) {
+  function loop(state, numberOfPasses, count) {
     if (count < numberOfPasses) {
       renderBarrier(state[count], context, "#ffff0061");
-      requestAnimationFrame(() => loop(state, numberOfPasses));
+      requestAnimationFrame(() => loop(state, numberOfPasses, count));
       count++;
+    } else {
+      const path = $path.getState();
+      renderPath({
+        path,
+        context,
+      });
     }
   }
   function renderLoop(state, numberOfPasses) {
-    loop(state.vertices, numberOfPasses);
+    let count = 0;
+    loop(state, numberOfPasses, count);
   }
 
   $algoritState.watch(
     ({ isValidEndProcess, traversedVertices, numberOfPasses }) => {
       if (isValidEndProcess) {
-        console.log(traversedVertices);
         renderLoop(traversedVertices, numberOfPasses);
       }
     }

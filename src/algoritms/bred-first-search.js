@@ -1,4 +1,11 @@
-import { setVertices, endProcess, incrementStep } from "../index";
+import {
+  setVertices,
+  endProcess,
+  incrementStep,
+  canVisitedVertex,
+} from "../index";
+import { graphControll } from "../graph";
+import { ceilType } from "../config";
 
 export function restorePath(endIndex, startIndex, parent) {
   const path = [];
@@ -13,7 +20,7 @@ export function restorePath(endIndex, startIndex, parent) {
     path.push(endIndex);
   }
 
-  path.unshift(startIndex); // показать первую вершину
+  path.unshift(startIndex);
 
   return path;
 }
@@ -23,13 +30,6 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
   const queue = [startIndex];
   const visited = new Map([[startIndex, true]]);
   const parent = {};
-  const bariers = [];
-
-  for (const key in graph) {
-    if (graph[key].type === "BARIER") {
-      bariers.push(parseInt(key));
-    }
-  }
 
   while (isWork && queue.length > 0) {
     incrementStep();
@@ -39,8 +39,9 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
 
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
       const next = graph[currentIndex].siblings[i];
+      const vertex = graphControll.getVertexByIndex(next);
 
-      if (!visited.has(next) && !bariers.includes(next)) {
+      if (!visited.has(next) && canVisitedVertex(vertex)) {
         queue.push(next);
         visited.set(next, true);
 

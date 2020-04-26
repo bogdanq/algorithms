@@ -9,6 +9,7 @@ import {
 } from "./algoritms/model";
 
 import "./styles.css";
+import { resetPath } from "./model";
 
 export default function App() {
   const algoritms = useStore($algoritms);
@@ -35,6 +36,9 @@ export default function App() {
             onClick={() => setGameStatus({ ref: gameStatus.START })}
           >
             start
+          </button>
+          <button className="btn" onClick={resetPath}>
+            reset
           </button>
 
           <button

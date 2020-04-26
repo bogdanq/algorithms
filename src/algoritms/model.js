@@ -1,31 +1,39 @@
-import { createStore, combine, createEvent, restore } from "effector";
+import {
+  createStore,
+  combine,
+  createEvent,
+  restore,
+  createDomain,
+} from "effector";
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";
 import { setGameStatus, gameStatus, $gameState, clearPath } from "../ui/model";
-import { resetPath } from "../model";
+import { resetPath, resetStore } from "../model";
+import { ceilType } from "../config";
+
+const algoritmsDomain = createDomain();
 
 export const selectAlgoritm = createEvent();
 export const incrementStep = createEvent();
 export const setVertices = createEvent();
 export const endProcess = createEvent();
 
-export const $isValidEndProcess = createStore(false).on(endProcess, () => true);
+export const $isValidEndProcess = algoritmsDomain
+  .store(false)
+  .on(endProcess, () => true);
 
 export const $currentAlgoritm = restore(selectAlgoritm, "bredth first search");
-export const $traversedVertices = createStore({ index: 0, vertices: {} }).on(
-  setVertices,
-  (state, payload) => {
-    return {
-      vertices: { ...state.vertices, [state.index]: payload },
-      index: state.index + 1,
-    };
-  }
-);
+export const $traversedVertices = algoritmsDomain
+  .store([])
+  .on(setVertices, (state, payload) => {
+    return [...state, payload];
+  });
 
-export const $numberOfPasses = createStore(0).on(
-  incrementStep,
-  (state) => state + 1
-);
+export const $numberOfPasses = algoritmsDomain
+  .store(0)
+  .on(incrementStep, (state) => state + 1);
+
+algoritmsDomain.onCreateStore((store) => store.reset(resetPath, resetStore));
 
 export const $algoritState = combine({
   isValidEndProcess: $isValidEndProcess,
@@ -45,6 +53,13 @@ export const $algoritms = createStore([
     name: "depth first search",
   },
 ]);
+
+export const canVisitedVertex = (vertex) => {
+  if (vertex.type !== ceilType.BARIER) {
+    return true;
+  }
+  return false;
+};
 
 export const $searchAlgoritm = combine(
   $currentAlgoritm,

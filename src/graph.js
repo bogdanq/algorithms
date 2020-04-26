@@ -24,6 +24,10 @@ class Graph {
     return this;
   }
 
+  getVertexByIndex(index) {
+    return this.graph[index];
+  }
+
   updateGraph({ index, type }) {
     if (this.graph[index]) {
       this.graph[index] = { ...this.graph[index], type };

@@ -60,3 +60,5 @@ export const $graph = combine({
 
   return { ...state, graph: graph.graph };
 });
+
+$graph.watch(resetPath);
