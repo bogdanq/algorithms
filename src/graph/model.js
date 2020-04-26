@@ -10,7 +10,7 @@ import {
 const graphDomain = createDomain("graph");
 
 export const resetStore = graphDomain.event();
-export const resetPath = graphDomain.event();
+export const clearCanvas = graphDomain.event();
 
 export const setBarrier = graphDomain.event();
 export const removeBarrierItem = graphDomain.event();
@@ -25,7 +25,7 @@ export const $startEndPosition = graphDomain.store([
 
 export const $barrier = graphDomain.store([]);
 
-graphDomain.onCreateDomain((store) => store.reset(resetStore));
+graphDomain.onCreateStore((store) => store.reset(resetStore));
 
 $barrier
   .on(setBarrier, (state, index) => {
@@ -56,4 +56,4 @@ export const $graph = combine({
   return { ...state, graph: graph.graph };
 });
 
-$graph.watch(resetPath);
+$graph.watch(clearCanvas);

@@ -1,39 +1,16 @@
-import {
-  setVertices,
-  endProcess,
-  incrementStep,
-  canVisitedVertex,
-} from "../index";
+import { createLogger, incrementStep } from "../index";
 import { graphControll } from "../graph";
-import { ceilType } from "../config";
-
-export function restorePath(endIndex, startIndex, parent) {
-  const path = [];
-  let target = parent[endIndex];
-
-  while (target && target !== startIndex) {
-    path.unshift(target);
-    target = parent[target];
-  }
-
-  if (path.length > 0) {
-    path.push(endIndex);
-  }
-
-  path.unshift(startIndex);
-
-  return path;
-}
-
+import { canVisitedVertex, restorePath } from "./utils";
 export function breadthFirstSearch(startIndex, endIndex, graph) {
+  const logger = createLogger();
+
   let isWork = true;
   const queue = [startIndex];
   const visited = new Map([[startIndex, true]]);
   const parent = {};
 
   while (isWork && queue.length > 0) {
-    incrementStep();
-    setVertices(queue.map((item) => item));
+    logger.setVertex(queue.map((item) => item));
 
     const currentIndex = queue.shift();
 
@@ -55,7 +32,7 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
     }
   }
 
-  endProcess();
+  logger.setDrowAnimated();
 
   return restorePath(endIndex, startIndex, parent);
 }

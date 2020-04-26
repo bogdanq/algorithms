@@ -1,21 +1,16 @@
-import { restorePath } from "./bred-first-search";
 import { graphControll } from "../graph";
-import {
-  setVertices,
-  endProcess,
-  incrementStep,
-  canVisitedVertex,
-} from "../index";
+import { createLogger } from "../index";
+import { canVisitedVertex, restorePath } from "./utils";
 
 export function depthFirstSearch(startIndex, endIndex, graph) {
+  const logger = createLogger();
   let isWork = true;
   const stack = [startIndex];
   const visited = new Map([[startIndex, true]]);
   const parent = {};
 
   while (isWork && stack.length > 0) {
-    incrementStep();
-    setVertices(stack.map((item) => item));
+    logger.setVertex(stack.map((item) => item));
 
     const currentIndex = stack.shift();
 
@@ -36,6 +31,8 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
       }
     }
   }
-  endProcess();
+
+  logger.setDrowAnimated();
+
   return restorePath(endIndex, startIndex, parent);
 }

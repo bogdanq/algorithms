@@ -50,7 +50,7 @@ export function drawSquare({
   context.fillRect(x + borderSize * 2, y + borderSize * 2, size, size);
 }
 
-export function clearCanvas(context, canvas) {
+export function clearALlCanvas(context, canvas) {
   return context.clearRect(0, 0, canvas.width, canvas.height);
 }
 

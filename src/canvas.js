@@ -8,7 +8,7 @@ import {
   getLocalSize,
   getGlobalSize,
   drawSquare,
-  clearCanvas,
+  clearALlCanvas,
   getPositionByIndex,
   getIndexByPosition,
   ceilType,
@@ -23,15 +23,35 @@ import {
   triggerEndPosition,
   $graph,
   resetStore,
-  resetPath,
+  clearCanvas,
 } from "./graph";
 
-import { $path, $isValidGameState } from "./ui/model";
-import { $algoritState } from "./algoritms/model";
+import {
+  $path,
+  $isValidGameState,
+  gameStatus,
+  setGameStatus,
+  $gameState,
+} from "./ui/model";
+import {
+  $canDrowAnimated,
+  $traversedVertexes,
+  $stepCounter,
+} from "./algoritms";
+import { GameLoop, gameLoop } from "./ui/loop";
 
-const $state = combine($isValidGameState, $graph);
+const $algoritState = combine({
+  canDrowAnimated: $canDrowAnimated,
+  traversedVertexes: $traversedVertexes,
+  stepCounter: $stepCounter,
+  gameState: $gameState,
+});
 
-function renderBarrier(barrier, context, color = colorSchema.blockColor) {
+export function renderBarrier(
+  barrier,
+  context,
+  color = colorSchema.blockColor
+) {
   for (let i = 0; i < barrier.length; i++) {
     const [x, y] = getPositionByIndex(barrier[i]);
     drawSquare({
@@ -128,7 +148,7 @@ export function renderCanvas(canvas, context) {
   canvasControl.addMouseClickEvent((e, s) => renderCeil(e, s).renderForClick());
 
   function render(state) {
-    clearCanvas(context, canvas);
+    clearALlCanvas(context, canvas);
     canvasControl.setState(state);
 
     renderActionsCeil(state.startEndPosition, context);
@@ -138,45 +158,21 @@ export function renderCanvas(canvas, context) {
     context.stroke(gridData.grid);
   }
 
-  $graph.watch(render);
-
   sample({
     source: $graph,
-    clock: merge([resetStore, resetPath]),
+    clock: merge([resetStore, clearCanvas]),
   }).watch(render);
 
-  function loop(state, numberOfPasses, count) {
-    if (count < numberOfPasses) {
-      renderBarrier(state[count], context, "#ffff0061");
-      const animateId = requestAnimationFrame(() =>
-        loop(state, numberOfPasses, count)
-      );
+  clearCanvas();
 
-      resetPath.watch(() => cancelAnimationFrame(animateId));
-
-      count++;
-    } else {
-      const path = $path.getState();
-      renderPath({
-        path,
-        context,
-      });
-    }
-  }
-  function renderLoop(state, numberOfPasses) {
-    let count = 0;
-    let animateId = null;
-
-    loop(state, numberOfPasses, count, animateId);
-  }
-
-  $algoritState.watch(
-    ({ isValidEndProcess, traversedVertices, numberOfPasses }) => {
-      if (isValidEndProcess) {
-        renderLoop(traversedVertices, numberOfPasses);
+  $algoritState.watch(({ canDrowAnimated, gameState, ...state }) => {
+    if (canDrowAnimated) {
+      if (gameState.ref === gameStatus.START) {
+        gameLoop.clear();
       }
+      gameLoop.start(state, context);
     }
-  );
+  });
 }
 
 let prev = null;

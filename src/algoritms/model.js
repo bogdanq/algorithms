@@ -7,40 +7,29 @@ import {
 } from "effector";
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";
-import { resetPath, resetStore } from "../graph";
-import { ceilType } from "../config";
+import { clearCanvas, resetStore } from "../graph";
 
 const algoritmsDomain = createDomain();
 
 export const selectAlgoritm = createEvent();
 export const incrementStep = createEvent();
-export const setVertices = createEvent();
-export const endProcess = createEvent();
+export const setVertex = createEvent();
+export const setDrowAnimated = createEvent();
 
-export const $isValidEndProcess = algoritmsDomain
+export const $canDrowAnimated = algoritmsDomain
   .store(false)
-  .on(endProcess, () => true);
+  .on(setDrowAnimated, () => true);
 
 export const $currentAlgoritm = restore(selectAlgoritm, "bredth first search");
-export const $traversedVertices = algoritmsDomain
+export const $traversedVertexes = algoritmsDomain
   .store([])
-  .on(setVertices, (state, payload) => {
-    return [...state, payload];
+  .on(setVertex, (vertexes, vertex) => {
+    return [...vertexes, vertex];
   });
 
-export const $numberOfPasses = algoritmsDomain
+export const $stepCounter = algoritmsDomain
   .store(0)
   .on(incrementStep, (state) => state + 1);
-
-algoritmsDomain.onCreateStore((store) => store.reset(resetPath, resetStore));
-
-export const $algoritState = combine({
-  isValidEndProcess: $isValidEndProcess,
-  traversedVertices: $traversedVertices,
-  numberOfPasses: $numberOfPasses,
-});
-
-selectAlgoritm.watch(resetPath);
 
 export const $algoritms = createStore([
   {
@@ -53,16 +42,23 @@ export const $algoritms = createStore([
   },
 ]);
 
-export const canVisitedVertex = (vertex) => {
-  if (vertex.type !== ceilType.BARIER) {
-    return true;
-  }
-  return false;
-};
-
 export const $searchAlgoritm = combine(
   $currentAlgoritm,
   $algoritms,
   (currentAlgoritm, algoritms) =>
     algoritms.find((algoritm) => algoritm.name === currentAlgoritm)
 );
+
+export const createLogger = () => {
+  return {
+    setDrowAnimated,
+    setVertex: (vertex) => {
+      setVertex(vertex);
+      incrementStep();
+    },
+  };
+};
+
+algoritmsDomain.onCreateStore((store) => store.reset(clearCanvas, resetStore));
+
+selectAlgoritm.watch(clearCanvas);
