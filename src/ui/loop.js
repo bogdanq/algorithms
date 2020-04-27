@@ -19,6 +19,11 @@ export class GameLoop {
     const gameState = $gameState.getState();
     const gameIsEnd = $gameIsEnd.getState();
 
+    if (gameState === gameStatus.END_GAME) {
+      // clearCanvas();
+      return;
+    }
+
     if (gameState === gameStatus.PAUSE) {
       cancelAnimationFrame(this.animateId);
       return;

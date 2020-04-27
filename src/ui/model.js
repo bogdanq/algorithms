@@ -1,6 +1,7 @@
 import { sample, guard, restore, forward, createDomain } from "effector";
 import { $graph, resetStore, clearCanvas } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
+import { canvasControl } from "../control-canvas";
 
 export const gameStatus = {
   START: "START",
@@ -26,51 +27,30 @@ export const $gameState = restore(setGameStatus, gameStatus.END_GAME).reset(
   resetStore
 );
 
-export const $isValidGameState = $gameState.map(
-  (state) => state === gameStatus.START
-);
-
-export const $clearGameState = $gameState.map(
-  (state) => state === gameStatus.CLEAR
-);
-
-export const $endGameState = $gameState.map(
-  (state) => state === gameStatus.END_GAME
-);
-
 export const startGame = guard({
   source: $gameState,
-  filter: $isValidGameState,
+  filter: $gameState.map((state) => state === gameStatus.START),
 });
 
-const clearGame = guard({
+guard({
   source: $gameState,
-  filter: $clearGameState,
+  filter: $gameState.map((state) => state === gameStatus.CLEAR),
+  target: resetStore,
 });
 
-const endGame = guard({
+guard({
   source: $gameState,
-  filter: $endGameState,
+  filter: $gameState.map((state) => state === gameStatus.END_GAME),
+  target: setEndGame,
 });
 
-// При остановке игры, нужно полностью очистить состояние приложения
-forward({
-  from: clearGame,
-  to: resetStore,
-});
+// guardTarget($source, [
+//   [(state) => state === 1, event],
+//   [(state) => state === 2, another]
+// ])
 
-// При старте игры - нужно удалить полностью те елементы канваса, которых нет в графе
-forward({
-  from: startGame,
-  to: clearCanvas,
-});
+// function guardTarget(source, guards) {}
 
-forward({
-  from: endGame,
-  to: setEndGame,
-});
-
-// При старте игры, нужно расчитать путь, взяв данные из состояния
 sample({
   source: {
     graph: $graph,
@@ -80,6 +60,8 @@ sample({
   target: $path,
   fn: ({ graph, algoritm }) => {
     const [start, end] = graph.startEndPosition;
+
+    clearCanvas();
 
     return algoritm.searchFunction(start, end, graph.graph);
   },

@@ -15,17 +15,12 @@ import {
 } from "./algoritms/model";
 
 import "./styles.css";
+import { checkGameStatus } from "./ui/utils";
 
 export default function App() {
   const algoritms = useStore($algoritms);
   const currentAlgoritm = useStore($currentAlgoritm);
   const gameState = useStore($gameState);
-  const [_, forceUpdate] = React.useReducer(() => ({}));
-
-  const name = () => {
-    forceUpdate();
-    return gameStatus.START;
-  };
 
   return (
     <div className="App">
@@ -49,19 +44,28 @@ export default function App() {
           >
             start
           </button>
-          <button
-            className="btn"
-            onClick={() => setGameStatus(gameStatus.PAUSE)}
-          >
-            pause
-          </button>
+          {checkGameStatus(
+            gameState,
+            gameStatus.START,
+            gameStatus.PAUSE,
+            gameStatus.RESUME
+          ) && (
+            <>
+              <button
+                className="btn"
+                onClick={() => setGameStatus(gameStatus.PAUSE)}
+              >
+                pause
+              </button>
 
-          <button
-            className="btn"
-            onClick={() => setGameStatus(gameStatus.RESUME)}
-          >
-            resume
-          </button>
+              <button
+                className="btn"
+                onClick={() => setGameStatus(gameStatus.RESUME)}
+              >
+                resume
+              </button>
+            </>
+          )}
 
           <button
             className="btn"

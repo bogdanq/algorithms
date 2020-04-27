@@ -158,12 +158,12 @@ export function renderCanvas(canvas, context) {
     context.stroke(gridData.grid);
   }
 
+  $graph.watch(render);
+
   sample({
     source: $graph,
     clock: merge([resetStore, clearCanvas]),
   }).watch(render);
-
-  clearCanvas();
 
   $algoritState.watch(({ canDrowAnimated, gameState, ...state }) => {
     if (canDrowAnimated) {

@@ -8,6 +8,7 @@ import {
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";
 import { clearCanvas, resetStore } from "../graph";
+import { setGameStatus, gameStatus } from "../ui/model";
 
 const algoritmsDomain = createDomain();
 
@@ -61,4 +62,7 @@ export const createLogger = () => {
 
 algoritmsDomain.onCreateStore((store) => store.reset(clearCanvas, resetStore));
 
-selectAlgoritm.watch(clearCanvas);
+selectAlgoritm.watch(() => {
+  // clearCanvas();
+  setGameStatus(gameStatus.END_GAME);
+});

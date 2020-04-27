@@ -1,4 +1,6 @@
 import { getTargetIndex } from "./config";
+import { $gameState, gameStatus } from "./ui/model";
+import { checkGameStatus } from "./ui/utils";
 
 class Controll {
   constructor() {
@@ -7,6 +9,26 @@ class Controll {
     this.listeners = [];
     this.state = {};
     this.lastIndex = null;
+    this.disabledListeners = [];
+  }
+
+  init() {
+    $gameState.watch((state) => {
+      if (
+        checkGameStatus(
+          state,
+          gameStatus.START,
+          gameStatus.PAUSE,
+          gameStatus.RESUME
+        )
+      ) {
+        this.disabledListener();
+      } else {
+        this.includeListener();
+      }
+    });
+
+    return this;
   }
 
   registerClickEventToCanvas(canvas) {
@@ -51,6 +73,14 @@ class Controll {
     });
   }
 
+  disabledListener() {
+    this.clear();
+  }
+
+  includeListener() {
+    this.listeners = this.disabledListeners;
+  }
+
   addMouseDownEvent(eventListener) {
     this.listeners.push({ type: "mousedown", eventListener });
   }
@@ -71,6 +101,17 @@ class Controll {
     this.state = state;
     return this;
   }
+
+  clear() {
+    if (this.listeners.length > 0) {
+      this.disabledListeners = this.listeners;
+      this.isMouseDown = false;
+      this.isMouseMove = false;
+      this.listeners = [];
+      this.lastIndex = null;
+    }
+  }
 }
 
 export const canvasControl = new Controll();
+canvasControl.init();
