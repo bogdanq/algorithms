@@ -15,7 +15,7 @@ export class GameLoop {
   }
 
   start(state, context) {
-    const { traversedVertexes, stepCounter } = state;
+    const { traversedVertexes, vertexesCount } = state;
     const gameState = $gameState.getState();
     const gameIsEnd = $gameIsEnd.getState();
 
@@ -34,11 +34,11 @@ export class GameLoop {
       return;
     }
 
-    if (this.count < stepCounter) {
+    if (this.count < vertexesCount) {
       renderBarrier(traversedVertexes[this.count], context, "#ffff0061");
 
       this.animateId = requestAnimationFrame(() =>
-        this.start({ traversedVertexes, stepCounter }, context)
+        this.start({ traversedVertexes, vertexesCount }, context)
       );
 
       clearCanvas.watch(() => cancelAnimationFrame(this.animateId));

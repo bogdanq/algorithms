@@ -36,14 +36,14 @@ import {
 import {
   $canDrowAnimated,
   $traversedVertexes,
-  $stepCounter,
+  $vertexesCount,
 } from "./algoritms";
 import { GameLoop, gameLoop } from "./ui/loop";
 
 const $algoritState = combine({
   canDrowAnimated: $canDrowAnimated,
   traversedVertexes: $traversedVertexes,
-  stepCounter: $stepCounter,
+  vertexesCount: $vertexesCount,
   gameState: $gameState,
 });
 

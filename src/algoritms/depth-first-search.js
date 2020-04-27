@@ -1,16 +1,18 @@
 import { graphControll } from "../graph";
 import { createLogger } from "../index";
-import { canVisitedVertex, restorePath } from "./utils";
+import { canVisitedVertex, restorePath, removeDoubleVertex } from "./utils";
 
 export function depthFirstSearch(startIndex, endIndex, graph) {
   const logger = createLogger();
+  const removeVertex = removeDoubleVertex();
+
   let isWork = true;
   const stack = [startIndex];
   const visited = new Map([[startIndex, true]]);
   const parent = {};
 
   while (isWork && stack.length > 0) {
-    logger.setVertex(stack.map((item) => item));
+    logger.setVertex(removeVertex(stack));
 
     const currentIndex = stack.shift();
 

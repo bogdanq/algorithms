@@ -1,8 +1,10 @@
-import { createLogger, incrementStep } from "../index";
+import { createLogger } from "../index";
 import { graphControll } from "../graph";
-import { canVisitedVertex, restorePath } from "./utils";
+import { canVisitedVertex, restorePath, removeDoubleVertex } from "./utils";
+
 export function breadthFirstSearch(startIndex, endIndex, graph) {
   const logger = createLogger();
+  const removeVertex = removeDoubleVertex();
 
   let isWork = true;
   const queue = [startIndex];
@@ -10,7 +12,7 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
   const parent = {};
 
   while (isWork && queue.length > 0) {
-    logger.setVertex(queue.map((item) => item));
+    logger.setVertex(removeVertex(queue));
 
     const currentIndex = queue.shift();
 

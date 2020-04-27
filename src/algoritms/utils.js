@@ -24,3 +24,15 @@ export function restorePath(endIndex, startIndex, parent) {
 
   return path;
 }
+
+export function removeDoubleVertex() {
+  let result = [];
+
+  return function removeVertex(item) {
+    const newErr = item.filter((vertex) => !result.includes(vertex));
+
+    result.push(...newErr);
+
+    return newErr;
+  };
+}

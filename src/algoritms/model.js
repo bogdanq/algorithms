@@ -13,7 +13,7 @@ import { setGameStatus, gameStatus } from "../ui/model";
 const algoritmsDomain = createDomain();
 
 export const selectAlgoritm = createEvent();
-export const incrementStep = createEvent();
+export const incrementVertex = createEvent();
 export const setVertex = createEvent();
 export const setDrowAnimated = createEvent();
 
@@ -28,9 +28,9 @@ export const $traversedVertexes = algoritmsDomain
     return [...vertexes, vertex];
   });
 
-export const $stepCounter = algoritmsDomain
+export const $vertexesCount = algoritmsDomain
   .store(0)
-  .on(incrementStep, (state) => state + 1);
+  .on(incrementVertex, (state) => state + 1);
 
 export const $algoritms = createStore([
   {
@@ -55,7 +55,7 @@ export const createLogger = () => {
     setDrowAnimated,
     setVertex: (vertex) => {
       setVertex(vertex);
-      incrementStep();
+      incrementVertex();
     },
   };
 };
