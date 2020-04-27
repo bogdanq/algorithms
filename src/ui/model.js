@@ -15,13 +15,8 @@ export const gameStatus = {
 const gameDomain = createDomain("game");
 
 export const setGameStatus = gameDomain.event();
-export const setEndGame = gameDomain.event();
 
 export const $path = gameDomain.store([]).reset(resetStore, clearCanvas);
-export const $gameIsEnd = gameDomain
-  .store(false)
-  .on(setEndGame, () => true)
-  .reset(resetStore, clearCanvas);
 
 export const $gameState = restore(setGameStatus, gameStatus.END_GAME).reset(
   resetStore
@@ -38,18 +33,10 @@ guard({
   target: resetStore,
 });
 
-guard({
+export const endGame = guard({
   source: $gameState,
   filter: $gameState.map((state) => state === gameStatus.END_GAME),
-  target: setEndGame,
 });
-
-// guardTarget($source, [
-//   [(state) => state === 1, event],
-//   [(state) => state === 2, another]
-// ])
-
-// function guardTarget(source, guards) {}
 
 sample({
   source: {

@@ -16,6 +16,11 @@ export const selectAlgoritm = createEvent();
 export const incrementVertex = createEvent();
 export const setVertex = createEvent();
 export const setDrowAnimated = createEvent();
+export const increment = createEvent();
+
+export const $numberOfIterations = algoritmsDomain
+  .store(0)
+  .on(increment, (_, count) => count);
 
 export const $canDrowAnimated = algoritmsDomain
   .store(false)
@@ -52,7 +57,11 @@ export const $searchAlgoritm = combine(
 
 export const createLogger = () => {
   return {
-    setDrowAnimated,
+    setDrowAnimated: (count) => {
+      setDrowAnimated();
+      increment(count);
+    },
+
     setVertex: (vertex) => {
       setVertex(vertex);
       incrementVertex();
@@ -62,7 +71,4 @@ export const createLogger = () => {
 
 algoritmsDomain.onCreateStore((store) => store.reset(clearCanvas, resetStore));
 
-selectAlgoritm.watch(() => {
-  // clearCanvas();
-  setGameStatus(gameStatus.END_GAME);
-});
+selectAlgoritm.watch(() => setGameStatus(gameStatus.END_GAME));

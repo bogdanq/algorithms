@@ -5,6 +5,7 @@ import { canVisitedVertex, restorePath, removeDoubleVertex } from "./utils";
 export function breadthFirstSearch(startIndex, endIndex, graph) {
   const logger = createLogger();
   const removeVertex = removeDoubleVertex();
+  let count = 0;
 
   let isWork = true;
   const queue = [startIndex];
@@ -25,6 +26,7 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
         visited.set(next, true);
 
         parent[next] = currentIndex;
+        count++;
       }
 
       if (next === endIndex) {
@@ -34,7 +36,7 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
     }
   }
 
-  logger.setDrowAnimated();
+  logger.setDrowAnimated(count);
 
   return restorePath(endIndex, startIndex, parent);
 }

@@ -1,12 +1,6 @@
 import { clearCanvas } from "../graph";
 import { renderBarrier, renderPath } from "../canvas";
-import {
-  gameStatus,
-  $path,
-  setGameStatus,
-  $gameState,
-  $gameIsEnd,
-} from "./model";
+import { gameStatus, $path, setGameStatus, $gameState } from "./model";
 
 export class GameLoop {
   constructor() {
@@ -17,10 +11,8 @@ export class GameLoop {
   start(state, context) {
     const { traversedVertexes, vertexesCount } = state;
     const gameState = $gameState.getState();
-    const gameIsEnd = $gameIsEnd.getState();
 
     if (gameState === gameStatus.END_GAME) {
-      // clearCanvas();
       return;
     }
 
@@ -29,10 +21,10 @@ export class GameLoop {
       return;
     }
 
-    if (gameState === gameStatus.RESUME && gameIsEnd) {
-      cancelAnimationFrame(this.animateId);
-      return;
-    }
+    // if (gameState === gameStatus.RESUME) {
+    //   cancelAnimationFrame(this.animateId);
+    //   return;
+    // }
 
     if (this.count < vertexesCount) {
       renderBarrier(traversedVertexes[this.count], context, "#ffff0061");
