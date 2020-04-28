@@ -16,23 +16,18 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
   while (isWork && stack.length > 0) {
     const currentIndex = stack.shift();
 
+    logger.setVertex({
+      data: removeVertexV(visited),
+      name: "visited",
+    });
+
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
       const next = graph[currentIndex].siblings[i];
       const vertex = graphControll.getVertexByIndex(next);
 
       if (!visited.includes(next) && canVisitedVertex(vertex)) {
-        logger.setVertex({
-          data: removeVertexV(visited),
-          name: "visited",
-        });
-
         stack.unshift(next);
         visited.push(next);
-
-        logger.setVertex({
-          data: removeVertexQ(stack),
-          name: "queue",
-        });
 
         parent[next] = currentIndex;
         count++;
@@ -43,6 +38,11 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
         break;
       }
     }
+
+    logger.setVertex({
+      data: removeVertexQ(stack),
+      name: "queue",
+    });
   }
 
   logger.setDrowAnimated(count);

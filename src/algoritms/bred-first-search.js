@@ -16,23 +16,18 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
   while (isWork && queue.length > 0) {
     const currentIndex = queue.shift();
 
+    logger.setVertex({
+      data: removeVertexV(visited),
+      name: "visited",
+    });
+
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
       const next = graph[currentIndex].siblings[i];
       const vertex = graphControll.getVertexByIndex(next);
 
       if (!visited.includes(next) && canVisitedVertex(vertex)) {
-        logger.setVertex({
-          data: removeVertexV(visited),
-          name: "visited",
-        });
-
         queue.push(next);
         visited.push(next);
-
-        logger.setVertex({
-          data: removeVertexQ(queue),
-          name: "queue",
-        });
 
         parent[next] = currentIndex;
         count++;
@@ -43,6 +38,11 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
         break;
       }
     }
+
+    logger.setVertex({
+      data: removeVertexQ(queue),
+      name: "queue",
+    });
   }
 
   logger.setDrowAnimated(count);
