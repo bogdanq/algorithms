@@ -28,9 +28,12 @@ export const $canDrowAnimated = algoritmsDomain
 
 export const $currentAlgoritm = restore(selectAlgoritm, "bredth first search");
 export const $traversedVertexes = algoritmsDomain
-  .store([])
-  .on(setVertex, (vertexes, vertex) => {
-    return [...vertexes, vertex];
+  .store({
+    queue: [],
+    visited: [],
+  })
+  .on(setVertex, (state, { data, name }) => {
+    return { ...state, [name]: [...state[name], data] };
   });
 
 export const $vertexesCount = algoritmsDomain

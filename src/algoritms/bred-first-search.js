@@ -4,16 +4,20 @@ import { canVisitedVertex, restorePath, removeDoubleVertex } from "./utils";
 
 export function breadthFirstSearch(startIndex, endIndex, graph) {
   const logger = createLogger();
-  const removeVertex = removeDoubleVertex();
+  const removeVertexQ = removeDoubleVertex();
+  const removeVertexV = removeDoubleVertex();
   let count = 0;
 
   let isWork = true;
   const queue = [startIndex];
-  const visited = new Map([[startIndex, true]]);
+  const visited = [startIndex];
   const parent = {};
 
   while (isWork && queue.length > 0) {
-    logger.setVertex(removeVertex(queue));
+    logger.setVertex({
+      data: removeVertexQ(queue),
+      name: "queue",
+    });
 
     const currentIndex = queue.shift();
 
@@ -21,9 +25,14 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
       const next = graph[currentIndex].siblings[i];
       const vertex = graphControll.getVertexByIndex(next);
 
-      if (!visited.has(next) && canVisitedVertex(vertex)) {
+      if (!visited.includes(next) && canVisitedVertex(vertex)) {
+        logger.setVertex({
+          data: removeVertexV(visited),
+          name: "visited",
+        });
+
         queue.push(next);
-        visited.set(next, true);
+        visited.push(next);
 
         parent[next] = currentIndex;
         count++;

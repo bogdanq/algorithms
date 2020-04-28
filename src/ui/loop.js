@@ -4,7 +4,7 @@ import { gameStatus, $path, setGameStatus, $gameState } from "./model";
 
 export class GameLoop {
   constructor() {
-    this.count = 0;
+    this.count = 1;
     this.animateId = null;
   }
 
@@ -26,8 +26,20 @@ export class GameLoop {
     //   return;
     // }
 
-    if (this.count < vertexesCount) {
-      renderBarrier(traversedVertexes[this.count], context, "#ffff0061");
+    if (this.count < traversedVertexes.visited.length) {
+      if (this.count < traversedVertexes.queue.length) {
+        renderBarrier(
+          traversedVertexes.queue[this.count],
+          context,
+          "rgb(152, 251, 152)"
+        );
+      }
+
+      renderBarrier(
+        traversedVertexes.visited[this.count],
+        context,
+        "rgb(175, 238, 238)"
+      );
 
       this.animateId = requestAnimationFrame(() =>
         this.start({ traversedVertexes, vertexesCount }, context)
@@ -49,7 +61,7 @@ export class GameLoop {
 
   clear() {
     cancelAnimationFrame(this.animateId);
-    this.count = 0;
+    this.count = 1;
     this.animateId = null;
   }
 
