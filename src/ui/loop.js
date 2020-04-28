@@ -23,7 +23,9 @@ export class GameLoop {
     }
 
     if (this.count < traversedVertexes.visited.length) {
-      if (this.count < traversedVertexes.queue.length) {
+      renderBarrier(traversedVertexes.visited[this.count], context, "#afeeee");
+
+      if (this.count < traversedVertexes.visited.length - 1) {
         renderBarrier(
           traversedVertexes.queue[this.count],
           context,
@@ -31,11 +33,9 @@ export class GameLoop {
         );
       }
 
-      renderBarrier(traversedVertexes.visited[this.count], context, "#afeeee");
-
       this.animateId = setInterval(
         () => this.start({ traversedVertexes, vertexesCount }, context),
-        300
+        1000 / 20
       );
 
       clearCanvas.watch(() => clearTimeout(this.animateId));

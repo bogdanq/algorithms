@@ -14,11 +14,6 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
   const parent = {};
 
   while (isWork && stack.length > 0) {
-    logger.setVertex({
-      data: removeVertexQ(stack),
-      name: "queue",
-    });
-
     const currentIndex = stack.shift();
 
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
@@ -33,6 +28,11 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
 
         stack.unshift(next);
         visited.push(next);
+
+        logger.setVertex({
+          data: removeVertexQ(stack),
+          name: "queue",
+        });
 
         parent[next] = currentIndex;
         count++;

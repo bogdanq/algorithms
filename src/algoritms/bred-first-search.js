@@ -14,11 +14,6 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
   const parent = {};
 
   while (isWork && queue.length > 0) {
-    logger.setVertex({
-      data: removeVertexQ(queue),
-      name: "queue",
-    });
-
     const currentIndex = queue.shift();
 
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
@@ -33,6 +28,11 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
 
         queue.push(next);
         visited.push(next);
+
+        logger.setVertex({
+          data: removeVertexQ(queue),
+          name: "queue",
+        });
 
         parent[next] = currentIndex;
         count++;
