@@ -3,6 +3,7 @@ import { graphControll } from "../graph";
 import { canVisitedVertex, restorePath, removeDoubleVertex } from "./utils";
 
 export function breadthFirstSearch(startIndex, endIndex, graph) {
+  // console.log(graph);
   const logger = createLogger();
   const removeVertexQ = removeDoubleVertex();
   const removeVertexV = removeDoubleVertex();

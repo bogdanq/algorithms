@@ -12,12 +12,9 @@ class Graph {
     for (let index = 0; index < this.cellCount; index++) {
       this.graph[index] = {
         type: ceilType.EMPTY,
-        siblings: [
-          this.getLeftSibling(index),
-          this.getTopSibling(index),
-          this.getRightSibling(index),
-          this.getDownSibling(index),
-        ].filter((item) => typeof item !== "undefined"),
+        siblings: this.getSiblings(index).filter(
+          (item) => typeof item !== "undefined"
+        ),
       };
     }
 
@@ -35,6 +32,52 @@ class Graph {
         this.graph[index] = { ...this.graph[index], type, siblings: [] };
       }
     }
+  }
+
+  getSiblings(index) {
+    const left = this.getLeftSibling(index);
+    const top = this.getTopSibling(index);
+    const right = this.getRightSibling(index);
+    const down = this.getDownSibling(index);
+
+    const topLeft = this.getTopLeftDiagonal(top, left);
+    const topRight = this.getTopRightDiagonal(top, right);
+    const botRight = this.getBotRightDiagonal(down, right);
+    const botLeft = this.getBotLeftDiagonal(down, left);
+
+    // return [left, top, right, down];
+    return [left, topLeft, top, topRight, right, botRight, down, botLeft];
+  }
+
+  getTopLeftDiagonal(top, left) {
+    if (top >= 0 && left >= 0) {
+      return top - 1;
+    }
+  }
+
+  getTopRightDiagonal(top, right) {
+    if (top >= 0 && right >= 0) {
+      return top + 1;
+    }
+  }
+
+  getBotLeftDiagonal(bot, left) {
+    if (bot >= 0 && left >= 0) {
+      return bot - 1;
+    }
+  }
+
+  getBotRightDiagonal(bot, right) {
+    if (bot >= 0 && right) {
+      return bot + 1;
+    }
+  }
+
+  getBottomDiagonal(down) {
+    const left = down - 1;
+    const right = down + 1;
+
+    return [left, right];
   }
 
   getDownSibling(index) {
