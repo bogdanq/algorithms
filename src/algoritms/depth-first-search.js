@@ -4,16 +4,20 @@ import { canVisitedVertex, restorePath, removeDoubleVertex } from "./utils";
 
 export function depthFirstSearch(startIndex, endIndex, graph) {
   const logger = createLogger();
-  const removeVertex = removeDoubleVertex();
+  const removeVertexQ = removeDoubleVertex();
+  const removeVertexV = removeDoubleVertex();
   let count = 0;
 
   let isWork = true;
   const stack = [startIndex];
-  const visited = new Map([[startIndex, true]]);
+  const visited = [startIndex];
   const parent = {};
 
   while (isWork && stack.length > 0) {
-    logger.setVertex(removeVertex(stack));
+    logger.setVertex({
+      data: removeVertexQ(stack),
+      name: "queue",
+    });
 
     const currentIndex = stack.shift();
 
@@ -21,9 +25,14 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
       const next = graph[currentIndex].siblings[i];
       const vertex = graphControll.getVertexByIndex(next);
 
-      if (!visited.has(next) && canVisitedVertex(vertex)) {
+      if (!visited.includes(next) && canVisitedVertex(vertex)) {
+        logger.setVertex({
+          data: removeVertexV(visited),
+          name: "visited",
+        });
+
         stack.unshift(next);
-        visited.set(next, true);
+        visited.push(next);
 
         parent[next] = currentIndex;
         count++;

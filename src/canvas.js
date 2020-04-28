@@ -178,7 +178,7 @@ export function renderCanvas(canvas, context) {
 }
 
 let prev = null;
-export function renderPath({ context, path = [], color = "blue" }) {
+export function renderPath({ context, path = [], color = "green" }) {
   for (let i = 0; i < path.length; i++) {
     const position = getPositionByIndex(path[i]);
     const [x, y] = convertLocalPositionToGlobal(position);

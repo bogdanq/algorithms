@@ -11,6 +11,7 @@ export class GameLoop {
   start(state, context) {
     const { traversedVertexes, vertexesCount } = state;
     const gameState = $gameState.getState();
+    clearTimeout(this.animateId);
 
     if (gameState === gameStatus.END_GAME) {
       return;
@@ -21,11 +22,6 @@ export class GameLoop {
       return;
     }
 
-    // if (gameState === gameStatus.RESUME) {
-    //   cancelAnimationFrame(this.animateId);
-    //   return;
-    // }
-
     if (this.count < traversedVertexes.visited.length) {
       if (this.count < traversedVertexes.queue.length) {
         renderBarrier(
@@ -35,17 +31,14 @@ export class GameLoop {
         );
       }
 
-      renderBarrier(
-        traversedVertexes.visited[this.count],
-        context,
-        "rgb(175, 238, 238)"
+      renderBarrier(traversedVertexes.visited[this.count], context, "#afeeee");
+
+      this.animateId = setInterval(
+        () => this.start({ traversedVertexes, vertexesCount }, context),
+        300
       );
 
-      this.animateId = requestAnimationFrame(() =>
-        this.start({ traversedVertexes, vertexesCount }, context)
-      );
-
-      clearCanvas.watch(() => cancelAnimationFrame(this.animateId));
+      clearCanvas.watch(() => clearTimeout(this.animateId));
 
       this.count++;
     } else {
@@ -60,7 +53,7 @@ export class GameLoop {
   }
 
   clear() {
-    cancelAnimationFrame(this.animateId);
+    // cancelAnimationFrame(this.animateId);
     this.count = 1;
     this.animateId = null;
   }
