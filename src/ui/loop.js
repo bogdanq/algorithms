@@ -1,5 +1,5 @@
 import { clearCanvas } from "../graph";
-import { renderBarrier, renderPath } from "../canvas";
+import { renderPath } from "../canvas";
 import {
   gameStatus,
   $path,
@@ -7,6 +7,18 @@ import {
   $gameState,
   $currentTimer,
 } from "./model";
+import { getPositionByIndex, drawSquare } from "../config";
+
+export function renderVisitedVertex(barrier, context, color) {
+  for (let i = 0; i < barrier.length; i++) {
+    const [x, y] = getPositionByIndex(barrier[i]);
+    drawSquare({
+      position: [x, y],
+      context,
+      color,
+    });
+  }
+}
 
 export class GameLoop {
   constructor() {
@@ -30,10 +42,14 @@ export class GameLoop {
     }
 
     if (this.count < traversedVertexes.visited.length) {
-      renderBarrier(traversedVertexes.visited[this.count], context, "#afeeee");
+      renderVisitedVertex(
+        traversedVertexes.visited[this.count],
+        context,
+        "#afeeee"
+      );
 
       if (this.count < traversedVertexes.visited.length - 1) {
-        renderBarrier(
+        renderVisitedVertex(
           traversedVertexes.queue[this.count],
           context,
           "rgb(152, 251, 152)"
@@ -65,7 +81,6 @@ export class GameLoop {
   }
 
   clear() {
-    // cancelAnimationFrame(this.animateId);
     this.count = 1;
     this.animateId = null;
   }

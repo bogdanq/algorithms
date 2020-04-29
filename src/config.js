@@ -8,7 +8,7 @@ export const endPosition = 110;
 
 export const colorSchema = {
   borderColor: "#000",
-  blockColor: "#8080805c",
+  blockColor: "#808080",
   startEndColor: ["green", "red"],
 };
 
@@ -42,9 +42,10 @@ export function drawSquare({
   color = "rgb(152, 251, 152)",
   position,
   context,
+  width,
 }) {
   const [x, y] = convertLocalPositionToGlobal(position);
-  const size = cellSize - borderSize * 2;
+  const size = width || cellSize - borderSize * 4;
 
   context.fillStyle = color;
   context.fillRect(x + borderSize * 2, y + borderSize * 2, size, size);

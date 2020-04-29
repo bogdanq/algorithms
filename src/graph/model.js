@@ -1,4 +1,4 @@
-import { combine, createDomain } from "effector";
+import { combine, createDomain, sample, guard } from "effector";
 import { startPosition, endPosition } from "../config";
 import { graphControll } from "./controller";
 import {
@@ -6,6 +6,7 @@ import {
   setStartPositionToGraph,
   setEndPositionToGraph,
 } from "./utils";
+import { Barier } from "../ui/utils";
 
 const graphDomain = createDomain("graph");
 
@@ -23,18 +24,31 @@ export const $startEndPosition = graphDomain.store([
   endPosition,
 ]);
 
-export const $barrier = graphDomain.store([]);
+export const $barriers = graphDomain.store([]);
 
 graphDomain.onCreateStore((store) => store.reset(resetStore));
 
-$barrier
-  .on(setBarrier, (state, index) => {
-    const isFindIndex = state.includes(index);
+export const removedBarrier = guard({
+  source: sample({
+    source: $barriers,
+    clock: removeBarrierItem,
+    fn: (state, index) => state.find((item) => item.getIndex() === index),
+  }),
+  filter: Boolean,
+});
 
-    return isFindIndex ? state : [...state, index];
+removedBarrier.watch((item) => item.remove());
+
+$barriers
+  .on(setBarrier, (state, index) => {
+    const barrier = new Barier(index);
+
+    const isFindIndex = state.find((item) => item.getIndex() === index);
+
+    return isFindIndex ? state : [...state, barrier];
   })
-  .on(removeBarrierItem, (state, index) =>
-    state.filter((item) => item !== index)
+  .on(removedBarrier, (state, removed) =>
+    state.filter((item) => item !== removed)
   );
 
 $startEndPosition
@@ -42,7 +56,7 @@ $startEndPosition
   .on(triggerEndPosition, (state, index) => [state[0], index]);
 
 export const $graph = combine({
-  barrier: $barrier,
+  barrier: $barriers,
   startEndPosition: $startEndPosition,
 }).map((state) => {
   const [start, end] = state.startEndPosition;

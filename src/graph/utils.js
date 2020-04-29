@@ -1,8 +1,8 @@
 import { ceilType } from "../config";
 
 export function setBarrierToGraph(graph, barriers) {
-  barriers.forEach((barrierIndex) => {
-    graph.updateGraph({ index: barrierIndex, type: ceilType.BARIER });
+  barriers.forEach((barrier) => {
+    graph.updateGraph({ index: barrier.getIndex(), type: ceilType.BARIER });
   });
 }
 

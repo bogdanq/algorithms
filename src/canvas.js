@@ -47,18 +47,9 @@ const $algoritState = combine({
   gameState: $gameState,
 });
 
-export function renderBarrier(
-  barrier,
-  context,
-  color = colorSchema.blockColor
-) {
+export function renderBarrier(barrier, context) {
   for (let i = 0; i < barrier.length; i++) {
-    const [x, y] = getPositionByIndex(barrier[i]);
-    drawSquare({
-      position: [x, y],
-      context,
-      color,
-    });
+    barrier[i].render(context);
   }
 }
 
@@ -94,6 +85,7 @@ function renderCeil(event, state) {
 }
 
 function renderStart(index, state) {
+  console.log(state.barrier);
   const findIndex = state.barrier.includes(index);
   const [, endIndex] = state.startEndPosition;
 
