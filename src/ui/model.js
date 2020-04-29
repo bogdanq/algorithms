@@ -15,8 +15,10 @@ export const gameStatus = {
 const gameDomain = createDomain("game");
 
 export const setGameStatus = gameDomain.event();
+export const setTimer = gameDomain.event();
 
-export const $path = gameDomain.store([]).reset(resetStore, clearCanvas);
+export const $path = gameDomain.store({}).reset(resetStore, clearCanvas);
+export const $currentTimer = restore(setTimer, 16).reset(resetStore);
 
 export const $gameState = restore(setGameStatus, gameStatus.END_GAME).reset(
   resetStore
@@ -50,6 +52,11 @@ sample({
 
     clearCanvas();
 
-    return algoritm.searchFunction(start, end, graph.graph);
+    const time = window.performance.now();
+
+    const path = algoritm.searchFunction(start, end, graph.graph);
+    const timeEnd = window.performance.now() - time;
+
+    return { path, timeEnd };
   },
 });

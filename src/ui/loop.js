@@ -1,6 +1,12 @@
 import { clearCanvas } from "../graph";
 import { renderBarrier, renderPath } from "../canvas";
-import { gameStatus, $path, setGameStatus, $gameState } from "./model";
+import {
+  gameStatus,
+  $path,
+  setGameStatus,
+  $gameState,
+  $currentTimer,
+} from "./model";
 
 export class GameLoop {
   constructor() {
@@ -11,6 +17,7 @@ export class GameLoop {
   start(state, context) {
     const { traversedVertexes, vertexesCount } = state;
     const gameState = $gameState.getState();
+    const fps = $currentTimer.getState();
     clearTimeout(this.animateId);
 
     if (gameState === gameStatus.END_GAME) {
@@ -18,7 +25,7 @@ export class GameLoop {
     }
 
     if (gameState === gameStatus.PAUSE) {
-      cancelAnimationFrame(this.animateId);
+      clearTimeout(this.animateId);
       return;
     }
 
@@ -35,7 +42,7 @@ export class GameLoop {
 
       this.animateId = setInterval(
         () => this.start({ traversedVertexes, vertexesCount }, context),
-        1000 / 20
+        this.getFps(fps)
       );
 
       clearCanvas.watch(() => clearTimeout(this.animateId));
@@ -44,12 +51,17 @@ export class GameLoop {
     } else {
       setGameStatus(gameStatus.END_GAME);
       this.clear();
-      const path = $path.getState();
+      const { path } = $path.getState();
       renderPath({
         path,
         context,
       });
     }
+  }
+
+  getFps(fps) {
+    const newFps = parseInt(fps) === 1 ? fps : fps * 10;
+    return 1000 / newFps;
   }
 
   clear() {
@@ -59,7 +71,7 @@ export class GameLoop {
   }
 
   removeAnimation() {
-    cancelAnimationFrame(this.animateId);
+    clearTimeout(this.animateId);
   }
 }
 
