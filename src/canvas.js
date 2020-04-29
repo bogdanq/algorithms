@@ -85,8 +85,7 @@ function renderCeil(event, state) {
 }
 
 function renderStart(index, state) {
-  console.log(state.barrier);
-  const findIndex = state.barrier.includes(index);
+  const findIndex = state.barrier.find((barrier) => barrier.index === index);
   const [, endIndex] = state.startEndPosition;
 
   if (!findIndex && index !== endIndex) {
@@ -94,8 +93,8 @@ function renderStart(index, state) {
   }
 }
 
-function renderEnd(index, state, lastIndex) {
-  const findIndex = state.barrier.includes(index);
+function renderEnd(index, state) {
+  const findIndex = state.barrier.find((barrier) => barrier.index === index);
   const [startIndex] = state.startEndPosition;
 
   if (!findIndex && index !== startIndex) {
