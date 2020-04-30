@@ -1,12 +1,9 @@
 import { graphControll } from "../graph";
-import { createLogger } from "../index";
-import { canVisitedVertex, restorePath, removeDoubleVertex } from "./utils";
+import { canVisitedVertex, restorePath } from "./utils";
+import { AlgoritmController } from "./controller";
 
 export function depthFirstSearch(startIndex, endIndex, graph) {
-  const logger = createLogger();
-  const removeVertexQ = removeDoubleVertex();
-  const removeVertexV = removeDoubleVertex();
-  let count = 0;
+  const aInfo = new AlgoritmController();
 
   let isWork = true;
   const stack = [startIndex];
@@ -16,10 +13,7 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
   while (isWork && stack.length > 0) {
     const currentIndex = stack.shift();
 
-    logger.setVertex({
-      data: removeVertexV(visited),
-      name: "visited",
-    });
+    aInfo.addToVisited(visited);
 
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
       const next = graph[currentIndex].siblings[i];
@@ -30,7 +24,7 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
         visited.push(next);
 
         parent[next] = currentIndex;
-        count++;
+        aInfo.increment();
       }
 
       if (next === endIndex) {
@@ -39,13 +33,14 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
       }
     }
 
-    logger.setVertex({
-      data: removeVertexQ(stack),
-      name: "queue",
-    });
+    aInfo.addToProcessing(stack);
   }
 
-  logger.setDrowAnimated(count);
+  const result = aInfo.getAlgotitmResult();
+  const path = restorePath(endIndex, startIndex, parent);
 
-  return restorePath(endIndex, startIndex, parent);
+  return {
+    path,
+    ...result,
+  };
 }

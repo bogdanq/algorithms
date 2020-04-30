@@ -16,7 +16,6 @@ import {
   $algoritms,
   selectAlgoritm,
   $currentAlgoritm,
-  $numberOfIterations,
 } from "./algoritms/model";
 
 import "./styles.css";
@@ -25,10 +24,7 @@ import { sample, createStore, guard } from "effector";
 const $store = createStore({});
 
 sample({
-  source: {
-    numberOfIterations: $numberOfIterations,
-    path: $path,
-  },
+  source: $path,
   clock: endGame,
   target: $store,
 });
@@ -47,14 +43,14 @@ export default function App() {
           <h2 className="select-bar_title">Информация:</h2>
           <div className="info-wrapper">
             <h3 className="select-bar_info">
-              Количество итераций: <span>{store?.numberOfIterations || 0}</span>
+              Количество итераций: <span>{store?.count || 0}</span>
             </h3>
             <h3 className="select-bar_info">
               Время прохождения:
-              <span> {store?.path?.timeEnd?.toFixed(4) || 0} ms</span>
+              <span> {store?.timeEnd?.toFixed(4) || 0} ms</span>
             </h3>
             <h3 className="select-bar_info">
-              Длина пути: <span>{store?.path?.path?.length || 0}</span>
+              Длина пути: <span>{store?.path?.length || 0}</span>
             </h3>
           </div>
           <h2 className="select-bar_title">Выбирите алгоритм:</h2>

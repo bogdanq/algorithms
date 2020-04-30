@@ -26,18 +26,11 @@ import {
   clearCanvas,
 } from "./graph";
 
-import { gameStatus, $gameState, gameLoop } from "./game";
-import {
-  $canDrowAnimated,
-  $traversedVertexes,
-  $vertexesCount,
-} from "./algoritms";
+import { gameStatus, $gameState, gameLoop, $path } from "./game";
 
 const $algoritState = combine({
-  canDrowAnimated: $canDrowAnimated,
-  traversedVertexes: $traversedVertexes,
-  vertexesCount: $vertexesCount,
   gameState: $gameState,
+  path: $path,
 });
 
 export function renderBarrier(barrier, context) {
@@ -149,14 +142,14 @@ export function renderCanvas(canvas, context) {
     clock: merge([resetStore, clearCanvas]),
   }).watch(render);
 
-  $algoritState.watch(({ canDrowAnimated, gameState, ...state }) => {
-    if (canDrowAnimated) {
+  $algoritState.watch(({ canDrowAnimated, gameState, path }) => {
+    if (path.timeEnd) {
       if (gameState === gameStatus.START) {
         gameLoop.clear();
       }
 
       gameLoop.removeAnimation();
-      gameLoop.start(state, context);
+      gameLoop.start(path, context);
     }
   });
 }

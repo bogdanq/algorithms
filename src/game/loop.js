@@ -15,8 +15,8 @@ export class GameLoop {
     this.animateId = null;
   }
 
-  start(state, context) {
-    const { traversedVertexes, vertexesCount } = state;
+  start(path, context) {
+    const { visited, processing } = path;
     const gameState = $gameState.getState();
     const fps = $currentTimer.getState();
 
@@ -31,23 +31,19 @@ export class GameLoop {
       return;
     }
 
-    if (this.count < traversedVertexes.visited.length) {
-      renderVisitedVertex(
-        traversedVertexes.visited[this.count],
-        context,
-        "#afeeee"
-      );
+    if (this.count < visited.length) {
+      renderVisitedVertex(visited[this.count], context, "#afeeee");
 
-      if (this.count < traversedVertexes.visited.length - 1) {
+      if (this.count < visited.length - 1) {
         renderVisitedVertex(
-          traversedVertexes.queue[this.count],
+          processing[this.count],
           context,
           "rgb(152, 251, 152)"
         );
       }
 
       this.animateId = setInterval(
-        () => this.start({ traversedVertexes, vertexesCount }, context),
+        () => this.start({ visited, processing }, context),
         this.getFps(fps)
       );
 

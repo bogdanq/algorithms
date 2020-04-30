@@ -2,6 +2,7 @@ import { sample, guard, restore, forward, createDomain } from "effector";
 import { $graph, resetStore, clearCanvas } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
 import { canvasControl } from "../control-canvas";
+import { removeDoubleVertex } from "../algoritms";
 
 export const gameStatus = {
   START: "START",
@@ -54,9 +55,15 @@ sample({
 
     const time = window.performance.now();
 
-    const path = algoritm.searchFunction(start, end, graph.graph);
+    const result = algoritm.searchFunction(start, end, graph.graph);
+
     const timeEnd = window.performance.now() - time;
 
-    return { path, timeEnd };
+    return {
+      ...result,
+      visited: removeDoubleVertex(result.visited),
+      processing: removeDoubleVertex(result.processing),
+      timeEnd,
+    };
   },
 });
