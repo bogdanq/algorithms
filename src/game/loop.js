@@ -66,7 +66,7 @@ export class GameLoop {
   }
 
   getFps(fps) {
-    const newFps = parseInt(fps) === 1 ? fps : fps * 10;
+    const newFps = fps === 1 ? fps : fps * 10;
     return 1000 / newFps;
   }
 

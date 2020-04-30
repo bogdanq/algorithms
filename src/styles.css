@@ -20,11 +20,11 @@ li:hover {
   color: #fff;
 }
 .isActive:after {
-  content: "+";
+  content: "✔";
   position: absolute;
   color: #b9ecb9;
   right: 0;
-  top: 50%;
+  top: 40%;
   font-size: 30px;
   transform: translateY(-50%);
 }
@@ -47,9 +47,18 @@ li:hover {
   width: 250px;
 }
 
+.info-wrapper {
+  text-align: left;
+}
+
+.select-bar:hover {
+  cursor: move;
+}
+
 .btn-wrapper {
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .btn {
@@ -59,5 +68,14 @@ li:hover {
   font-size: 90%;
   cursor: pointer;
   padding: 2px 8px;
-  width: 28%;
+  margin: 10px 5px;
+}
+
+.select-bar_info {
+  font-size: 0.9em;
+}
+
+.select-bar_info span {
+  font-style: italic;
+  text-decoration: underline;
 }
