@@ -26,19 +26,12 @@ import {
   clearCanvas,
 } from "./graph";
 
-import {
-  $path,
-  $isValidGameState,
-  gameStatus,
-  setGameStatus,
-  $gameState,
-} from "./ui/model";
+import { gameStatus, $gameState, gameLoop } from "./ui";
 import {
   $canDrowAnimated,
   $traversedVertexes,
   $vertexesCount,
 } from "./algoritms";
-import { GameLoop, gameLoop } from "./ui/loop";
 
 const $algoritState = combine({
   canDrowAnimated: $canDrowAnimated,

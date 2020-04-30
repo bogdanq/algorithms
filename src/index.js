@@ -7,4 +7,4 @@ ReactDOM.render(<App />, rootElement);
 
 export * from "./algoritms";
 export * from "./graph";
-export * from "./ui/model";
+export * from "./ui";

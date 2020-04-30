@@ -9,7 +9,8 @@ import {
   endGame,
   $currentTimer,
   setTimer,
-} from "./ui/model";
+  checkGameStatus,
+} from "./ui";
 import {
   $algoritms,
   selectAlgoritm,
@@ -18,7 +19,6 @@ import {
 } from "./algoritms/model";
 
 import "./styles.css";
-import { checkGameStatus } from "./ui/utils";
 import { sample, createStore, guard } from "effector";
 
 const $store = createStore({});

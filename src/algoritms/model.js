@@ -8,7 +8,7 @@ import {
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";
 import { clearCanvas, resetStore } from "../graph";
-import { setGameStatus, gameStatus } from "../ui/model";
+import { setGameStatus, gameStatus } from "../ui";
 
 const algoritmsDomain = createDomain();
 
