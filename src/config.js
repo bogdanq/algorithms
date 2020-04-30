@@ -76,9 +76,8 @@ export function getTargetIndex(event) {
   return index;
 }
 
-export function drawMark({ color = "#e84a4a", position, context, width }) {
+export function drawMark({ color = "#e84a4a", position, context }) {
   const [x, y] = convertLocalPositionToGlobal(position);
-  const size = cellSize - borderSize * 4;
 
   context.strokeStyle = color;
 
