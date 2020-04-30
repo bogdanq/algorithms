@@ -7,18 +7,7 @@ import {
   $gameState,
   $currentTimer,
 } from "./model";
-import { getPositionByIndex, drawSquare } from "../config";
-
-export function renderVisitedVertex(barrier, context, color) {
-  for (let i = 0; i < barrier.length; i++) {
-    const [x, y] = getPositionByIndex(barrier[i]);
-    drawSquare({
-      position: [x, y],
-      context,
-      color,
-    });
-  }
-}
+import { renderVisitedVertex } from "./utils";
 
 export class GameLoop {
   constructor() {
@@ -30,6 +19,7 @@ export class GameLoop {
     const { traversedVertexes, vertexesCount } = state;
     const gameState = $gameState.getState();
     const fps = $currentTimer.getState();
+
     clearTimeout(this.animateId);
 
     if (gameState === gameStatus.END_GAME) {
