@@ -8,7 +8,7 @@ export const endPosition = 110;
 
 export const colorSchema = {
   borderColor: "#000",
-  blockColor: "#808080",
+  blockColor: "#bbbbbb",
   startEndColor: ["green", "red"],
 };
 
@@ -45,7 +45,7 @@ export function drawSquare({
   width,
 }) {
   const [x, y] = convertLocalPositionToGlobal(position);
-  const size = width || cellSize - borderSize * 4;
+  const size = width || cellSize - borderSize * 2;
 
   context.fillStyle = color;
   context.fillRect(x + borderSize * 2, y + borderSize * 2, size, size);
@@ -74,4 +74,21 @@ export function getTargetIndex(event) {
   const index = getIndexByPosition([w, h]);
 
   return index;
+}
+
+export function drawMark({ color = "#e84a4a", position, context, width }) {
+  const [x, y] = convertLocalPositionToGlobal(position);
+  const size = cellSize - borderSize * 4;
+
+  context.strokeStyle = color;
+
+  context.beginPath();
+  context.moveTo(x + 10, y + 10);
+  context.lineTo(x + cellSize - 10, y + cellSize - 10);
+  context.stroke();
+
+  context.beginPath();
+  context.moveTo(x + cellSize - 10, y + 10);
+  context.lineTo(x + 10, y + cellSize - 10);
+  context.stroke();
 }

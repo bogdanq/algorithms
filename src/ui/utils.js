@@ -1,4 +1,9 @@
-import { getPositionByIndex, drawSquare, colorSchema } from "../config";
+import {
+  getPositionByIndex,
+  drawSquare,
+  colorSchema,
+  drawMark,
+} from "../config";
 
 export function checkGameStatus(target, ...status) {
   return status.some((item) => target === item);
@@ -56,56 +61,75 @@ export class Barier {
   }
 }
 
-function drawSquareWithAnimation({ position, context, color, width }) {
+function drawSquareWithAnimation({
+  position: [x, y],
+  context,
+  color,
+  width,
+  scale = 0.3,
+}) {
   let widthC = width;
   let animateId;
+  let scaleN = scale;
 
-  if (width < 34) {
+  if (width < 35) {
     animateId = requestAnimationFrame(() =>
       drawSquareWithAnimation({
-        position,
+        position: [x, y],
         context,
         color,
         width: widthC,
+        scale: scaleN,
       })
     );
 
     drawSquare({
-      position,
+      position: [x + scaleN, y + scaleN],
       context,
       color,
       width: widthC,
     });
+
+    if (scaleN > 0 && widthC % 5 === 0) {
+      scaleN = scaleN - 0.1;
+    }
+
     widthC++;
   } else {
     cancelAnimationFrame(animateId);
   }
 }
 
-function drawSquareWithAnimationMin({ position, context, color, width }) {
+function drawSquareWithAnimationMin({
+  position: [x, y],
+  context,
+  color,
+  width,
+}) {
   let widthC = width;
   let animateId;
 
   if (width < 34) {
     animateId = requestAnimationFrame(() =>
       drawSquareWithAnimationMin({
-        position,
+        position: [x, y],
         context,
         color,
         width: widthC,
       })
     );
 
-    drawSquare({
-      position,
+    drawMark({
+      position: [x, y],
       context,
       color,
       width: widthC,
     });
+
     widthC++;
   } else {
     drawSquare({
-      position,
+      position: [x, y],
       context,
       color: "#fff",
       width: 0,
