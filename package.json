@@ -11,6 +11,7 @@
   "dependencies": {
     "effector": "20.13.5",
     "effector-react": "20.6.3",
+    "fastpriorityqueue": "0.6.3",
     "gh-pages": "2.2.0",
     "react": "16.12.0",
     "react-dom": "16.12.0",

@@ -45,8 +45,8 @@ class Graph {
     const botRight = this.getBotRightDiagonal(down, right);
     const botLeft = this.getBotLeftDiagonal(down, left);
 
-    // return [left, top, right, down];
-    return [left, topLeft, top, topRight, right, botRight, down, botLeft];
+    return [left, top, right, down];
+    // return [left, topLeft, top, topRight, right, botRight, down, botLeft];
   }
 
   getTopLeftDiagonal(top, left) {

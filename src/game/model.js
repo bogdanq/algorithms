@@ -61,8 +61,8 @@ sample({
 
     return {
       ...result,
-      visited: removeDoubleVertex(result.visited),
-      processing: removeDoubleVertex(result.processing),
+      // visited: removeDoubleVertex(result.visited),
+      // processing: removeDoubleVertex(result.processing),
       timeEnd,
     };
   },

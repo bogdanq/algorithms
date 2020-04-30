@@ -3,7 +3,7 @@ import { canVisitedVertex, restorePath } from "./utils";
 import { AlgoritmController } from "./controller";
 
 export function depthFirstSearch(startIndex, endIndex, graph) {
-  const aInfo = new AlgoritmController();
+  const aInfo = new AlgoritmController(startIndex, endIndex);
 
   let isWork = true;
   const stack = [startIndex];

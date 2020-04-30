@@ -1,8 +1,9 @@
 export class AlgoritmController {
-  constructor() {
+  constructor(startIndex, endIndex) {
     this.count = 0;
     this.processing = [];
     this.visited = [];
+    this.startIndex = startIndex;
   }
 
   increment() {
@@ -14,7 +15,7 @@ export class AlgoritmController {
   }
 
   addToVisited(visited) {
-    this.visited.push([...visited]);
+    this.visited.push([...visited.filter((item) => item !== this.startIndex)]);
   }
 
   getAlgotitmResult() {

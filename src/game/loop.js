@@ -11,7 +11,7 @@ import { renderVisitedVertex } from "./utils";
 
 export class GameLoop {
   constructor() {
-    this.count = 1;
+    this.count = 0;
     this.animateId = null;
   }
 
@@ -31,16 +31,16 @@ export class GameLoop {
       return;
     }
 
-    if (this.count < visited.length) {
-      renderVisitedVertex(visited[this.count], context, "#afeeee");
-
-      if (this.count < visited.length - 1) {
+    if (this.count < processing.length) {
+      if (this.count < processing.length - 1) {
         renderVisitedVertex(
           processing[this.count],
           context,
           "rgb(152, 251, 152)"
         );
       }
+
+      renderVisitedVertex(visited[this.count], context, "#afeeee");
 
       this.animateId = setInterval(
         () => this.start({ visited, processing }, context),
@@ -67,7 +67,7 @@ export class GameLoop {
   }
 
   clear() {
-    this.count = 1;
+    this.count = 0;
     this.animateId = null;
   }
 

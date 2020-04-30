@@ -3,12 +3,14 @@ import { canVisitedVertex, restorePath } from "./utils";
 import { AlgoritmController } from "./controller";
 
 export function breadthFirstSearch(startIndex, endIndex, graph) {
-  const aInfo = new AlgoritmController();
+  const aInfo = new AlgoritmController(startIndex, endIndex);
 
   let isWork = true;
   const queue = [startIndex];
   const visited = [startIndex];
   const parent = {};
+
+  // console.time("start");
 
   while (isWork && queue.length > 0) {
     const currentIndex = queue.shift();
@@ -35,6 +37,7 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
 
     aInfo.addToProcessing(queue);
   }
+  // console.timeEnd("start");
 
   const result = aInfo.getAlgotitmResult();
   const path = restorePath(endIndex, startIndex, parent);
