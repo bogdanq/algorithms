@@ -1,5 +1,5 @@
 import { getTargetIndex } from "./config";
-import { $gameState, gameStatus, checkGameStatus } from "./ui";
+import { $gameState, gameStatus, checkGameStatus } from "./game";
 
 class Controll {
   constructor() {

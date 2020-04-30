@@ -26,7 +26,7 @@ import {
   clearCanvas,
 } from "./graph";
 
-import { gameStatus, $gameState, gameLoop } from "./ui";
+import { gameStatus, $gameState, gameLoop } from "./game";
 import {
   $canDrowAnimated,
   $traversedVertexes,

@@ -10,7 +10,7 @@ import {
   $currentTimer,
   setTimer,
   checkGameStatus,
-} from "./ui";
+} from "./game";
 import {
   $algoritms,
   selectAlgoritm,

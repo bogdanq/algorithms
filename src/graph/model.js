@@ -6,7 +6,7 @@ import {
   setStartPositionToGraph,
   setEndPositionToGraph,
 } from "./utils";
-import { Barier } from "../ui";
+import { Barier } from "../game";
 
 const graphDomain = createDomain("graph");
 
