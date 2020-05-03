@@ -30,6 +30,11 @@ export const startGame = guard({
   filter: $gameState.map((state) => state === gameStatus.START),
 });
 
+export const resumeGame = guard({
+  source: $gameState,
+  filter: $gameState.map((state) => state === gameStatus.RESUME),
+});
+
 guard({
   source: $gameState,
   filter: $gameState.map((state) => state === gameStatus.CLEAR),

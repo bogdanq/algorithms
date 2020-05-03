@@ -5,19 +5,20 @@ import {
   sample,
   guard,
   combine,
+  merge,
 } from "effector";
-
 import { renderPath } from "../canvas";
+import { addVisitedVertex, addProcessedVertex } from "../algoritms";
+import { clearCanvas, resetStore } from "../graph";
+import { checkGameStatus } from "./utils";
 import {
   gameStatus,
   setGameStatus,
   $gameState,
   $currentTimer,
   startGame,
+  resumeGame,
 } from "./model";
-
-import { addVisitedVertex, addProcessedVertex } from "../algoritms";
-import { clearCanvas, resetStore } from "../graph";
 
 const tickFx = createEffect().use(
   (fps) => new Promise((rs) => setTimeout(rs, 1000 / fps))
@@ -45,14 +46,18 @@ export function createTick(store, context) {
   });
 
   guard({
-    source: startGame,
-    filter: $gameState.map((state) => state === gameStatus.START),
+    source: merge([startGame, resumeGame]),
+    filter: $gameState.map((state) =>
+      checkGameStatus(state, gameStatus.RESUME, gameStatus.START)
+    ),
     target: tickWithParams,
   });
 
   guard({
     source: tickWithParams.done,
-    filter: $gameState.map((state) => state === gameStatus.START),
+    filter: $gameState.map((state) =>
+      checkGameStatus(state, gameStatus.RESUME, gameStatus.START)
+    ),
     target: tickWithParams,
   });
 }
