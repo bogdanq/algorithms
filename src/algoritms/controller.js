@@ -4,18 +4,16 @@ export class AlgoritmController {
     this.processing = [];
     this.visited = [];
     this.startIndex = startIndex;
+    this.endIndex = endIndex;
   }
 
   increment() {
     this.count++;
   }
 
-  addToProcessing(processing) {
-    this.processing.push([...processing]);
-  }
-
-  addToVisited(visited) {
-    this.visited.push([...visited.filter((item) => item !== this.startIndex)]);
+  addVertex(processing, visited) {
+    this.processing.push(processing);
+    this.visited.push(visited);
   }
 
   getAlgotitmResult() {

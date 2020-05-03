@@ -13,8 +13,18 @@ import { setGameStatus, gameStatus } from "../game";
 const algoritmsDomain = createDomain();
 
 export const selectAlgoritm = createEvent();
+export const addVisitedVertex = createEvent();
+export const addProcessedVertex = createEvent();
 
 export const $currentAlgoritm = restore(selectAlgoritm, "bredth first search");
+export const $visitedVertex = algoritmsDomain.store([]);
+export const $processedVertex = algoritmsDomain.store({
+  vertex: 0,
+  siblings: [],
+});
+
+$visitedVertex.on(addVisitedVertex, (state, vertex) => [...state, vertex]);
+$processedVertex.on(addProcessedVertex, (_, processed) => processed);
 
 export const $algoritms = createStore([
   {

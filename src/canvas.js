@@ -26,11 +26,25 @@ import {
   clearCanvas,
 } from "./graph";
 
-import { gameStatus, $gameState, gameLoop, $path } from "./game";
+import {
+  gameStatus,
+  $gameState,
+  $path,
+  renderVisitedVertexByArr,
+  renderVisitedVertex,
+  createTick,
+} from "./game";
+import { $visitedVertex, $processedVertex } from "./algoritms";
 
 const $algoritState = combine({
   gameState: $gameState,
   path: $path,
+});
+
+const $mainState = combine({
+  visitedVertex: $visitedVertex,
+  graph: $graph,
+  processedVertex: $processedVertex,
 });
 
 export function renderBarrier(barrier, context) {
@@ -118,40 +132,32 @@ export function renderCanvas(canvas, context) {
   configureCanvas(canvas, globalSize);
 
   canvasControl.registerClickEventToCanvas(canvas);
-  canvasControl.addMouseMoveEvent((e, s) => {
-    return renderLogic(e, s);
-  });
+  canvasControl.addMouseMoveEvent(renderLogic);
   canvasControl.addMouseUpEvent(() => (type = null));
   canvasControl.addMouseClickEvent((e, s) => renderCeil(e, s).renderForClick());
 
-  function render(state) {
+  function render({ graph, visitedVertex, processedVertex }) {
     clearALlCanvas(context, canvas);
-    canvasControl.setState(state);
+    canvasControl.setState(graph);
+    renderVisitedVertexByArr(processedVertex.siblings, context, "#d2ef99");
+    renderVisitedVertex(processedVertex.vertex, context, "#f3fc23");
 
-    renderActionsCeil(state.startEndPosition, context);
-    renderBarrier(state.barrier, context);
+    renderVisitedVertexByArr(visitedVertex, context, "#00bcd4");
+    renderActionsCeil(graph.startEndPosition, context);
+    renderBarrier(graph.barrier, context);
 
     gridData.applyStyles();
     context.stroke(gridData.grid);
   }
 
-  $graph.watch(render);
+  $mainState.watch(render);
 
   sample({
-    source: $graph,
+    source: $mainState,
     clock: merge([resetStore, clearCanvas]),
   }).watch(render);
 
-  $algoritState.watch(({ canDrowAnimated, gameState, path }) => {
-    if (path.timeEnd) {
-      if (gameState === gameStatus.START) {
-        gameLoop.clear();
-      }
-
-      gameLoop.removeAnimation();
-      gameLoop.start(path, context);
-    }
-  });
+  createTick($path, context);
 }
 
 let prev = null;

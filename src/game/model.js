@@ -36,6 +36,12 @@ guard({
   target: resetStore,
 });
 
+guard({
+  source: $gameState,
+  filter: $gameState.map((state) => state === gameStatus.START),
+  target: clearCanvas,
+});
+
 export const endGame = guard({
   source: $gameState,
   filter: $gameState.map((state) => state === gameStatus.END_GAME),
@@ -51,8 +57,6 @@ sample({
   fn: ({ graph, algoritm }) => {
     const [start, end] = graph.startEndPosition;
 
-    clearCanvas();
-
     const time = window.performance.now();
 
     const result = algoritm.searchFunction(start, end, graph.graph);
@@ -61,9 +65,9 @@ sample({
 
     return {
       ...result,
-      // visited: removeDoubleVertex(result.visited),
-      // processing: removeDoubleVertex(result.processing),
       timeEnd,
     };
   },
 });
+
+$graph.watch(clearCanvas);

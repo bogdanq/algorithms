@@ -7,13 +7,20 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
 
   let isWork = true;
   const stack = [startIndex];
-  const visited = [startIndex];
+  const visited = [];
   const parent = {};
+  let prevIndex = null;
 
   while (isWork && stack.length > 0) {
     const currentIndex = stack.shift();
 
-    aInfo.addToVisited(visited);
+    aInfo.addVertex(
+      {
+        vertex: currentIndex,
+        siblings: graph[currentIndex].siblings,
+      },
+      prevIndex
+    );
 
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
       const next = graph[currentIndex].siblings[i];
@@ -32,8 +39,7 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
         break;
       }
     }
-
-    aInfo.addToProcessing(stack);
+    prevIndex = currentIndex;
   }
 
   const result = aInfo.getAlgotitmResult();

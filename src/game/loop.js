@@ -1,79 +1,77 @@
-import { clearCanvas } from "../graph";
+import {
+  createEffect,
+  attach,
+  createStore,
+  sample,
+  guard,
+  combine,
+} from "effector";
+
 import { renderPath } from "../canvas";
 import {
   gameStatus,
-  $path,
   setGameStatus,
   $gameState,
   $currentTimer,
+  startGame,
 } from "./model";
-import { renderVisitedVertex } from "./utils";
 
-export class GameLoop {
-  constructor() {
-    this.count = 0;
-    this.animateId = null;
-  }
+import { addVisitedVertex, addProcessedVertex } from "../algoritms";
+import { clearCanvas, resetStore } from "../graph";
 
-  start(path, context) {
-    const { visited, processing } = path;
-    const gameState = $gameState.getState();
-    const fps = $currentTimer.getState();
+const tickFx = createEffect().use(
+  (fps) => new Promise((rs) => setTimeout(rs, 1000 / fps))
+);
 
-    clearTimeout(this.animateId);
+export function createTick(store, context) {
+  const $animationCount = createStore(0).reset(clearCanvas, resetStore);
 
-    if (gameState === gameStatus.END_GAME) {
-      return;
-    }
+  const tickWithParams = attach({
+    effect: tickFx,
+    source: $currentTimer,
+    mapParams: (_, fps) => fps,
+  });
 
-    if (gameState === gameStatus.PAUSE) {
-      clearTimeout(this.animateId);
-      return;
-    }
+  const $combineState = combine(
+    store,
+    $animationCount,
+    (store, animationCount) => ({ state: store, animationCount })
+  );
 
-    if (this.count < processing.length) {
-      if (this.count < processing.length - 1) {
-        renderVisitedVertex(
-          processing[this.count],
-          context,
-          "rgb(152, 251, 152)"
-        );
-      }
+  $animationCount.on(tickWithParams.done, (state) => state + 1);
 
-      renderVisitedVertex(visited[this.count], context, "#afeeee");
+  sample($combineState, tickWithParams).watch((state) => {
+    animatedVisitedVertex(state, context);
+  });
 
-      this.animateId = setInterval(
-        () => this.start({ visited, processing }, context),
-        this.getFps(fps)
-      );
+  guard({
+    source: startGame,
+    filter: $gameState.map((state) => state === gameStatus.START),
+    target: tickWithParams,
+  });
 
-      clearCanvas.watch(() => clearTimeout(this.animateId));
-
-      this.count++;
-    } else {
-      setGameStatus(gameStatus.END_GAME);
-      this.clear();
-      const { path } = $path.getState();
-      renderPath({
-        path,
-        context,
-      });
-    }
-  }
-
-  getFps(fps) {
-    const newFps = fps === 1 ? fps : fps * 10;
-    return 1000 / newFps;
-  }
-
-  clear() {
-    this.count = 0;
-    this.animateId = null;
-  }
-
-  removeAnimation() {
-    clearTimeout(this.animateId);
-  }
+  guard({
+    source: tickWithParams.done,
+    filter: $gameState.map((state) => state === gameStatus.START),
+    target: tickWithParams,
+  });
 }
 
-export const gameLoop = new GameLoop();
+export function animatedVisitedVertex({ animationCount, state }, context) {
+  const { processing } = state;
+
+  if (animationCount < processing.length) {
+    addProcessedVertex(processing[animationCount]);
+
+    if (processing[animationCount - 1]) {
+      addVisitedVertex(processing[animationCount - 1].vertex);
+    }
+  } else {
+    setGameStatus(gameStatus.END_GAME);
+
+    renderPath({
+      path: state.path,
+      context,
+    });
+  }
+}
