@@ -14,12 +14,11 @@ class Controll {
   init() {
     $gameState.watch((state) => {
       if (
-        checkGameStatus(
-          state,
+        checkGameStatus(state, [
           gameStatus.START,
           gameStatus.PAUSE,
-          gameStatus.RESUME
-        )
+          gameStatus.RESUME,
+        ])
       ) {
         this.disabledListener();
       } else {

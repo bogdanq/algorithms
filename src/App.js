@@ -72,12 +72,11 @@ export default function App() {
             >
               Старт
             </button>
-            {checkGameStatus(
-              gameState,
+            {checkGameStatus(gameState, [
               gameStatus.START,
               gameStatus.PAUSE,
-              gameStatus.RESUME
-            ) && (
+              gameStatus.RESUME,
+            ]) && (
               <>
                 <button
                   className="btn"

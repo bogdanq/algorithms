@@ -1,6 +1,6 @@
 import { getPositionByIndex, drawSquare } from "../config";
 
-export function checkGameStatus(target, ...status) {
+export function checkGameStatus(target, status) {
   return status.some((item) => target === item);
 }
 
