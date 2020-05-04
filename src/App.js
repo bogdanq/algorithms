@@ -19,26 +19,11 @@ import {
 } from "./algoritms/model";
 
 import "./styles.css";
-import { sample, createStore, guard } from "effector";
+import { sample, createStore } from "effector";
 
 import { InfoDraggable } from "./gui/ui/organisms/info-block";
-import styled from "styled-components";
 
 const $store = createStore({});
-
-const Wrapper = styled.div`
-  display: flex;
-  position: fixed;
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  border-radius: 8px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-  cursor: default;
-  right: 20px;
-  top: 20px;
-  width: 250px;
-`;
 
 sample({
   source: $path,
@@ -52,8 +37,6 @@ export default function App() {
   const gameState = useStore($gameState);
   const store = useStore($store);
   const currentTimer = useStore($currentTimer);
-
-  const [modalIsOpen, setIsOpen] = React.useState(false);
 
   return (
     <div className="App">
