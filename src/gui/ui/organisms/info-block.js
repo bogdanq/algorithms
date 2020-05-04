@@ -2,11 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import Draggable from "react-draggable";
 import { Settings, Info, AboutAlgoritms } from "../molecules";
+import { History } from "./history";
 
 const Wrapper = styled.div`
   display: flex;
   position: fixed;
-  padding: 10px;
+  padding: 15px 10px;
   background-color: rgba(0, 0, 0, 0.6);
   color: #fff;
   border-radius: 8px;
@@ -14,7 +15,6 @@ const Wrapper = styled.div`
   cursor: default;
   left: 20px;
   bottom: 20px;
-  width: 250px;
 
   &:hover {
     cursor: move;
@@ -34,6 +34,7 @@ export function InfoDraggable() {
         <Info />
         <Settings />
         <AboutAlgoritms />
+        <History />
       </Wrapper>
     </Draggable>
   );

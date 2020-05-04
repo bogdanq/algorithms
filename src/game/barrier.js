@@ -49,5 +49,7 @@ export class Barier {
       position: this.position,
       context: this.context,
     });
+
+    this.canRemove = false;
   }
 }

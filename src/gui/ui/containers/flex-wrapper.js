@@ -4,4 +4,5 @@ export const FlexContainer = styled.div`
   display: flex;
   flex-direction: ${({ direction }) => direction || "row"};
   align-items: center;
+  flex-wrap: wrap;
 `;
