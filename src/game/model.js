@@ -1,8 +1,6 @@
-import { sample, guard, restore, forward, createDomain } from "effector";
+import { sample, guard, restore, createDomain } from "effector";
 import { $graph, resetStore, clearCanvas } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
-import { canvasControl } from "../control-canvas";
-import { removeDoubleVertex } from "../algoritms";
 
 export const gameStatus = {
   START: "START",
@@ -74,5 +72,3 @@ sample({
     };
   },
 });
-
-$graph.watch(clearCanvas);
