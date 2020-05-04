@@ -62,7 +62,8 @@ function HistoryList({ historyGame, setOpen }) {
 }
 
 const HistoryItem = styled.div`
-  border: 1px solid #666666;
+  border: 2px solid #666666;
+  border-radius: 10px;
   padding: 5px 10px;
   cursor: pointer;
   margin: 5px;
@@ -71,16 +72,16 @@ const HistoryItem = styled.div`
   ${({ active }) =>
     active &&
     css`
-      border: 1px solid green;
+      border: 2px solid #00bcd4;
     `}
 
   &:hover {
-    border: 1px solid #fff;
+    border: 2px solid #00bcd4;
   }
 `;
 
 const HistoryListWrapper = styled.div`
-  overflow-y: scroll;
+  overflow-y: auto;
   max-height: 500px;
 `;
 
