@@ -23,6 +23,7 @@ export const gameStatus = {
   RESUME: "RESUME",
   CLEAR: "CLEAR",
   END_GAME: "END_GAME",
+  RESET: "RESET",
 };
 
 const gameDomain = createDomain("game");
@@ -48,7 +49,7 @@ export const $currentGame = restore(setCurrentGame, null).reset(
   clearCanvas
 );
 
-export const $gameState = restore(setGameStatus, gameStatus.END_GAME).reset(
+export const $gameState = restore(setGameStatus, gameStatus.RESET).reset(
   resetStore
 );
 
