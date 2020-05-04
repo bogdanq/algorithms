@@ -7,6 +7,7 @@ import {
   $startEndPosition,
 } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
+import { equal } from "./utils";
 
 export const gameStatus = {
   START: "START",
@@ -31,7 +32,10 @@ export const $historyGame = gameDomain.store([]);
 export const $currentTimer = restore(setTimer, 16).reset(resetStore);
 
 $historyGame.on(setHistoryGame, (state, { barrier, startEndPosition }) => {
-  return [...state, { barrier, startEndPosition, date: new Date() }];
+  const nextGame = { barrier, startEndPosition, date: new Date() };
+  const findedGame = equal(state, nextGame);
+
+  return findedGame ? [...state, nextGame] : state;
 });
 
 export const $currentGame = restore(setCurrentGame, null).reset(
@@ -91,9 +95,7 @@ sample({
     const [start, end] = graph.startEndPosition;
 
     const time = window.performance.now();
-
     const result = algoritm.searchFunction(start, end, graph.graph);
-
     const timeEnd = window.performance.now() - time;
 
     return {
