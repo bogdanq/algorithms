@@ -19,7 +19,7 @@ export const addProcessedVertex = createEvent();
 export const $currentAlgoritm = restore(selectAlgoritm, "bredth first search");
 export const $visitedVertex = algoritmsDomain.store([]);
 export const $processedVertex = algoritmsDomain.store({
-  vertex: 0,
+  vertex: null,
   siblings: [],
 });
 

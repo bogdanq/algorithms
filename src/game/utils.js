@@ -5,12 +5,14 @@ export function checkGameStatus(target, status) {
 }
 
 export function renderVisitedVertex(barrier, context, color) {
-  const [x, y] = getPositionByIndex(barrier);
-  drawSquare({
-    position: [x, y],
-    context,
-    color,
-  });
+  if (barrier) {
+    const [x, y] = getPositionByIndex(barrier);
+    drawSquare({
+      position: [x, y],
+      context,
+      color,
+    });
+  }
 }
 
 export function renderVisitedVertexByArr(barrier, context, color = "#000") {
