@@ -62,6 +62,11 @@ export const endGame = guard({
   filter: $gameState.map((state) => state === gameStatus.END_GAME),
 });
 
+const restoredHistoryGame = guard({
+  source: recoveryHistoryGame,
+  filter: $gameState.map((state) => state === gameStatus.END_GAME),
+});
+
 guard({
   source: $gameState,
   filter: $gameState.map((state) => state === gameStatus.CLEAR),
@@ -73,10 +78,6 @@ guard({
   filter: $gameState.map((state) => state === gameStatus.START),
   target: clearCanvas,
 });
-
-sampleForHistoryGame($barriers, "barrier");
-sampleForHistoryGame($startEndPosition, "startEndPosition");
-sampleForHistoryGame($currentGame, "date");
 
 sample({
   source: $graph,
@@ -105,10 +106,14 @@ sample({
   },
 });
 
+sampleForHistoryGame($barriers, "barrier");
+sampleForHistoryGame($startEndPosition, "startEndPosition");
+sampleForHistoryGame($currentGame, "date");
+
 function sampleForHistoryGame(target, key) {
   return sample({
     source: $historyGame,
-    clock: recoveryHistoryGame,
+    clock: restoredHistoryGame,
     target,
     fn: (historyGame, params) => {
       const findedGame = historyGame.find((game) => game.date === params);
