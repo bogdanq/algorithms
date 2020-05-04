@@ -22,6 +22,8 @@ import "./styles.css";
 import { sample, createStore } from "effector";
 
 import { InfoDraggable } from "./gui/ui/organisms/info-block";
+import { FlexContainer } from "./gui/ui/containers";
+import { $canMoveDiagonal, changeDirection } from "./graph";
 
 const $store = createStore({});
 
@@ -37,6 +39,7 @@ export default function App() {
   const gameState = useStore($gameState);
   const store = useStore($store);
   const currentTimer = useStore($currentTimer);
+  const canMoveDiagonal = useStore($canMoveDiagonal);
 
   return (
     <div className="App">
@@ -104,20 +107,30 @@ export default function App() {
             </button>
           </div>
 
-          <div className="info-wrapper">
-            <h3 className="select-bar_info">
-              Скорость: <span>{currentTimer}</span>
-            </h3>
-            <input
-              type="number"
-              value={currentTimer}
-              max="20"
-              min="1"
-              maxLength="2"
-              onChange={({ target }) => {
-                setTimer(parseInt(target.value));
-              }}
-            />
+          <div className="info-wrapper" style={{ borderTop: "2px solid #fff" }}>
+            <FlexContainer>
+              <h3 className="select-bar_info">Скорость:</h3>
+              <input
+                type="number"
+                value={currentTimer}
+                max="20"
+                min="1"
+                maxLength="2"
+                onChange={({ target }) => {
+                  setTimer(parseInt(target.value));
+                }}
+              />
+            </FlexContainer>
+            <label>
+              <FlexContainer>
+                <h3 className="select-bar_info">Проход по диагонали:</h3>
+                <input
+                  type="checkbox"
+                  checked={canMoveDiagonal}
+                  onChange={changeDirection}
+                />
+              </FlexContainer>
+            </label>
           </div>
         </div>
       </Draggable>

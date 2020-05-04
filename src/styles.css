@@ -73,9 +73,5 @@ li:hover {
 
 .select-bar_info {
   font-size: 0.9em;
-}
-
-.select-bar_info span {
-  font-style: italic;
-  text-decoration: underline;
+  margin-right: 5px;
 }

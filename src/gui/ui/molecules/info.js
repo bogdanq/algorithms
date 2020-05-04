@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { FiInfo } from "react-icons/fi";
 import { ModalWrapper } from "./modal-wrapper";
 import { Icon, Text } from "../atoms";
+import { FlexContainer } from "../containers";
 
 export function Info() {
-  const [isOpen, setOpen] = React.useState(true);
+  const [isOpen, setOpen] = React.useState(false);
   return (
     <>
       <Icon onClick={() => setOpen(true)}>
@@ -24,38 +25,33 @@ function InfoModal({ isOpen, setOpen }) {
       isOpen={isOpen}
       onRequestClose={() => setOpen(false)}
     >
-      <List>
+      <FlexContainer>
         <ColorBlock color="green" />
         <Text>- Точка старта алгоритма</Text>
-      </List>
-      <List>
+      </FlexContainer>
+      <FlexContainer>
         <ColorBlock color="red" />
         <Text>- Точка завершения алгоритма</Text>
-      </List>
-      <List>
+      </FlexContainer>
+      <FlexContainer>
         <ColorBlock color="#00bcd4" />
         <Text>- Пройденная вершина</Text>
-      </List>
-      <List>
+      </FlexContainer>
+      <FlexContainer>
         <ColorBlock color="#f3fc23" />
         <Text>- Вершина, находящаяся в обработке</Text>
-      </List>
-      <List>
+      </FlexContainer>
+      <FlexContainer>
         <ColorBlock color="#d2ef99" />
         <Text>- Соседи текущей вершины</Text>
-      </List>
-      <List>
+      </FlexContainer>
+      <FlexContainer>
         <ColorBlock color="#bbbbbb" />
         <Text>- Цвет не проходимого барьера</Text>
-      </List>
+      </FlexContainer>
     </ModalWrapper>
   );
 }
-
-const List = styled.div`
-  display: flex;
-  flex-direction: ${({ direction }) => direction || "row"};
-`;
 
 const ColorBlock = styled.div`
   width: 35px;

@@ -13,6 +13,7 @@ const graphDomain = createDomain("graph");
 export const resetStore = graphDomain.event();
 export const clearCanvas = graphDomain.event();
 
+export const changeDirection = graphDomain.event();
 export const setBarrier = graphDomain.event();
 export const removeBarrierItem = graphDomain.event();
 
@@ -24,7 +25,11 @@ export const $startEndPosition = graphDomain.store([
   endPosition,
 ]);
 
+export const $canMoveDiagonal = graphDomain.store(false);
+
 export const $barriers = graphDomain.store([]);
+
+$canMoveDiagonal.on(changeDirection, (state) => !state);
 
 graphDomain.onCreateStore((store) => store.reset(resetStore));
 
@@ -58,10 +63,11 @@ $startEndPosition
 export const $graph = combine({
   barrier: $barriers,
   startEndPosition: $startEndPosition,
+  canMoveDiagonal: $canMoveDiagonal,
 }).map((state) => {
   const [start, end] = state.startEndPosition;
 
-  const graph = graphControll.createGraph();
+  const graph = graphControll.createGraph(state.canMoveDiagonal);
 
   setBarrierToGraph(graph, state.barrier);
   setStartPositionToGraph(graph, start);

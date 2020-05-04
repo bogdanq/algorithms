@@ -7,12 +7,12 @@ class Graph {
     this.lastIndex = null;
   }
 
-  createGraph() {
+  createGraph(canMoveDiagonal) {
     this.clear();
     for (let index = 0; index < this.cellCount; index++) {
       this.graph[index] = {
         type: ceilType.EMPTY,
-        siblings: this.getSiblings(index).filter(
+        siblings: this.getSiblings(index, canMoveDiagonal).filter(
           (item) => typeof item !== "undefined"
         ),
       };
@@ -34,19 +34,22 @@ class Graph {
     }
   }
 
-  getSiblings(index) {
+  getSiblings(index, canMoveDiagonal) {
     const left = this.getLeftSibling(index);
     const top = this.getTopSibling(index);
     const right = this.getRightSibling(index);
     const down = this.getDownSibling(index);
 
-    const topLeft = this.getTopLeftDiagonal(top, left);
-    const topRight = this.getTopRightDiagonal(top, right);
-    const botRight = this.getBotRightDiagonal(down, right);
-    const botLeft = this.getBotLeftDiagonal(down, left);
+    if (canMoveDiagonal) {
+      const topLeft = this.getTopLeftDiagonal(top, left);
+      const topRight = this.getTopRightDiagonal(top, right);
+      const botRight = this.getBotRightDiagonal(down, right);
+      const botLeft = this.getBotLeftDiagonal(down, left);
 
-    return [left, top, right, down];
-    // return [left, top, right, down, topLeft, topRight, botRight, botLeft];
+      return [topLeft, top, topRight, right, botRight, down, botLeft, left];
+    }
+
+    return [top, left, down, right];
   }
 
   getTopLeftDiagonal(top, left) {
