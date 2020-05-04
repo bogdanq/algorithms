@@ -1,11 +1,4 @@
-import {
-  sample,
-  guard,
-  restore,
-  createDomain,
-  forward,
-  combine,
-} from "effector";
+import { sample, guard, restore, createDomain } from "effector";
 import {
   $graph,
   resetStore,
@@ -14,7 +7,6 @@ import {
   $startEndPosition,
 } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
-import { Barier } from "./barrier";
 
 export const gameStatus = {
   START: "START",
@@ -39,9 +31,7 @@ export const $historyGame = gameDomain.store([]);
 export const $currentTimer = restore(setTimer, 16).reset(resetStore);
 
 $historyGame.on(setHistoryGame, (state, { barrier, startEndPosition }) => {
-  const [start, end] = startEndPosition;
-
-  return [...state, { barrier, start, end, date: new Date() }];
+  return [...state, { barrier, startEndPosition, date: new Date() }];
 });
 
 export const $currentGame = restore(setCurrentGame, null).reset(
@@ -63,6 +53,11 @@ export const resumeGame = guard({
   filter: $gameState.map((state) => state === gameStatus.RESUME),
 });
 
+export const endGame = guard({
+  source: $gameState,
+  filter: $gameState.map((state) => state === gameStatus.END_GAME),
+});
+
 guard({
   source: $gameState,
   filter: $gameState.map((state) => state === gameStatus.CLEAR),
@@ -75,37 +70,14 @@ guard({
   target: clearCanvas,
 });
 
-export const endGame = guard({
-  source: $gameState,
-  filter: $gameState.map((state) => state === gameStatus.END_GAME),
-});
+sampleForHistoryGame($barriers, "barrier");
+sampleForHistoryGame($startEndPosition, "startEndPosition");
+sampleForHistoryGame($currentGame, "date");
 
 sample({
   source: $graph,
   clock: endGame,
   target: setHistoryGame,
-});
-
-sample({
-  source: $historyGame,
-  clock: recoveryHistoryGame,
-  target: $barriers,
-  fn: (historyGame, params) => {
-    const findedGame = historyGame.find((game) => game.date === params);
-    setCurrentGame(findedGame.date);
-    return findedGame.barrier;
-  },
-});
-
-sample({
-  source: $historyGame,
-  clock: recoveryHistoryGame,
-  target: $startEndPosition,
-  fn: (historyGame, params) => {
-    const findedGame = historyGame.find((game) => game.date === params);
-
-    return [findedGame.start, findedGame.end];
-  },
 });
 
 sample({
@@ -130,3 +102,16 @@ sample({
     };
   },
 });
+
+function sampleForHistoryGame(target, key) {
+  return sample({
+    source: $historyGame,
+    clock: recoveryHistoryGame,
+    target,
+    fn: (historyGame, params) => {
+      const findedGame = historyGame.find((game) => game.date === params);
+
+      return findedGame[key];
+    },
+  });
+}

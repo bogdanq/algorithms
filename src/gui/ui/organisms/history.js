@@ -51,8 +51,8 @@ function HistoryList({ historyGame, setOpen }) {
             key={index.toString()}
           >
             <p>Баррьеры: {item.barrier.length}</p>
-            <p>Старт: {item.start}</p>
-            <p>Конец: {item.end}</p>
+            <p>Старт: {item.startEndPosition[0]}</p>
+            <p>Конец: {item.startEndPosition[1]}</p>
             <h3>Будет дата</h3>
           </HistoryItem>
         ))}
