@@ -13,6 +13,7 @@ const globalCss = css`
     border: none !important;
     background: transparent !important;
     ${StyledInner} {
+      overflow: hidden;
       opacity: 1;
       transform: translateX(0);
     }

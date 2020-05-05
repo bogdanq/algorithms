@@ -6,7 +6,7 @@ import { Icon, Text } from "../atoms";
 import { FlexContainer } from "../containers";
 
 export function Info() {
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpen, setOpen] = React.useState(true);
   return (
     <>
       <Icon onClick={() => setOpen(true)}>

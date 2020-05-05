@@ -39,6 +39,7 @@ export const $algoritms = createStore([
   {
     searchFunction: null,
     name: "custom function",
+    modal: true,
   },
 ]).on(addCustomAlgoritm, (state, foo) =>
   state.map((algoritm) =>
