@@ -34,5 +34,14 @@ const globalCss = css`
       opacity: 0;
     }
   }
+
+  .MuiInputBase-input {
+    color: #fff;
+  }
+
+  .MuiInput-underline:before,
+  .MuiInput-underline:after {
+    border-bottom: 1px solid #fff;
+  }
 `;
 export const GlobalModalStyles = createGlobalStyle`${globalCss}`;

@@ -6,3 +6,8 @@ export const FlexContainer = styled.div`
   align-items: center;
   flex-wrap: wrap;
 `;
+
+export const Left = styled.div`
+  width: 30%;
+  text-align: left;
+`;

@@ -22,8 +22,11 @@ import "./styles.css";
 import { sample, createStore } from "effector";
 
 import { InfoDraggable } from "./gui/ui/organisms/info-block";
-import { FlexContainer } from "./gui/ui/containers";
+import { FlexContainer, Left } from "./gui/ui/containers";
 import { $canMoveDiagonal, changeDirection } from "./graph";
+import { GrResume, GrClear, GrPlay, GrPause } from "react-icons/gr";
+import { Button, Switch } from "./gui/ui/atoms";
+import { TextField } from "@material-ui/core";
 
 const $store = createStore({});
 
@@ -71,66 +74,63 @@ export default function App() {
             ))}
           </ul>
           <div className="btn-wrapper">
-            <button
-              className="btn"
-              onClick={() => setGameStatus(gameStatus.START)}
-            >
-              Старт
-            </button>
             {checkGameStatus(gameState, [
               gameStatus.START,
               gameStatus.PAUSE,
               gameStatus.RESUME,
-            ]) && (
+            ]) ? (
               <>
-                <button
-                  className="btn"
+                <Button
                   onClick={() => setGameStatus(gameStatus.PAUSE)}
+                  icon={GrPause}
                 >
                   Пауза
-                </button>
+                </Button>
 
-                <button
-                  className="btn"
+                <Button
                   onClick={() => setGameStatus(gameStatus.RESUME)}
+                  icon={GrResume}
                 >
                   Продолжить
-                </button>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  onClick={() => setGameStatus(gameStatus.START)}
+                  icon={GrPlay}
+                >
+                  Старт
+                </Button>
+                <Button
+                  onClick={() => setGameStatus(gameStatus.CLEAR)}
+                  icon={GrClear}
+                >
+                  Очистить
+                </Button>
               </>
             )}
-
-            <button
-              className="btn"
-              onClick={() => setGameStatus(gameStatus.CLEAR)}
-            >
-              Очистить
-            </button>
           </div>
-
           <div className="info-wrapper" style={{ borderTop: "2px solid #fff" }}>
             <FlexContainer>
-              <h3 className="select-bar_info">Скорость:</h3>
-              <input
-                type="number"
-                value={currentTimer}
-                max="20"
-                min="1"
-                maxLength="2"
-                onChange={({ target }) => {
-                  setTimer(parseInt(target.value));
-                }}
-              />
-            </FlexContainer>
-            <label>
-              <FlexContainer>
-                <h3 className="select-bar_info">Проход по диагонали:</h3>
-                <input
-                  type="checkbox"
-                  checked={canMoveDiagonal}
-                  onChange={changeDirection}
+              <Left>
+                <TextField
+                  style={{ width: "40px" }}
+                  type="number"
+                  value={currentTimer}
+                  onChange={({ target }) => {
+                    setTimer(parseInt(target.value));
+                  }}
                 />
-              </FlexContainer>
-            </label>
+              </Left>
+              <h3 className="select-bar_info">Скорость</h3>
+            </FlexContainer>
+
+            <Switch
+              checked={canMoveDiagonal}
+              onChange={changeDirection}
+              label="Проход по диагонали"
+            />
           </div>
         </div>
       </Draggable>
