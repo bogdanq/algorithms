@@ -115,7 +115,6 @@ export default function App() {
             <FlexContainer>
               <Left>
                 <TextField
-                  style={{ width: "40px" }}
                   type="number"
                   value={currentTimer}
                   onChange={({ target }) => {

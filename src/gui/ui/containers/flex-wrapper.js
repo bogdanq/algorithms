@@ -8,6 +8,7 @@ export const FlexContainer = styled.div`
 `;
 
 export const Left = styled.div`
-  width: 30%;
+  width: 25%;
   text-align: left;
+  padding-right: 15px;
 `;
