@@ -55,7 +55,7 @@ export function createTick($state, context) {
 }
 
 export function animatedVisitedVertex({ animationCount, state }, context) {
-  const { processing } = state;
+  const { processing = [] } = state;
 
   if (animationCount < processing.length) {
     addProcessedVertex(processing[animationCount]);

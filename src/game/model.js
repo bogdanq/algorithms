@@ -96,6 +96,15 @@ sample({
     const [start, end] = graph.startEndPosition;
 
     const time = window.performance.now();
+    // const result = {
+    //   count: 0,
+    //   endIndex: null,
+    //   startIndex: null,
+    //   path: [],
+    //   visited: [],
+    //   processing: [],
+    // };
+    // algoritm.searchFunction(start, end, graph.graph);
     const result = algoritm.searchFunction(start, end, graph.graph);
     const timeEnd = window.performance.now() - time;
 

@@ -19,7 +19,7 @@ import {
 } from "./algoritms/model";
 
 import "./styles.css";
-import { sample, createStore } from "effector";
+import { sample, createStore, createEvent } from "effector";
 
 import { InfoDraggable } from "./gui/ui/organisms/info-block";
 import { FlexContainer, Left } from "./gui/ui/containers";
@@ -27,6 +27,7 @@ import { $canMoveDiagonal, changeDirection } from "./graph";
 import { GrResume, GrClear, GrPlay, GrPause } from "react-icons/gr";
 import { Button, Switch } from "./gui/ui/atoms";
 import { TextField } from "@material-ui/core";
+import { CodeArea } from "./gui/ui/organisms/code-area";
 
 const $store = createStore({});
 
@@ -46,8 +47,9 @@ export default function App() {
 
   return (
     <div className="App">
-      <Draggable>
+      <Draggable disabled>
         <div className="select-bar">
+          <CodeArea />
           <h2 className="select-bar_title">Информация:</h2>
           <div className="info-wrapper">
             <h3 className="select-bar_info">

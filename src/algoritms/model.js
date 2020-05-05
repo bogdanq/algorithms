@@ -15,6 +15,7 @@ const algoritmsDomain = createDomain();
 export const selectAlgoritm = createEvent();
 export const addVisitedVertex = createEvent();
 export const addProcessedVertex = createEvent();
+export const addCustomAlgoritm = createEvent();
 
 export const $currentAlgoritm = restore(selectAlgoritm, "bredth first search");
 export const $visitedVertex = algoritmsDomain.store([]);
@@ -35,7 +36,17 @@ export const $algoritms = createStore([
     searchFunction: depthFirstSearch,
     name: "depth first search",
   },
-]);
+  {
+    searchFunction: null,
+    name: "custom function",
+  },
+]).on(addCustomAlgoritm, (state, foo) =>
+  state.map((algoritm) =>
+    algoritm.name === "custom function"
+      ? { ...algoritm, searchFunction: foo }
+      : algoritm
+  )
+);
 
 export const $searchAlgoritm = combine(
   $currentAlgoritm,
