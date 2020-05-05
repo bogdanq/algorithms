@@ -7,7 +7,7 @@ import {
   $startEndPosition,
 } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
-import { equal } from "./utils";
+import { equal, filtredFps } from "./utils";
 
 export const gameStatus = {
   START: "START",
@@ -29,7 +29,7 @@ export const setCurrentGame = gameDomain.event();
 
 export const $path = gameDomain.store({}).reset(resetStore, clearCanvas);
 export const $historyGame = gameDomain.store([]);
-export const $currentTimer = restore(setTimer, 16).reset(resetStore);
+export const $currentTimer = gameDomain.store(15).on(setTimer, filtredFps);
 
 $historyGame.on(setHistoryGame, (state, { barrier, startEndPosition }) => {
   const nextGame = { barrier, startEndPosition, date: new Date() };

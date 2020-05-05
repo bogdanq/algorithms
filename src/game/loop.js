@@ -21,7 +21,7 @@ import {
 } from "./model";
 
 const tickFx = createEffect().use(
-  (fps) => new Promise((rs) => setTimeout(rs, 1000 / fps))
+  (fps) => new Promise((rs) => setTimeout(rs, 1000 / (fps * 2)))
 );
 
 export function createTick($state, context) {

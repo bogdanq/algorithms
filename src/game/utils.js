@@ -26,6 +26,21 @@ export function renderVisitedVertexByArr(barrier, context, color = "#000") {
   }
 }
 
+export function filtredFps(_, fps) {
+  const fpsVariant = {
+    min: 1,
+    max: 30,
+  };
+
+  if (fps < fpsVariant.min) {
+    return fpsVariant.min;
+  }
+  if (fps >= fpsVariant.max) {
+    return fpsVariant.max;
+  }
+  return fps;
+}
+
 export function equal(state, nextGame) {
   const hasNewBarriers = checkBarriers(state, nextGame.barrier);
   const hasNewPosition = checkPosition(state, nextGame.startEndPosition);
