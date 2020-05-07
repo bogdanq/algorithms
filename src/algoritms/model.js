@@ -7,6 +7,7 @@ import {
 } from "effector";
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";
+import { dijkstra } from "./dijkstra";
 import { clearCanvas, resetStore } from "../graph";
 import { setGameStatus, gameStatus } from "../game";
 
@@ -35,6 +36,10 @@ export const $algoritms = createStore([
   {
     searchFunction: depthFirstSearch,
     name: "depth first search",
+  },
+  {
+    searchFunction: dijkstra,
+    name: "dijkstrah",
   },
   {
     searchFunction: null,

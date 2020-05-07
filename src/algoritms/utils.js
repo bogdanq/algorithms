@@ -7,20 +7,14 @@ export const canVisitedVertex = (vertex) => {
   return false;
 };
 
-export function restorePath(endIndex, startIndex, parent) {
-  const path = [];
-  let target = parent[endIndex];
+export function restorePath(endIndex, startIndex, historyPath) {
+  const path = [endIndex];
+  let lastStep = endIndex;
 
-  while (target && target !== startIndex) {
-    path.unshift(target);
-    target = parent[target];
+  while (lastStep !== startIndex) {
+    path.unshift(historyPath[lastStep]);
+    lastStep = historyPath[lastStep];
   }
-
-  if (path.length > 0) {
-    path.push(endIndex);
-  }
-
-  path.unshift(startIndex);
 
   return path;
 }
