@@ -11,8 +11,12 @@ export class AlgoritmController {
     this.count++;
   }
 
-  addVertex(processing, visited) {
-    this.processing.push(processing);
+  addVertex({ vertex, siblings }, visited) {
+    const updateProcessing = {
+      vertex,
+      siblings: siblings.map((item) => item.vertex),
+    };
+    this.processing.push(updateProcessing);
     this.visited.push(visited);
   }
 

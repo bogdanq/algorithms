@@ -24,17 +24,17 @@ export function depthFirstSearch(startIndex, endIndex, graph) {
 
     for (let i = 0; i < graph[currentIndex].siblings.length; i++) {
       const next = graph[currentIndex].siblings[i];
-      const vertex = graphControll.getVertexByIndex(next);
+      const vertex = graphControll.getVertexByIndex(next.vertex);
 
-      if (!visited.includes(next) && canVisitedVertex(vertex)) {
-        stack.unshift(next);
-        visited.push(next);
+      if (!visited.includes(next.vertex) && canVisitedVertex(vertex)) {
+        stack.unshift(next.vertex);
+        visited.push(next.vertex);
 
-        parent[next] = currentIndex;
+        parent[next.vertex] = currentIndex;
         aInfo.increment();
       }
 
-      if (next === endIndex) {
+      if (next.vertex === endIndex) {
         isWork = false;
         break;
       }

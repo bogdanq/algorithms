@@ -12,15 +12,18 @@ class Graph {
     for (let index = 0; index < this.cellCount; index++) {
       this.graph[index] = {
         type: ceilType.EMPTY,
-        siblings: this.getSiblings(index, canMoveDiagonal).filter(
-          (item) => typeof item !== "undefined"
-        ),
+        siblings: this.getSiblings(index, canMoveDiagonal)
+          .map((item) =>
+            typeof item !== "undefined"
+              ? { vertex: item, weight: 1 }
+              : undefined
+          )
+          .filter(Boolean),
       };
     }
 
     return this;
   }
-
   getVertexByIndex(index) {
     return this.graph[index];
   }
