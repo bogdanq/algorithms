@@ -18,7 +18,7 @@ export class Barier {
     return this.index;
   }
 
-  render(context) {
+  render(context, color = colorSchema.blockColor) {
     this.context = context;
     this.position = getPositionByIndex(this.index);
 
@@ -27,14 +27,14 @@ export class Barier {
         drawSquareWithAnimation({
           position: this.position,
           context,
-          color: colorSchema.blockColor,
+          color,
           width: 20,
         });
       } else {
         drawSquare({
           position: this.position,
           context,
-          color: colorSchema.blockColor,
+          color,
         });
       }
 

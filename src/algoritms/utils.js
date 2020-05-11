@@ -25,3 +25,11 @@ export function removeDoubleVertex(target) {
     return acc;
   }, []);
 }
+
+export function getVertexWeight(vertex) {
+  if (vertex.weight) {
+    return vertex.weight;
+  }
+
+  return 1;
+}

@@ -1,10 +1,11 @@
 import { combine, createDomain, sample, guard } from "effector";
-import { startPosition, endPosition } from "../config";
+import { startPosition, endPosition, ceilType } from "../config";
 import { graphControll } from "./controller";
 import {
   setBarrierToGraph,
   setStartPositionToGraph,
   setEndPositionToGraph,
+  setWaterToGraph,
 } from "./utils";
 import { Barier } from "../game";
 
@@ -27,7 +28,17 @@ export const $startEndPosition = graphDomain.store([
 
 export const $canMoveDiagonal = graphDomain.store(false);
 
-export const $barriers = graphDomain.store([]);
+export const $barrierType = graphDomain.store(ceilType.WATER);
+export const $barriersList = graphDomain.store({
+  [ceilType.BARIER]: [],
+  [ceilType.WATER]: [],
+});
+
+export const $barriers = combine(
+  $barrierType,
+  $barriersList,
+  (barrierType, barriersList) => barriersList[barrierType]
+);
 
 $canMoveDiagonal.on(changeDirection, (state) => !state);
 
@@ -35,26 +46,44 @@ graphDomain.onCreateStore((store) => store.reset(resetStore));
 
 export const removedBarrier = guard({
   source: sample({
-    source: $barriers,
+    source: $barriersList,
     clock: removeBarrierItem,
-    fn: (state, index) => state.find((item) => item.getIndex() === index),
+    fn: (state, { type, index }) => {
+      const findedBarrier = state[type].find(
+        (item) => item.getIndex() === index
+      );
+
+      if (findedBarrier) {
+        return {
+          type,
+          index,
+          findedBarrier,
+        };
+      }
+    },
   }),
   filter: Boolean,
 });
 
-removedBarrier.watch((item) => item.remove());
+removedBarrier.watch(({ findedBarrier }) => findedBarrier.remove());
 
-$barriers
-  .on(setBarrier, (state, index) => {
+$barriersList
+  .on(setBarrier, (state, { type, index }) => {
     const barrier = new Barier(index);
 
-    const isFindIndex = state.find((item) => item.getIndex() === index);
+    const isFindIndex = state[type].find((item) => item.getIndex() === index);
 
-    return isFindIndex ? state : [...state, barrier];
+    return {
+      ...state,
+      [type]: isFindIndex ? state[type] : [...state[type], barrier],
+    };
   })
-  .on(removedBarrier, (state, removed) =>
-    state.filter((item) => item !== removed)
-  );
+  .on(removedBarrier, (state, { type, index }) => {
+    return {
+      ...state,
+      [type]: state[type].filter((item) => item.index !== index),
+    };
+  });
 
 $startEndPosition
   .on(triggerStartPosition, (state, index) => [index, state[1]])
@@ -62,6 +91,8 @@ $startEndPosition
 
 export const $graph = combine({
   barrier: $barriers,
+  barrierType: $barrierType,
+  barriersList: $barriersList,
   startEndPosition: $startEndPosition,
   canMoveDiagonal: $canMoveDiagonal,
 }).map((state) => {
@@ -69,7 +100,14 @@ export const $graph = combine({
 
   const graph = graphControll.createGraph(state.canMoveDiagonal);
 
-  setBarrierToGraph(graph, state.barrier);
+  if (state.barrierType === ceilType.BARIER) {
+    setBarrierToGraph(graph, state.barrier);
+  }
+
+  if (state.barrierType === ceilType.WATER) {
+    setWaterToGraph(graph, state.barrier);
+  }
+
   setStartPositionToGraph(graph, start);
   setEndPositionToGraph(graph, end);
 

@@ -24,6 +24,7 @@ import {
   $graph,
   resetStore,
   clearCanvas,
+  $barrierType,
 } from "./graph";
 
 import {
@@ -36,20 +37,24 @@ import {
 } from "./game";
 import { $visitedVertex, $processedVertex } from "./algoritms";
 
-const $algoritState = combine({
-  gameState: $gameState,
-  path: $path,
-});
-
 const $mainState = combine({
   visitedVertex: $visitedVertex,
   graph: $graph,
   processedVertex: $processedVertex,
+  barrierType: $barrierType,
 });
 
-export function renderBarrier(barrier, context) {
-  for (let i = 0; i < barrier.length; i++) {
-    barrier[i].render(context);
+export function renderBarrier(barriers, barrierType, context) {
+  for (const barrier in barriers) {
+    for (let i = 0; i < barriers[barrier].length; i++) {
+      if (barrierType === ceilType.BARIER) {
+        barriers[barrier][i].render(context);
+      }
+
+      if (barrierType === ceilType.WATER) {
+        barriers[barrier][i].render(context, "#73c8ef");
+      }
+    }
   }
 }
 
@@ -68,34 +73,36 @@ function renderCeil(event, state) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
 
-  const [startIndex, endIndex] = state.startEndPosition;
+  const { graph, barrierType } = state;
+
+  const [startIndex, endIndex] = graph.startEndPosition;
 
   return {
     renderForMove: () => {
       if (index !== startIndex && index !== endIndex) {
-        setBarrier(index);
+        setBarrier({ index, type: barrierType });
       }
     },
     renderForClick: () => {
       if (index !== startIndex && index !== endIndex) {
-        removeBarrierItem(index);
+        removeBarrierItem({ index, type: barrierType });
       }
     },
   };
 }
 
-function renderStart(index, state) {
-  const findIndex = state.barrier.find((barrier) => barrier.index === index);
-  const [, endIndex] = state.startEndPosition;
+function renderStart(index, { graph }) {
+  const findIndex = graph.barrier.find((barrier) => barrier.index === index);
+  const [, endIndex] = graph.startEndPosition;
 
   if (!findIndex && index !== endIndex) {
     triggerStartPosition(index);
   }
 }
 
-function renderEnd(index, state) {
-  const findIndex = state.barrier.find((barrier) => barrier.index === index);
-  const [startIndex] = state.startEndPosition;
+function renderEnd(index, { graph }) {
+  const findIndex = graph.barrier.find((barrier) => barrier.index === index);
+  const [startIndex] = graph.startEndPosition;
 
   if (!findIndex && index !== startIndex) {
     triggerEndPosition(index);
@@ -103,17 +110,19 @@ function renderEnd(index, state) {
 }
 
 let type = null;
-function renderLogic(event) {
+function renderLogic(event, state) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
-  const state = $graph.getState();
+  const { graph } = state;
 
   if (!type) {
-    type = state.graph[index].type;
+    type = graph.graph[index].type;
   }
 
   switch (type) {
     case ceilType.BARIER:
+      return renderCeil(event, state).renderForClick();
+    case ceilType.WATER:
       return renderCeil(event, state).renderForClick();
     case ceilType.START_POSITION:
       return renderStart(index, state);
@@ -136,15 +145,17 @@ export function renderCanvas(canvas, context) {
   canvasControl.addMouseUpEvent(() => (type = null));
   canvasControl.addMouseClickEvent((e, s) => renderCeil(e, s).renderForClick());
 
-  function render({ graph, visitedVertex, processedVertex }) {
+  function render({ graph, visitedVertex, processedVertex, barrierType }) {
     clearALlCanvas(context, canvas);
-    canvasControl.setState(graph);
+    canvasControl.setState({ graph, barrierType });
+
+    renderVisitedVertexByArr(visitedVertex, context, "#00bcd4");
     renderVisitedVertexByArr(processedVertex.siblings, context, "#d2ef99");
     renderVisitedVertex(processedVertex.vertex, context, "#f3fc23");
 
-    renderVisitedVertexByArr(visitedVertex, context, "#00bcd4");
     renderActionsCeil(graph.startEndPosition, context);
-    renderBarrier(graph.barrier, context);
+
+    renderBarrier(graph.barriersList, barrierType, context);
 
     gridData.applyStyles();
     context.stroke(gridData.grid);

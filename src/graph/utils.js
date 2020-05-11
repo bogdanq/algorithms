@@ -13,3 +13,13 @@ export function setStartPositionToGraph(graph, startIndex) {
 export function setEndPositionToGraph(graph, endIndex) {
   graph.updateGraph({ index: endIndex, type: ceilType.END_POSITION });
 }
+
+export function setWaterToGraph(graph, waterBarriers) {
+  waterBarriers.forEach((barrier) => {
+    graph.updateGraph({
+      index: barrier.getIndex(),
+      type: ceilType.WATER,
+      weight: 5,
+    });
+  });
+}

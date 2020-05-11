@@ -1,8 +1,7 @@
 import PriorityQueue from "fastpriorityqueue";
 import { graphControll } from "../graph";
-import { canVisitedVertex, restorePath } from "./utils";
+import { canVisitedVertex, restorePath, getVertexWeight } from "./utils";
 import { AlgoritmController } from "./controller";
-import _ from "lodash";
 
 export function dijkstra(startIndex, endIndex, graph) {
   const aInfo = new AlgoritmController(startIndex, endIndex);
@@ -40,7 +39,7 @@ export function dijkstra(startIndex, endIndex, graph) {
       const vertex = graphControll.getVertexByIndex(sibling.vertex);
 
       if (vertex && canVisitedVertex(vertex)) {
-        const nextWeight = visited.get(currentIndex) + sibling.weight;
+        const nextWeight = visited.get(currentIndex) + getVertexWeight(vertex);
 
         const weightIsLower =
           visited.get(sibling.vertex) === undefined ||
