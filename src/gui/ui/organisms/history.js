@@ -2,10 +2,10 @@ import React from "react";
 import { FaHistory } from "react-icons/fa";
 import styled, { css } from "styled-components";
 import { useStore } from "effector-react";
-import { ModalWrapper } from "../molecules";
-import { FlexContainer } from "../containers";
-import { Icon } from "../atoms";
 import { $historyGame, recoveryHistoryGame, $currentGame } from "../../../game";
+import { ModalWrapper } from "../molecules";
+import { FlexContainer } from "../templates";
+import { Icon } from "../atoms";
 
 export function History() {
   const [isOpen, setOpen] = React.useState(false);

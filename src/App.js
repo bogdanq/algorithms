@@ -3,18 +3,9 @@ import { useStore } from "effector-react";
 import Draggable from "react-draggable";
 import { sample, createStore } from "effector";
 import { TextField } from "@material-ui/core";
-import { GrResume, GrClear, GrPlay, GrPause } from "react-icons/gr";
+
 import { renderCanvas } from "./canvas";
-import {
-  setGameStatus,
-  gameStatus,
-  $gameState,
-  $path,
-  endGame,
-  $currentTimer,
-  setTimer,
-  checkGameStatus,
-} from "./game";
+import { $gameState, $path, endGame, $currentTimer, setTimer } from "./game";
 import {
   $algoritms,
   selectAlgoritm,
@@ -22,12 +13,13 @@ import {
 } from "./algoritms/model";
 import "./styles.css";
 import { InfoDraggable } from "./gui/ui/organisms/info-block";
-import { FlexContainer, Left } from "./gui/ui/containers";
+import { FlexContainer, Left } from "./gui/ui/templates";
 import { $canMoveDiagonal, changeDirection } from "./graph";
 import { Button, Switch } from "./gui/ui/atoms";
 import { CodeArea } from "./gui/ui/organisms/code-area";
 import { ModalWrapper, SelectBarrierType } from "./gui/ui/molecules";
 import _ from "lodash";
+import { GameControllButtons } from "./gui/ui/organisms/game-controll-buttons";
 const $store = createStore({});
 
 sample({
@@ -79,42 +71,7 @@ export default function App() {
               </li>
             ))}
           </ul>
-          <div className="btn-wrapper">
-            {checkGameStatus(gameState, [
-              gameStatus.START,
-              gameStatus.PAUSE,
-              gameStatus.RESUME,
-            ]) ? (
-              !checkGameStatus(gameState, [gameStatus.PAUSE]) ? (
-                <Button
-                  onClick={() => setGameStatus(gameStatus.PAUSE)}
-                  icon={GrPause}
-                >
-                  Пауза
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => setGameStatus(gameStatus.RESUME)}
-                  icon={GrResume}
-                >
-                  Продолжить
-                </Button>
-              )
-            ) : (
-              <Button
-                onClick={() => setGameStatus(gameStatus.START)}
-                icon={GrPlay}
-              >
-                Старт
-              </Button>
-            )}
-            <Button
-              onClick={() => setGameStatus(gameStatus.CLEAR)}
-              icon={GrClear}
-            >
-              Очистить
-            </Button>
-          </div>
+          <GameControllButtons />
           <div className="info-wrapper" style={{ borderTop: "2px solid #fff" }}>
             <FlexContainer>
               <Left>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FiInfo } from "react-icons/fi";
 import { ModalWrapper } from "./modal-wrapper";
 import { Icon, Text } from "../atoms";
-import { FlexContainer } from "../containers";
+import { FlexContainer } from "../templates";
 
 export function Info() {
   const [isOpen, setOpen] = React.useState(false);

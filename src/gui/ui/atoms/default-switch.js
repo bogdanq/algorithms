@@ -1,6 +1,6 @@
 import React from "react";
 import { FormControlLabel, Switch as DefaultSwitch } from "@material-ui/core";
-import { FlexContainer, Left } from "../containers";
+import { FlexContainer, Left } from "../templates";
 
 export function Switch({ label, name = "gilad", ...rest }) {
   return (
