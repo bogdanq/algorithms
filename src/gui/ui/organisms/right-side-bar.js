@@ -1,15 +1,8 @@
 import React from "react";
 import DraggableDefault from "react-draggable";
-import styled from "styled-components";
-import { createStore, sample, combine } from "effector";
+import { combine } from "effector";
 import { TextField } from "@material-ui/core";
-import {
-  endGame,
-  $path,
-  setTimer,
-  $currentTimer,
-  $gameState,
-} from "../../../game";
+import { setTimer, $currentTimer } from "../../../game";
 import { useStore } from "effector-react";
 import {
   $algoritms,
@@ -22,8 +15,7 @@ import { $canMoveDiagonal, changeDirection } from "../../../graph";
 import { GameControllButtons } from "./game-controll-buttons";
 import { Left, FlexContainer } from "../templates";
 import { Switch } from "../atoms";
-
-const $graphState = createStore({});
+import { AlgotitmResult } from "./algoritm-result";
 
 const $state = combine({
   currentAlgoritm: $currentAlgoritm,
@@ -32,14 +24,7 @@ const $state = combine({
   canMoveDiagonal: $canMoveDiagonal,
 });
 
-sample({
-  source: $path,
-  clock: endGame,
-  target: $graphState,
-});
-
 export function RightSideBar() {
-  const graphState = useStore($graphState);
   const {
     currentAlgoritm,
     currentTimer,
@@ -52,18 +37,7 @@ export function RightSideBar() {
     <DraggableDefault>
       <div className="select-bar">
         <h2 className="select-bar_title">Информация:</h2>
-        <div className="info-wrapper">
-          <h3 className="select-bar_info">
-            Количество итераций: <span>{graphState?.count || 0}</span>
-          </h3>
-          <h3 className="select-bar_info">
-            Время прохождения:
-            <span> {graphState?.timeEnd?.toFixed(4) || 0} ms</span>
-          </h3>
-          <h3 className="select-bar_info">
-            Длина пути: <span>{graphState?.path?.length || 0}</span>
-          </h3>
-        </div>
+        <AlgotitmResult />
         <h2 className="select-bar_title">Выбирите алгоритм:</h2>
         <ul>
           {algoritms.map((algoritm, index) => (
