@@ -52,6 +52,7 @@ export function dijkstra(startIndex, endIndex, graph) {
           priorityQueue.add([sibling.vertex, nextWeight]);
           path[sibling.vertex] = currentIndex;
           visited.set(sibling.vertex, nextWeight);
+          aInfo.increment();
         }
       }
     }
