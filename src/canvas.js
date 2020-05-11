@@ -45,16 +45,18 @@ const $mainState = combine({
 });
 
 export function renderBarrier(barriers, barrierType, context) {
-  for (const barrier in barriers) {
-    for (let i = 0; i < barriers[barrier].length; i++) {
-      if (barrierType === ceilType.BARIER) {
-        barriers[barrier][i].render(context);
-      }
+  renderWater(barriers[ceilType.WATER], context);
+  renderBar(barriers[ceilType.BARIER], context);
+}
 
-      if (barrierType === ceilType.WATER) {
-        barriers[barrier][i].render(context, "#73c8ef");
-      }
-    }
+function renderWater(barriers, context) {
+  for (let i = 0; i < barriers.length; i++) {
+    barriers[i].render(context, "#73c8ef");
+  }
+}
+function renderBar(barriers, context) {
+  for (let i = 0; i < barriers.length; i++) {
+    barriers[i].render(context);
   }
 }
 
@@ -121,14 +123,17 @@ function renderLogic(event, state) {
 
   switch (type) {
     case ceilType.BARIER:
+      type = null;
       return renderCeil(event, state).renderForClick();
     case ceilType.WATER:
+      type = null;
       return renderCeil(event, state).renderForClick();
     case ceilType.START_POSITION:
       return renderStart(index, state);
     case ceilType.END_POSITION:
       return renderEnd(index, state);
     case ceilType.EMPTY:
+      type = null;
       return renderCeil(event, state).renderForMove();
   }
 }

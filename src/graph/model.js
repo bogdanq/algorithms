@@ -1,4 +1,4 @@
-import { combine, createDomain, sample, guard } from "effector";
+import { combine, createDomain, sample, guard, restore } from "effector";
 import { startPosition, endPosition, ceilType } from "../config";
 import { graphControll } from "./controller";
 import {
@@ -15,6 +15,7 @@ export const resetStore = graphDomain.event();
 export const clearCanvas = graphDomain.event();
 
 export const changeDirection = graphDomain.event();
+export const setBarrierType = graphDomain.event();
 export const setBarrier = graphDomain.event();
 export const removeBarrierItem = graphDomain.event();
 
@@ -28,7 +29,8 @@ export const $startEndPosition = graphDomain.store([
 
 export const $canMoveDiagonal = graphDomain.store(false);
 
-export const $barrierType = graphDomain.store(ceilType.WATER);
+export const $barrierType = restore(setBarrierType, ceilType.BARIER);
+
 export const $barriersList = graphDomain.store({
   [ceilType.BARIER]: [],
   [ceilType.WATER]: [],
@@ -100,13 +102,9 @@ export const $graph = combine({
 
   const graph = graphControll.createGraph(state.canMoveDiagonal);
 
-  if (state.barrierType === ceilType.BARIER) {
-    setBarrierToGraph(graph, state.barrier);
-  }
+  setBarrierToGraph(graph, state.barriersList[ceilType.BARIER]);
 
-  if (state.barrierType === ceilType.WATER) {
-    setWaterToGraph(graph, state.barrier);
-  }
+  setWaterToGraph(graph, state.barriersList[ceilType.WATER]);
 
   setStartPositionToGraph(graph, start);
   setEndPositionToGraph(graph, end);

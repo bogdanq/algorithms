@@ -1,6 +1,9 @@
 import React from "react";
 import { useStore } from "effector-react";
 import Draggable from "react-draggable";
+import { sample, createStore } from "effector";
+import { TextField } from "@material-ui/core";
+import { GrResume, GrClear, GrPlay, GrPause } from "react-icons/gr";
 import { renderCanvas } from "./canvas";
 import {
   setGameStatus,
@@ -17,19 +20,14 @@ import {
   selectAlgoritm,
   $currentAlgoritm,
 } from "./algoritms/model";
-
 import "./styles.css";
-import { sample, createStore, createEvent } from "effector";
-
 import { InfoDraggable } from "./gui/ui/organisms/info-block";
 import { FlexContainer, Left } from "./gui/ui/containers";
 import { $canMoveDiagonal, changeDirection } from "./graph";
-import { GrResume, GrClear, GrPlay, GrPause } from "react-icons/gr";
 import { Button, Switch } from "./gui/ui/atoms";
-import { TextField } from "@material-ui/core";
 import { CodeArea } from "./gui/ui/organisms/code-area";
-import { ModalWrapper } from "./gui/ui/molecules";
-
+import { ModalWrapper, SelectBarrierType } from "./gui/ui/molecules";
+import _ from "lodash";
 const $store = createStore({});
 
 sample({
@@ -136,6 +134,7 @@ export default function App() {
               onChange={changeDirection}
               label="Проход по диагонали"
             />
+            <SelectBarrierType />
           </div>
         </div>
       </Draggable>
