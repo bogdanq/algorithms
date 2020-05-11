@@ -39,7 +39,7 @@ export const $algoritms = createStore([
   },
   {
     searchFunction: dijkstra,
-    name: "dijkstrah",
+    name: "dijkstra",
   },
   {
     searchFunction: null,

@@ -33,12 +33,14 @@ export function breadthFirstSearch(startIndex, endIndex, graph) {
         parent[next.vertex] = currentIndex;
         aInfo.increment();
       }
-      prevIndex = currentIndex;
+
       if (next.vertex === endIndex) {
         isWork = false;
         break;
       }
     }
+
+    prevIndex = currentIndex;
   }
 
   const result = aInfo.getAlgotitmResult();

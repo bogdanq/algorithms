@@ -11,7 +11,7 @@ export function restorePath(endIndex, startIndex, historyPath) {
   const path = [endIndex];
   let lastStep = endIndex;
 
-  while (lastStep !== startIndex) {
+  while (lastStep && lastStep !== startIndex) {
     path.unshift(historyPath[lastStep]);
     lastStep = historyPath[lastStep];
   }

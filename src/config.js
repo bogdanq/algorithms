@@ -4,7 +4,7 @@ export const pageHeight = window.innerHeight;
 export const borderSize = 0.5;
 export const boardLength = pageWidth * pageHeight;
 export const startPosition = 0;
-export const endPosition = 110;
+export const endPosition = 17;
 
 export const colorSchema = {
   borderColor: "#000",

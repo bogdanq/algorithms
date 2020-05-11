@@ -24,6 +24,7 @@ class Graph {
 
     return this;
   }
+
   getVertexByIndex(index) {
     return this.graph[index];
   }
@@ -32,7 +33,11 @@ class Graph {
     if (this.graph[index]) {
       this.graph[index] = { ...this.graph[index], type };
       if (type === ceilType.BARIER) {
-        this.graph[index] = { ...this.graph[index], type, siblings: [] };
+        this.graph[index] = {
+          ...this.graph[index],
+          type,
+          siblings: [],
+        };
       }
     }
   }
