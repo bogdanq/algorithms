@@ -7,18 +7,16 @@ import {
   combine,
   merge,
 } from "effector";
-import { addVisitedVertex, addProcessedVertex } from "../algoritms";
 import { clearCanvas, resetStore } from "../graph";
 import { checkGameStatus } from "./utils";
 import {
   gameStatus,
-  setGameStatus,
   $gameState,
   $currentTimer,
   startGame,
   resumeGame,
 } from "./model";
-import { renderPath } from "../render/render-path";
+import { animatedVisitedVertex } from "./animated-vertex";
 
 const tickFx = createEffect().use(
   (fps) => new Promise((rs) => setTimeout(rs, 1000 / (fps * 2)))
@@ -42,7 +40,7 @@ export function createTick($state, context) {
   $animationCount.on(tickWithParams.done, (state) => state + 1);
 
   sample($combineState, tickWithParams).watch((state) => {
-    animatedVisitedVertex(state, context);
+    animatedVisitedVertex.setVertex(state, context);
   });
 
   guard({
@@ -52,23 +50,4 @@ export function createTick($state, context) {
     ),
     target: tickWithParams,
   });
-}
-
-export function animatedVisitedVertex({ animationCount, state }, context) {
-  const { processing = [] } = state;
-
-  if (animationCount < processing.length) {
-    addProcessedVertex(processing[animationCount]);
-
-    if (processing[animationCount - 1]) {
-      addVisitedVertex(processing[animationCount - 1].vertex);
-    }
-  } else {
-    setGameStatus(gameStatus.END_GAME);
-
-    renderPath({
-      path: state.path,
-      context,
-    });
-  }
 }

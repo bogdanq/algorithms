@@ -1,20 +1,25 @@
 import { clearALlCanvas } from "../config";
 import { canvasControl } from "../control-canvas";
-import { renderVisitedVertexByArr, renderVisitedVertex } from "../game";
+import { animatedVisitedVertex } from "../game/animated-vertex";
 import { drowBarriers } from "./render-barrier-with-type";
-import { renderActionsCeil } from "./drow-start-end-position";
+import { drowStartEndPOsitions } from "./drow-start-end-position";
 
 export function executeLogic(canvas, context, gridData) {
-  return function ({ graph, visitedVertex, processedVertex, barrierType }) {
+  return function render({
+    graph,
+    visitedVertex,
+    processedVertex,
+    barrierType,
+  }) {
     clearALlCanvas(context, canvas);
+
     canvasControl.setState({ graph, barrierType });
 
-    renderVisitedVertexByArr(processedVertex.siblings, context, "#d2ef99");
-    renderVisitedVertex(processedVertex.vertex, context, "#f3fc23");
-    renderVisitedVertexByArr(visitedVertex, context, "#00bcd4");
+    animatedVisitedVertex.drawVertexWithLoop(processedVertex, visitedVertex);
 
-    drowBarriers.renderBarrier(graph.barriersList, context);
-    renderActionsCeil(graph.startEndPosition, context);
+    drowBarriers.drowBarriers(graph.barrier, context);
+
+    drowStartEndPOsitions(graph.startEndPosition, context);
 
     gridData.applyStyles();
     context.stroke(gridData.grid);

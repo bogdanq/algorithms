@@ -10,7 +10,7 @@ import { buildGrid } from "./render/build-grid";
 import { drowBarriers } from "./render/render-barrier-with-type";
 import { renderCeil } from "./render/render-ceil";
 
-const $mainState = combine({
+const $state = combine({
   visitedVertex: $visitedVertex,
   graph: $graph,
   processedVertex: $processedVertex,
@@ -22,23 +22,26 @@ export function renderCanvas(canvas, context) {
   const globalSize = getGlobalSize(localSize.w, localSize.h);
   const gridData = buildGrid(context);
 
-  canvasControl.registerClickEventToCanvas(canvas);
-  canvasControl.addMouseMoveEvent(drowBarriers.renderWithMove);
-  canvasControl.addMouseClickEvent((e, s) => renderCeil(e, s).renderForClick());
-  canvasControl.addMouseUpEvent(drowBarriers.clear);
+  addEventsToCanvas(canvas);
+  configureCanvas(canvas, globalSize);
 
   const render = executeLogic(canvas, context, gridData);
 
-  configureCanvas(canvas, globalSize);
-
-  $mainState.watch(render);
+  $state.watch(render);
 
   sample({
-    source: $mainState,
+    source: $state,
     clock: merge([resetStore, clearCanvas]),
   }).watch(render);
 
   createTick($path, context);
+}
+
+function addEventsToCanvas() {
+  canvasControl.registerClickEventToCanvas(canvas);
+  canvasControl.addMouseMoveEvent(drowBarriers.renderWithMove);
+  canvasControl.addMouseClickEvent((e, s) => renderCeil(e, s).renderForClick());
+  canvasControl.addMouseUpEvent(drowBarriers.clear);
 }
 
 const canvas = document.getElementById("viewport");

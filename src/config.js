@@ -18,6 +18,7 @@ export const ceilType = {
   BARIER: "BARIER",
   EMPTY: "EMPTY",
   WATER: "WATER",
+  SAND: "SAND",
 };
 
 export function getLocalSize(w, h) {

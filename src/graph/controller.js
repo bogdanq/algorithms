@@ -27,25 +27,9 @@ class Graph {
     return this.graph[index];
   }
 
-  updateGraph({ index, type, weight }) {
+  updateGraph({ index, ...newParams }) {
     if (this.graph[index]) {
-      this.graph[index] = { ...this.graph[index], type };
-
-      if (type === ceilType.BARIER) {
-        this.graph[index] = {
-          ...this.graph[index],
-          type,
-          siblings: [],
-        };
-      }
-
-      if (type === ceilType.WATER) {
-        this.graph[index] = {
-          ...this.graph[index],
-          type,
-          weight,
-        };
-      }
+      this.graph[index] = { ...this.graph[index], ...newParams };
     }
   }
 

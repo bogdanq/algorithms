@@ -12,12 +12,12 @@ export function renderCeil(event, state) {
   return {
     renderForMove: () => {
       if (index !== startIndex && index !== endIndex) {
-        setBarrier({ index, type: barrierType });
+        setBarrier({ index, barrierType });
       }
     },
     renderForClick: () => {
       if (index !== startIndex && index !== endIndex) {
-        removeBarrierItem({ index, type: barrierType });
+        removeBarrierItem(index);
       }
     },
   };

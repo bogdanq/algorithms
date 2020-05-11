@@ -2,7 +2,29 @@ import { ceilType } from "../config";
 
 export function setBarrierToGraph(graph, barriers) {
   barriers.forEach((barrier) => {
-    graph.updateGraph({ index: barrier.getIndex(), type: ceilType.BARIER });
+    if (barrier.barrierType === ceilType.BARIER) {
+      graph.updateGraph({
+        index: barrier.getIndex(),
+        type: barrier.barrierType,
+        siblings: [],
+      });
+    }
+
+    if (barrier.barrierType === ceilType.WATER) {
+      graph.updateGraph({
+        index: barrier.getIndex(),
+        type: barrier.barrierType,
+        weight: 10,
+      });
+    }
+
+    if (barrier.barrierType === ceilType.SAND) {
+      graph.updateGraph({
+        index: barrier.getIndex(),
+        type: barrier.barrierType,
+        weight: 3,
+      });
+    }
   });
 }
 
@@ -12,14 +34,4 @@ export function setStartPositionToGraph(graph, startIndex) {
 
 export function setEndPositionToGraph(graph, endIndex) {
   graph.updateGraph({ index: endIndex, type: ceilType.END_POSITION });
-}
-
-export function setWaterToGraph(graph, waterBarriers) {
-  waterBarriers.forEach((barrier) => {
-    graph.updateGraph({
-      index: barrier.getIndex(),
-      type: ceilType.WATER,
-      weight: 5,
-    });
-  });
 }
