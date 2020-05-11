@@ -46,10 +46,6 @@ body {
   width: 250px;
 }
 
-.info-wrapper {
-  text-align: left;
-}
-
 .select-bar:hover {
   cursor: move;
 }
