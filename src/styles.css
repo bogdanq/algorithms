@@ -29,9 +29,8 @@ li:hover {
   transform: translateY(-50%);
 }
 
-.App {
-  font-family: sans-serif;
-  text-align: center;
+body {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 .select-bar {
