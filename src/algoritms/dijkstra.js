@@ -8,8 +8,7 @@ export function dijkstra(startIndex, endIndex, graph) {
   const aInfo = new AlgoritmController(startIndex, endIndex);
   let prevIndex = null;
   const priorityQueue = new PriorityQueue((a, b) => a[1] < b[1]);
-  const visited = { [startIndex]: true }; // помещать сюда вершину из очереди
-  const processing = {}; // помещать сюда новые значения
+  const visited = new Map([[startIndex, 0]]); // помещать сюда вершину из очереди
   const path = {};
   let isWork = true;
 
@@ -17,17 +16,22 @@ export function dijkstra(startIndex, endIndex, graph) {
 
   while (isWork && !priorityQueue.isEmpty()) {
     const [currentIndex] = priorityQueue.poll();
+    const currentVertex = graph[currentIndex];
+
+    if (currentIndex === endIndex) {
+      isWork = false;
+      break;
+    }
 
     aInfo.addVertex(
       {
         vertex: currentIndex,
-        processing,
+        siblings: graph[currentIndex].siblings,
       },
       prevIndex
     );
 
     // Получить текущую вершину из очереди и получить ее соседей
-    const currentVertex = graph[currentIndex];
 
     // пройтипо всем соседям текущей вершины, вычислить вес, указать предка
     for (let i = 0; i < currentVertex.siblings.length; i++) {
@@ -35,42 +39,25 @@ export function dijkstra(startIndex, endIndex, graph) {
       const sibling = currentVertex.siblings[i];
       const vertex = graphControll.getVertexByIndex(sibling.vertex);
 
-      // вычислить вес соседа, сравнив с прошлым весом, если веса прошлого нет, значит он бесконечность
+      if (vertex && canVisitedVertex(vertex)) {
+        const nextWeight = visited.get(currentIndex) + sibling.weight;
 
-      // Положить ребро в просмотренные, с выполненными вычислениями
+        const weightIsLower =
+          visited.get(sibling.vertex) === undefined ||
+          nextWeight < visited.get(sibling.vertex);
 
-      if (!visited[sibling.vertex] && canVisitedVertex(vertex)) {
-        const weight =
-          sibling.weight < (processing[sibling.vertex]?.weight || Infinity);
+        // вычислить вес соседа, сравнив с прошлым весом, если веса прошлого нет, значит он бесконечность
 
-        path[sibling.vertex] = currentIndex;
-
-        processing[sibling.vertex] = {
-          weight: weight ? sibling.weight : processing[sibling.vertex].weight,
-          parent: currentIndex,
-          vertex: sibling.vertex,
-        };
-
-        aInfo.increment();
-      }
-
-      if (currentIndex === endIndex) {
-        isWork = false;
-        break;
+        // Положить ребро в просмотренные, с выполненными вычислениями
+        if (weightIsLower) {
+          priorityQueue.add([sibling.vertex, nextWeight]);
+          path[sibling.vertex] = currentIndex;
+          visited.set(sibling.vertex, nextWeight);
+        }
       }
     }
 
     prevIndex = currentIndex;
-
-    // необходимо найти наименьший вес из ребер в processing
-    const minSibling = _.minBy(Object.values(processing), "weight");
-
-    if (minSibling) {
-      // path[minSibling.vertex] = processing[minSibling.vertex]?.parent;
-      visited[minSibling.vertex] = true;
-      priorityQueue.add([minSibling.vertex, minSibling.weight]);
-      delete processing[minSibling.vertex];
-    }
   }
 
   const restoredPath = restorePath(endIndex, startIndex, path);
