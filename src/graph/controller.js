@@ -14,9 +14,7 @@ class Graph {
         type: ceilType.EMPTY,
         siblings: this.getSiblings(index, canMoveDiagonal)
           .map((item) =>
-            typeof item !== "undefined"
-              ? { vertex: item, weight: 1 }
-              : undefined
+            typeof item !== "undefined" ? { vertex: item } : undefined
           )
           .filter(Boolean),
       };

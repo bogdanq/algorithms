@@ -7,7 +7,6 @@ import {
   combine,
   merge,
 } from "effector";
-import { renderPath } from "../canvas";
 import { addVisitedVertex, addProcessedVertex } from "../algoritms";
 import { clearCanvas, resetStore } from "../graph";
 import { checkGameStatus } from "./utils";
@@ -19,6 +18,7 @@ import {
   startGame,
   resumeGame,
 } from "./model";
+import { renderPath } from "../render/render-path";
 
 const tickFx = createEffect().use(
   (fps) => new Promise((rs) => setTimeout(rs, 1000 / (fps * 2)))
