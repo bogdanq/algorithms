@@ -55,13 +55,16 @@ class AnimatedVisitedVertex {
     }
   }
 
-  drawVertexWithLoop(processedVertex, visitedVertex) {
+  drawVertexWithLoop(processedVertex) {
     this.animatedVertexWithArray(
       processedVertex.siblings,
       this.context,
       "#d2ef99"
     );
     this.animatedVertex(processedVertex.vertex, this.context, "#f3fc23");
+  }
+
+  drawVisitedVertexWithLoop(visitedVertex) {
     this.animatedVertexWithArray(visitedVertex, this.context, "#00bcd4");
   }
 }

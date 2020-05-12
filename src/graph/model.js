@@ -5,9 +5,8 @@ import {
   setBarrierToGraph,
   setStartPositionToGraph,
   setEndPositionToGraph,
-  setWaterToGraph,
 } from "./utils";
-import { Barier } from "../game";
+import { BarierItem } from "./barrier";
 
 const graphDomain = createDomain("graph");
 
@@ -50,7 +49,7 @@ removedBarrier.watch((item) => item.remove());
 
 $barriers
   .on(setBarrier, (state, { index, barrierType }) => {
-    const barrier = new Barier(index, barrierType);
+    const barrier = new BarierItem(index, barrierType);
 
     const isFindIndex = state.find((item) => item.getIndex() === index);
 

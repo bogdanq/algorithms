@@ -1,7 +1,7 @@
 import { getPositionByIndex, drawSquare, colorSchema } from "../config";
 import { drawSquareWithAnimation, drawMarkerWithAnimation } from "./animations";
 
-export class Barier {
+export class BarierItem {
   constructor(index, barrierType) {
     this.barrierType = barrierType;
     this.index = index;

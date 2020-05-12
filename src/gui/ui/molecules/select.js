@@ -19,7 +19,7 @@ export function SelectBarrierType() {
     >
       <MenuItem value={ceilType.BARIER}>Не проходимый барьер</MenuItem>
       <MenuItem value={ceilType.WATER}>Вода (вес 10)</MenuItem>
-      <MenuItem value={ceilType.SAND}>Пеоск (вес 3)</MenuItem>
+      <MenuItem value={ceilType.SAND}>Песок (вес 3)</MenuItem>
     </DefaultSelect>
   );
 }

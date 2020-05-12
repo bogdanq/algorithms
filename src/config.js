@@ -8,7 +8,7 @@ export const endPosition = 17;
 
 export const colorSchema = {
   borderColor: "#000",
-  blockColor: "#bbbbbb",
+  blockColor: "#523509",
   startEndColor: ["green", "red"],
 };
 

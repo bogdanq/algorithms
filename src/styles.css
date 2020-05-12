@@ -75,3 +75,26 @@ h3 {
   line-height: 1.5;
   letter-spacing: 0.00938em;
 }
+
+.MuiMenuItem-root:hover {
+  background-color: rgba(190, 190, 190, 0.733) !important;
+}
+
+.MuiListItem-root.Mui-selected {
+  background-color: rgba(37, 37, 37, 0.534) !important;
+  color: #fff;
+}
+
+.MuiSelect-select,
+.MuiSelect-icon,
+.MuiInputBase-input {
+  color: #fff !important;
+}
+
+.MuiSelect-select:focus {
+  background-color: transparent !important;
+}
+
+.MuiInput-underline:before {
+  border-bottom: 1px solid #fff !important;
+}
