@@ -63,4 +63,4 @@ export const $searchAlgoritm = combine(
 
 algoritmsDomain.onCreateStore((store) => store.reset(clearCanvas, resetStore));
 
-selectAlgoritm.watch(() => setGameStatus(gameStatus.END_GAME));
+selectAlgoritm.watch(() => setGameStatus(gameStatus.RESET));

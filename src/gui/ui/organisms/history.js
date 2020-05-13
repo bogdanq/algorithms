@@ -53,7 +53,7 @@ function HistoryList({ historyGame, setOpen }) {
             <p>Баррьеры: {item.barrier.length}</p>
             <p>Старт: {item.startEndPosition[0]}</p>
             <p>Конец: {item.startEndPosition[1]}</p>
-            <h3>Будет дата</h3>
+            <h3>{item.date}</h3>
           </HistoryItem>
         ))}
       </FlexContainer>

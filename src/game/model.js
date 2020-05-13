@@ -1,4 +1,5 @@
 import { sample, guard, restore, createDomain } from "effector";
+import _ from "lodash";
 import {
   $graph,
   resetStore,
@@ -7,7 +8,7 @@ import {
   $startEndPosition,
 } from "../graph";
 import { $searchAlgoritm } from "../algoritms/model";
-import { equal, filtredFps } from "./utils";
+import { filtredFps, formatter } from "./utils";
 
 export const gameStatus = {
   START: "START",
@@ -32,16 +33,17 @@ export const $historyGame = gameDomain.store([]);
 export const $currentTimer = gameDomain.store(15).on(setTimer, filtredFps);
 
 $historyGame.on(setHistoryGame, (state, { barrier, startEndPosition }) => {
-  const nextGame = { barrier, startEndPosition, date: new Date() };
-  const findedGame = equal(state, nextGame);
+  const nextGame = {
+    barrier,
+    startEndPosition,
+    date: formatter(new Date()),
+  };
+  const findedGame = _.find(state, nextGame);
 
-  return findedGame ? [...state, nextGame] : state;
+  return findedGame ? state : [...state, nextGame];
 });
 
-export const $currentGame = restore(setCurrentGame, null).reset(
-  resetStore,
-  clearCanvas
-);
+export const $currentGame = restore(setCurrentGame, null).reset(resetStore);
 
 export const $gameState = restore(setGameStatus, gameStatus.RESET).reset(
   resetStore
@@ -64,7 +66,9 @@ export const endGame = guard({
 
 const restoredHistoryGame = guard({
   source: recoveryHistoryGame,
-  filter: $gameState.map((state) => state === gameStatus.END_GAME),
+  filter: $gameState.map(
+    (state) => state === gameStatus.END_GAME || state === gameStatus.RESET
+  ),
 });
 
 guard({
