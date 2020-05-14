@@ -1,4 +1,4 @@
-import { sample, guard, restore, createDomain } from "effector";
+import { sample, guard, restore, createDomain, combine } from "effector";
 import _ from "lodash";
 import {
   $graph,
@@ -7,8 +7,8 @@ import {
   $barriers,
   $startEndPosition,
 } from "../graph";
-import { $searchAlgoritm } from "../algoritms/model";
-import { filtredFps, formatter } from "./utils";
+import { $searchAlgoritm, $currentAlgoritm } from "../algoritms/model";
+import { filtredFps } from "./utils";
 
 export const gameStatus = {
   START: "START",
@@ -32,16 +32,37 @@ export const $path = gameDomain.store({}).reset(resetStore, clearCanvas);
 export const $historyGame = gameDomain.store([]);
 export const $currentTimer = gameDomain.store(15).on(setTimer, filtredFps);
 
-$historyGame.on(setHistoryGame, (state, { barrier, startEndPosition }) => {
-  const nextGame = {
-    barrier,
-    startEndPosition,
-    date: formatter(new Date()),
-  };
-  const findedGame = _.find(state, nextGame);
-
-  return findedGame ? state : [...state, nextGame];
+const $stateForRecoverHistory = combine({
+  path: $path,
+  currentAlgoritm: $currentAlgoritm,
+  graph: $graph,
 });
+
+$historyGame.on(
+  setHistoryGame,
+  (
+    state,
+    {
+      currentAlgoritm,
+      path: { count, path, timeEnd },
+      graph: { barrier, startEndPosition },
+    }
+  ) => {
+    const nextGame = {
+      barrier,
+      startEndPosition,
+      currentAlgoritm,
+      index: timeEnd.toFixed(1) + currentAlgoritm,
+      timeEnd: timeEnd.toFixed(1),
+      path,
+      count,
+    };
+
+    const findedGame = _.find(state, nextGame);
+
+    return findedGame ? state : [...state, nextGame];
+  }
+);
 
 export const $currentGame = restore(setCurrentGame, null).reset(resetStore);
 
@@ -84,7 +105,7 @@ guard({
 });
 
 sample({
-  source: $graph,
+  source: $stateForRecoverHistory,
   clock: endGame,
   target: setHistoryGame,
 });
@@ -112,15 +133,16 @@ sample({
 
 sampleForHistoryGame($barriers, "barrier");
 sampleForHistoryGame($startEndPosition, "startEndPosition");
-sampleForHistoryGame($currentGame, "date");
+sampleForHistoryGame($currentGame, "index");
+sampleForHistoryGame($currentAlgoritm, "currentAlgoritm");
 
 function sampleForHistoryGame(target, key) {
   return sample({
     source: $historyGame,
     clock: restoredHistoryGame,
     target,
-    fn: (historyGame, params) => {
-      const findedGame = historyGame.find((game) => game.date === params);
+    fn: (historyGame, index) => {
+      const findedGame = historyGame.find((game) => game.index === index);
 
       return findedGame[key];
     },

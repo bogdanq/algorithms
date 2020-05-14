@@ -4,7 +4,6 @@ import styled, { css } from "styled-components";
 import { useStore } from "effector-react";
 import { $historyGame, recoveryHistoryGame, $currentGame } from "../../../game";
 import { ModalWrapper } from "../molecules";
-import { FlexContainer } from "../templates";
 import { Icon } from "../atoms";
 
 export function History() {
@@ -35,7 +34,7 @@ function HistoryList({ historyGame, setOpen }) {
   const currentGame = useStore($currentGame);
   const handleChangeItem = React.useCallback(
     (item) => {
-      recoveryHistoryGame(item.date);
+      recoveryHistoryGame(item.index);
       setOpen(false);
     },
     [setOpen]
@@ -43,20 +42,24 @@ function HistoryList({ historyGame, setOpen }) {
 
   return (
     <HistoryListWrapper>
-      <FlexContainer>
+      <>
         {historyGame.map((item, index) => (
           <HistoryItem
-            active={currentGame === item.date}
+            active={currentGame === item.index}
             onClick={() => handleChangeItem(item)}
             key={index.toString()}
           >
+            <p>Алгоритм: {item.currentAlgoritm}</p>
+            <p>Путь: {item.path.length}</p>
+            <p>Время: {item.timeEnd} ms</p>
             <p>Баррьеры: {item.barrier.length}</p>
-            <p>Старт: {item.startEndPosition[0]}</p>
-            <p>Конец: {item.startEndPosition[1]}</p>
-            <h3>{item.date}</h3>
+            <p>
+              Старт - Конец: {item.startEndPosition[0]} /{" "}
+              {item.startEndPosition[1]}
+            </p>
           </HistoryItem>
         ))}
-      </FlexContainer>
+      </>
     </HistoryListWrapper>
   );
 }

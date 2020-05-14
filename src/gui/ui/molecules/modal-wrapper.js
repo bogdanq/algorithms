@@ -31,7 +31,7 @@ export const StyledInner = styled.div`
   text-align: left;
   max-width: 800px;
   margin: 10px;
-  width: ${({ width }) => width}px;
+  width: ${({ width }) => (width ? `${width}px` : "auto")};
   position: relative;
   border-radius: 10px;
   opacity: 0;
