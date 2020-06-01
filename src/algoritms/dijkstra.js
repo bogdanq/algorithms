@@ -1,9 +1,8 @@
 import PriorityQueue from "fastpriorityqueue";
-import { graphControll } from "../graph";
 import { canVisitedVertex, restorePath, getVertexWeight } from "./utils";
 import { AlgoritmController } from "./controller";
 
-export function dijkstra(startIndex, endIndex, graph) {
+export function dijkstra(startIndex, endIndex, graph, graphControll) {
   const aInfo = new AlgoritmController(startIndex, endIndex);
   let prevIndex = null;
   const priorityQueue = new PriorityQueue((a, b) => a[1] < b[1]);

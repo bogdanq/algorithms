@@ -1,8 +1,7 @@
-import { graphControll } from "../graph";
 import { canVisitedVertex, restorePath } from "./utils";
 import { AlgoritmController } from "./controller";
 
-export function depthFirstSearch(startIndex, endIndex, graph) {
+export function depthFirstSearch(startIndex, endIndex, graph, graphControll) {
   const aInfo = new AlgoritmController(startIndex, endIndex);
 
   let isWork = true;

@@ -8,6 +8,7 @@ import {
   $startEndPosition,
 } from "../graph";
 import { $searchAlgoritm, $currentAlgoritm } from "../algoritms/model";
+import { graphControll } from "../graph/controller";
 import { filtredFps } from "./utils";
 
 export const gameStatus = {
@@ -121,7 +122,12 @@ sample({
     const [start, end] = graph.startEndPosition;
 
     const time = window.performance.now();
-    const result = algoritm.searchFunction(start, end, graph.graph);
+    const result = algoritm.searchFunction(
+      start,
+      end,
+      graph.graph,
+      graphControll
+    );
     const timeEnd = window.performance.now() - time;
 
     return {
