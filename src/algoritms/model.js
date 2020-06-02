@@ -10,6 +10,7 @@ import { depthFirstSearch } from "./depth-first-search";
 import { dijkstra } from "./dijkstra";
 import { clearCanvas, resetStore } from "../graph";
 import { setGameStatus, gameStatus } from "../game";
+import { aStar } from "./a-start";
 
 const algoritmsDomain = createDomain();
 
@@ -40,6 +41,10 @@ export const $algoritms = createStore([
   {
     searchFunction: dijkstra,
     name: "dijkstra",
+  },
+  {
+    searchFunction: aStar,
+    name: "a-star",
   },
   {
     searchFunction: null,

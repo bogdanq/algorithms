@@ -15,11 +15,11 @@ export function executeLogic(canvas, context, gridData) {
 
     canvasControl.setState({ graph, barrierType });
 
+    animatedVisitedVertex.drawVertexWithLoop(processedVertex);
+
     animatedVisitedVertex.drawVisitedVertexWithLoop(visitedVertex);
 
     barrier.drowBarriersWithType(graph.barrier, context);
-
-    animatedVisitedVertex.drawVertexWithLoop(processedVertex);
 
     drowStartEndPositions(graph.startEndPosition, context);
 
