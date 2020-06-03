@@ -1,6 +1,9 @@
 export class AlgoritmController {
   public count: number;
-  public processing: Array<{ vertex: number; siblings: number[] }>;
+  public processing: Array<{
+    vertex: number;
+    siblings: (number | undefined)[];
+  }>;
   public dejkstra: number[];
   public visited: (number | null)[];
   public startIndex: number;
@@ -25,21 +28,28 @@ export class AlgoritmController {
       siblings,
       processing,
     }: {
-      vertex: number;
-      siblings: Array<{ vertex: number }>;
+      vertex?: number;
+      siblings: (
+        | {
+            vertex: number;
+          }
+        | undefined
+      )[];
       processing?: Array<{ vertex: number }>;
     },
     visited: number | null
   ) {
-    const updateProcessing = {
-      vertex,
-      siblings: ((processing && Object.values(processing)) || siblings).map(
-        (item) => item.vertex
-      ),
-    };
+    if (vertex) {
+      const updateProcessing = {
+        vertex,
+        siblings: ((processing && Object.values(processing)) || siblings)
+          .map((item) => item && item.vertex)
+          .filter(Boolean),
+      };
 
-    this.processing.push(updateProcessing);
-    this.visited.push(visited);
+      this.processing.push(updateProcessing);
+      this.visited.push(visited);
+    }
   }
 
   getAlgotitmResult() {

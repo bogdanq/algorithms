@@ -1,5 +1,5 @@
 import PriorityQueue from "fastpriorityqueue";
-import { GraphType } from "graph";
+import { GraphType, Graph } from "graph";
 import { getPositionByIndex } from "../config";
 import { AlgoritmController } from "./controller";
 import { canVisitedVertex, restorePath, getVertexWeight } from "./utils";
@@ -12,29 +12,35 @@ export function aStar(
   startIndex: number,
   endIndex: number,
   graph: GraphType,
-  graphControll: any
+  graphControll: Graph
 ) {
+  let prevIndex = null;
+
   const positionByEndIndex = getPositionByIndex(endIndex);
 
   const aInfo = new AlgoritmController(startIndex, endIndex);
-  let prevIndex = null;
+
   const priorityQueue = new PriorityQueue<[number, number]>(
     (a, b) => a[1] < b[1]
   );
+
   const visited = new Map([[startIndex, 0]]);
-  const path = {};
+
+  const path: { [key: string]: number } = {};
+
   let isWork = true;
 
   priorityQueue.add([startIndex, 0]);
 
   while (isWork && !priorityQueue.isEmpty()) {
     const [currentIndex] = priorityQueue.poll() || [];
-    const currentVertex = graph[currentIndex];
 
-    if (currentIndex === endIndex) {
+    if (!currentIndex || currentIndex === endIndex) {
       isWork = false;
       break;
     }
+
+    const currentVertex = graph[currentIndex];
 
     aInfo.addVertex(
       {
@@ -46,6 +52,12 @@ export function aStar(
 
     for (let i = 0; i < currentVertex.siblings.length; i++) {
       const sibling = currentVertex.siblings[i];
+
+      if (!sibling) {
+        isWork = false;
+        break;
+      }
+
       const vertex = graphControll.getVertexByIndex(sibling.vertex);
 
       if (vertex && canVisitedVertex(vertex)) {
@@ -53,7 +65,7 @@ export function aStar(
 
         const weightIsLower =
           typeof visited.get(sibling.vertex) === "undefined" ||
-          nextWeight < visited.get(sibling.vertex);
+          nextWeight < (visited.get(sibling.vertex) || Infinity);
 
         if (weightIsLower && !visited.has(sibling.vertex)) {
           priorityQueue.add([
@@ -64,16 +76,13 @@ export function aStar(
           path[sibling.vertex] = currentIndex;
           visited.set(sibling.vertex, nextWeight);
           aInfo.increment();
-
-          if (endIndex === sibling.vertex) {
-            isWork = false;
-            break;
-          }
         }
       }
     }
 
-    prevIndex = currentIndex;
+    if (currentIndex) {
+      prevIndex = currentIndex;
+    }
   }
 
   const restoredPath = restorePath(endIndex, startIndex, path);
