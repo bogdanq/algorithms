@@ -1,11 +1,13 @@
 import { BarrierType, pageWidth, getLocalSize, pageHeight } from "../config";
 
+export type Vertex = {
+  type: BarrierType;
+  siblings: ({ vertex: number } | undefined)[];
+  weight?: number;
+};
+
 export type GraphType = {
-  [key: string]: {
-    type: BarrierType;
-    siblings: ({ vertex: number } | undefined)[];
-    weight?: number;
-  };
+  [key: string]: Vertex;
 };
 
 export class Graph {

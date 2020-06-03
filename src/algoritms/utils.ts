@@ -1,13 +1,18 @@
 import { BarrierType } from "../config";
+import { Vertex } from "graph";
 
-export const canVisitedVertex = (vertex) => {
+export const canVisitedVertex = (vertex: { type: BarrierType }) => {
   if (vertex.type !== BarrierType.BARIER) {
     return true;
   }
   return false;
 };
 
-export function restorePath(endIndex, startIndex, historyPath) {
+export function restorePath(
+  endIndex: number,
+  startIndex: number,
+  historyPath: { [key: string]: number }
+) {
   const path = [endIndex];
   let lastStep = endIndex;
 
@@ -19,14 +24,7 @@ export function restorePath(endIndex, startIndex, historyPath) {
   return path;
 }
 
-export function removeDoubleVertex(target) {
-  return target.reduce((acc, row) => {
-    acc.push(row.filter((el) => !acc.some((accRow) => accRow.includes(el))));
-    return acc;
-  }, []);
-}
-
-export function getVertexWeight(vertex) {
+export function getVertexWeight(vertex: Vertex | null) {
   if (vertex.weight) {
     return vertex.weight;
   }

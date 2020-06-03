@@ -15,6 +15,7 @@ export function aStar(
   graphControll: Graph
 ) {
   let prevIndex = null;
+  let isWork = true;
 
   const positionByEndIndex = getPositionByIndex(endIndex);
 
@@ -27,8 +28,6 @@ export function aStar(
   const visited = new Map([[startIndex, 0]]);
 
   const path: { [key: string]: number } = {};
-
-  let isWork = true;
 
   priorityQueue.add([startIndex, 0]);
 
@@ -61,7 +60,8 @@ export function aStar(
       const vertex = graphControll.getVertexByIndex(sibling.vertex);
 
       if (vertex && canVisitedVertex(vertex)) {
-        const nextWeight = visited.get(currentIndex) + getVertexWeight(vertex);
+        const nextWeight =
+          (visited.get(currentIndex) || currentIndex) + getVertexWeight(vertex);
 
         const weightIsLower =
           typeof visited.get(sibling.vertex) === "undefined" ||
@@ -80,9 +80,7 @@ export function aStar(
       }
     }
 
-    if (currentIndex) {
-      prevIndex = currentIndex;
-    }
+    prevIndex = currentIndex;
   }
 
   const restoredPath = restorePath(endIndex, startIndex, path);
