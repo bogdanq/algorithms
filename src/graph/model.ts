@@ -1,5 +1,13 @@
-import { combine, createDomain, sample, guard, restore } from "effector";
-import { startPosition, endPosition, ceilType } from "../config";
+import {
+  combine,
+  createDomain,
+  sample,
+  guard,
+  restore,
+  Event,
+  Store,
+} from "effector";
+import { startPosition, endPosition, BarrierType } from "../config";
 import { graphControll } from "./controller";
 import {
   setBarrierToGraph,
@@ -10,27 +18,38 @@ import { BarierItem } from "./barrier";
 
 const graphDomain = createDomain("graph");
 
-export const resetStore = graphDomain.event();
-export const clearCanvas = graphDomain.event();
+export const resetStore: Event<void> = graphDomain.event();
 
-export const changeDirection = graphDomain.event();
-export const setBarrierType = graphDomain.event();
-export const setBarrier = graphDomain.event();
-export const removeBarrierItem = graphDomain.event();
+export const clearCanvas: Event<void> = graphDomain.event();
 
-export const triggerStartPosition = graphDomain.event();
-export const triggerEndPosition = graphDomain.event();
+export const changeDirection: Event<void> = graphDomain.event();
 
-export const $startEndPosition = graphDomain.store([
+export const setBarrierType: Event<string> = graphDomain.event();
+
+export const setBarrier: Event<{
+  index: number;
+  barrierType: BarrierType;
+}> = graphDomain.event();
+
+export const removeBarrierItem: Event<number> = graphDomain.event();
+
+export const triggerStartPosition: Event<number> = graphDomain.event();
+
+export const triggerEndPosition: Event<number> = graphDomain.event();
+
+export const $startEndPosition: Store<[number, number]> = graphDomain.store([
   startPosition,
   endPosition,
 ]);
 
-export const $canMoveDiagonal = graphDomain.store(false);
+export const $canMoveDiagonal: Store<boolean> = graphDomain.store(false);
 
-export const $barrierType = restore(setBarrierType, ceilType.BARIER);
+export const $barrierType: Store<string> = restore(
+  setBarrierType,
+  BarrierType.BARIER
+);
 
-export const $barriers = graphDomain.store([]);
+export const $barriers: Store<Array<BarierItem>> = graphDomain.store([]);
 
 $canMoveDiagonal.on(changeDirection, (state) => !state);
 
@@ -40,12 +59,12 @@ export const removedBarrier = guard({
   source: sample({
     source: $barriers,
     clock: removeBarrierItem,
-    fn: (state, index) => state.find((item) => item.getIndex() === index),
+    fn: (state, index) => state.find((barrier) => barrier.getIndex() === index),
   }),
   filter: Boolean,
 });
 
-removedBarrier.watch((item) => item.remove());
+removedBarrier.watch((barrier: BarierItem) => barrier.remove());
 
 $barriers
   .on(setBarrier, (state, { index, barrierType }) => {
@@ -76,6 +95,7 @@ export const $graph = combine({
   setBarrierToGraph(graph, state.barrier);
 
   setStartPositionToGraph(graph, start);
+
   setEndPositionToGraph(graph, end);
 
   return { ...state, graph: graph.graph };

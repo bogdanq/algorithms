@@ -1,6 +1,12 @@
 import { drawSquare, drawMark, cellSize } from "../config";
 
-export function drawSquareWithAnimation(params) {
+export function drawSquareWithAnimation(params: {
+  position: [number, number];
+  context: any;
+  color?: string;
+  width: number;
+  scale?: number;
+}) {
   let animateId;
   let {
     position: [x, y],
@@ -28,7 +34,9 @@ export function drawSquareWithAnimation(params) {
 
     width++;
   } else {
-    cancelAnimationFrame(animateId);
+    if (animateId) {
+      cancelAnimationFrame(animateId);
+    }
   }
 }
 

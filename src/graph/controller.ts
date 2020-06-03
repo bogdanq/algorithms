@@ -1,17 +1,28 @@
-import { ceilType, pageWidth, getLocalSize, pageHeight } from "../config";
+import { BarrierType, pageWidth, getLocalSize, pageHeight } from "../config";
 
-class Graph {
-  constructor({ w, h }) {
+export type GraphType = {
+  [key: string]: {
+    type: BarrierType;
+    siblings: ({ vertex: number } | undefined)[];
+    weight?: number;
+  };
+};
+
+export class Graph {
+  public graph: GraphType;
+  private cellCount: number;
+
+  constructor({ w, h }: { w: number; h: number }) {
     this.graph = {};
     this.cellCount = w * h;
-    this.lastIndex = null;
   }
 
-  createGraph(canMoveDiagonal) {
+  createGraph(canMoveDiagonal: boolean) {
     this.clear();
+
     for (let index = 0; index < this.cellCount; index++) {
       this.graph[index] = {
-        type: ceilType.EMPTY,
+        type: BarrierType.EMPTY,
         siblings: this.getSiblings(index, canMoveDiagonal)
           .map((item) =>
             typeof item !== "undefined" ? { vertex: item } : undefined
@@ -23,17 +34,29 @@ class Graph {
     return this;
   }
 
-  getVertexByIndex(index) {
-    return this.graph[index];
+  getVertexByIndex(index?: number) {
+    if (index) {
+      return this.graph[index];
+    }
+
+    return null;
   }
 
-  updateGraph({ index, ...newParams }) {
+  updateGraph({
+    index,
+    ...newParams
+  }: {
+    index: number;
+    type: BarrierType;
+    weight?: number;
+    siblings?: [];
+  }) {
     if (this.graph[index]) {
       this.graph[index] = { ...this.graph[index], ...newParams };
     }
   }
 
-  getSiblings(index, canMoveDiagonal) {
+  getSiblings(index: number, canMoveDiagonal: boolean) {
     const left = this.getLeftSibling(index);
     const top = this.getTopSibling(index);
     const right = this.getRightSibling(index);
@@ -51,38 +74,54 @@ class Graph {
     return [top, left, down, right];
   }
 
-  getTopLeftDiagonal(top, left) {
+  getTopLeftDiagonal(top?: number, left?: number) {
+    if (!top || !left) {
+      return undefined;
+    }
+
     if (top >= 0 && left >= 0) {
       return top - 1;
     }
   }
 
-  getTopRightDiagonal(top, right) {
+  getTopRightDiagonal(top?: number, right?: number) {
+    if (!top || !right) {
+      return undefined;
+    }
+
     if (top >= 0 && right >= 0) {
       return top + 1;
     }
   }
 
-  getBotLeftDiagonal(bot, left) {
+  getBotLeftDiagonal(bot?: number, left?: number) {
+    if (!bot || !left) {
+      return undefined;
+    }
+
     if (bot >= 0 && left >= 0) {
       return bot - 1;
     }
   }
 
-  getBotRightDiagonal(bot, right) {
+  getBotRightDiagonal(bot?: number, right?: number) {
+    if (!bot || !right) {
+      return undefined;
+    }
+
     if (bot >= 0 && right) {
       return bot + 1;
     }
   }
 
-  getBottomDiagonal(down) {
+  getBottomDiagonal(down: number) {
     const left = down - 1;
     const right = down + 1;
 
     return [left, right];
   }
 
-  getDownSibling(index) {
+  getDownSibling(index: number) {
     const { w, h } = getLocalSize(pageWidth, pageHeight);
 
     const hasDownNeighbour = Math.floor(index / w) < h - 1;
@@ -92,7 +131,7 @@ class Graph {
     }
   }
 
-  getTopSibling(index) {
+  getTopSibling(index: number) {
     const { w } = getLocalSize(pageWidth, pageHeight);
 
     const hasTopNeighbour = Math.floor(index / w) > 0;
@@ -102,7 +141,7 @@ class Graph {
     }
   }
 
-  getRightSibling(index) {
+  getRightSibling(index: number) {
     const { w } = getLocalSize(pageWidth, pageHeight);
 
     const hasRightNeighbour = index % w < w - 1;
@@ -112,7 +151,7 @@ class Graph {
     }
   }
 
-  getLeftSibling(index) {
+  getLeftSibling(index: number) {
     const { w } = getLocalSize(pageWidth, pageHeight);
 
     const hasLeftNeighbour = index % w > 0;

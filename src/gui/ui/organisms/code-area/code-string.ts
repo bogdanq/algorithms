@@ -32,7 +32,7 @@ export const codeString = `
     GraphControll - создает граф, может вернуть вершину по индексу
   */
 
-  enum CeilType {
+  enum BarrierType {
     START_POSITION = "START_POSITION",
     END_POSITION = "END_POSITION",
     BARIER = "BARIER",
@@ -40,7 +40,7 @@ export const codeString = `
     VISITED = "VISITED",
   };
   
-  type Graph = { [key: string]: { type: CeilType , siblings: Array<number> } }
+  type Graph = { [key: string]: { type: BarrierType , siblings: Array<number> } }
 
   type GraphControll = {
     getVertexByIndex: (index: number) => Graph
@@ -59,6 +59,6 @@ export const codeString = `
 
   // сanVisitedVertex проверяет, можно ли прайти на указанную вершину
     type CanVisitedVertex = (
-      vertex: { type: CeilType , siblings: Array<number> }
+      vertex: { type: BarrierType , siblings: Array<number> }
     ) => boolean
 `;

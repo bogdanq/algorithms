@@ -1,18 +1,26 @@
 import PriorityQueue from "fastpriorityqueue";
-import { canVisitedVertex, restorePath, getVertexWeight } from "./utils";
-import { AlgoritmController } from "./controller";
+import { GraphType } from "graph";
 import { getPositionByIndex } from "../config";
+import { AlgoritmController } from "./controller";
+import { canVisitedVertex, restorePath, getVertexWeight } from "./utils";
 
-function heuristic([x, y], [x1, y1]) {
+function heuristic([x, y]: number[], [x1, y1]: number[]) {
   return Math.abs(x - x1) + Math.abs(y - y1);
 }
 
-export function aStar(startIndex, endIndex, graph, graphControll) {
+export function aStar(
+  startIndex: number,
+  endIndex: number,
+  graph: GraphType,
+  graphControll: any
+) {
   const positionByEndIndex = getPositionByIndex(endIndex);
 
   const aInfo = new AlgoritmController(startIndex, endIndex);
   let prevIndex = null;
-  const priorityQueue = new PriorityQueue((a, b) => a[1] < b[1]);
+  const priorityQueue = new PriorityQueue<[number, number]>(
+    (a, b) => a[1] < b[1]
+  );
   const visited = new Map([[startIndex, 0]]);
   const path = {};
   let isWork = true;
@@ -20,7 +28,7 @@ export function aStar(startIndex, endIndex, graph, graphControll) {
   priorityQueue.add([startIndex, 0]);
 
   while (isWork && !priorityQueue.isEmpty()) {
-    const [currentIndex] = priorityQueue.poll();
+    const [currentIndex] = priorityQueue.poll() || [];
     const currentVertex = graph[currentIndex];
 
     if (currentIndex === endIndex) {

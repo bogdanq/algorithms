@@ -1,14 +1,16 @@
-import { ceilType, getLocalSize, getIndexByPosition } from "../config";
+import { BarrierType, getLocalSize, getIndexByPosition } from "../config";
 import {
   removeBarrierItem,
   setBarrier,
   triggerEndPosition,
   triggerStartPosition,
 } from "./model";
+import { Graph } from "./controller";
+import { BarierItem } from "./barrier";
 
-export function setBarrierToGraph(graph, barriers) {
+export function setBarrierToGraph(graph: Graph, barriers: Array<BarierItem>) {
   barriers.forEach((barrier) => {
-    if (barrier.barrierType === ceilType.BARIER) {
+    if (barrier.barrierType === BarrierType.BARIER) {
       graph.updateGraph({
         index: barrier.getIndex(),
         type: barrier.barrierType,
@@ -16,7 +18,7 @@ export function setBarrierToGraph(graph, barriers) {
       });
     }
 
-    if (barrier.barrierType === ceilType.WATER) {
+    if (barrier.barrierType === BarrierType.WATER) {
       graph.updateGraph({
         index: barrier.getIndex(),
         type: barrier.barrierType,
@@ -24,7 +26,7 @@ export function setBarrierToGraph(graph, barriers) {
       });
     }
 
-    if (barrier.barrierType === ceilType.SAND) {
+    if (barrier.barrierType === BarrierType.SAND) {
       graph.updateGraph({
         index: barrier.getIndex(),
         type: barrier.barrierType,
@@ -34,12 +36,12 @@ export function setBarrierToGraph(graph, barriers) {
   });
 }
 
-export function setStartPositionToGraph(graph, startIndex) {
-  graph.updateGraph({ index: startIndex, type: ceilType.START_POSITION });
+export function setStartPositionToGraph(graph: Graph, startIndex: number) {
+  graph.updateGraph({ index: startIndex, type: BarrierType.START_POSITION });
 }
 
-export function setEndPositionToGraph(graph, endIndex) {
-  graph.updateGraph({ index: endIndex, type: ceilType.END_POSITION });
+export function setEndPositionToGraph(graph: Graph, endIndex: number) {
+  graph.updateGraph({ index: endIndex, type: BarrierType.END_POSITION });
 }
 
 export function setBarrierToState(event, state) {
@@ -65,7 +67,7 @@ export function removeBarrierFromState(event) {
   removeBarrierItem(index);
 }
 
-export function setStartToStore(index, { graph }) {
+export function setStartToStore(index: number, { graph }) {
   const findIndex = graph.barrier.find((barrier) => barrier.index === index);
   const [, endIndex] = graph.startEndPosition;
 
@@ -74,7 +76,7 @@ export function setStartToStore(index, { graph }) {
   }
 }
 
-export function setEndToStore(index, { graph }) {
+export function setEndToStore(index: number, { graph }) {
   const findIndex = graph.barrier.find((barrier) => barrier.index === index);
   const [startIndex] = graph.startEndPosition;
 

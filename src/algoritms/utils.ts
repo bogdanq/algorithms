@@ -1,7 +1,7 @@
-import { ceilType } from "../config";
+import { BarrierType } from "../config";
 
 export const canVisitedVertex = (vertex) => {
-  if (vertex.type !== ceilType.BARIER) {
+  if (vertex.type !== BarrierType.BARIER) {
     return true;
   }
   return false;

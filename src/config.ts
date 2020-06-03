@@ -12,14 +12,14 @@ export const colorSchema = {
   startEndColor: ["green", "red"],
 };
 
-export const ceilType = {
-  START_POSITION: "START_POSITION",
-  END_POSITION: "END_POSITION",
-  BARIER: "BARIER",
-  EMPTY: "EMPTY",
-  WATER: "WATER",
-  SAND: "SAND",
-};
+export enum BarrierType {
+  START_POSITION = "START_POSITION",
+  END_POSITION = "END_POSITION",
+  BARIER = "BARIER",
+  EMPTY = "EMPTY",
+  WATER = "WATER",
+  SAND = "SAND",
+}
 
 export function getLocalSize(w, h) {
   return {
@@ -44,6 +44,11 @@ export function drawSquare({
   position,
   context,
   width,
+}: {
+  color?: string;
+  position: [number, number];
+  context: any;
+  width?: number;
 }) {
   const [x, y] = convertLocalPositionToGlobal(position);
   const size = width || cellSize - borderSize * 2;
@@ -62,7 +67,7 @@ export function getIndexByPosition([x, y]) {
   return y * w + x;
 }
 
-export function getPositionByIndex(index) {
+export function getPositionByIndex(index: number): [number, number] {
   const { w } = getLocalSize(pageWidth, pageHeight);
   const y = Math.floor(index / w);
   const x = index - y * w;

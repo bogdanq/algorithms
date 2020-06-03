@@ -1,8 +1,20 @@
-import { getPositionByIndex, drawSquare, colorSchema } from "../config";
+import {
+  getPositionByIndex,
+  drawSquare,
+  colorSchema,
+  BarrierType,
+} from "../config";
 import { drawSquareWithAnimation, drawMarkerWithAnimation } from "./animations";
 
 export class BarierItem {
-  constructor(index, barrierType) {
+  public barrierType: BarrierType;
+  public index: number;
+  public canDrawe: boolean;
+  public context: null | any;
+  public canRemove: boolean;
+  public position: boolean | [number, number];
+
+  constructor(index: number, barrierType: BarrierType) {
     this.barrierType = barrierType;
     this.index = index;
     this.canDrawe = false;
@@ -19,7 +31,7 @@ export class BarierItem {
     return this.index;
   }
 
-  render(context, color = colorSchema.blockColor) {
+  render(context: any, color = colorSchema.blockColor) {
     this.context = context;
     this.position = getPositionByIndex(this.index);
 

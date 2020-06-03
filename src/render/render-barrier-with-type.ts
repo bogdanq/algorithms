@@ -1,4 +1,4 @@
-import { getLocalSize, getIndexByPosition, ceilType } from "../config";
+import { getLocalSize, getIndexByPosition, BarrierType } from "../config";
 import {
   removeBarrierFromState,
   setBarrierToState,
@@ -8,7 +8,7 @@ import {
 
 class Barrier {
   constructor() {
-    this.ceilType = null;
+    this.BarrierType = null;
     this.context = null;
     this.setBarrierToStateWithType = this.setBarrierToStateWithType.bind(this);
     this.clear = this.clear.bind(this);
@@ -19,42 +19,42 @@ class Barrier {
     const index = getIndexByPosition([w, h]);
     const { graph } = state;
 
-    if (!this.ceilType) {
-      this.ceilType = graph.graph[index].type;
+    if (!this.BarrierType) {
+      this.BarrierType = graph.graph[index].type;
     }
 
-    switch (this.ceilType) {
-      case ceilType.BARIER:
+    switch (this.BarrierType) {
+      case BarrierType.BARIER:
         return removeBarrierFromState(event, state);
-      case ceilType.WATER:
+      case BarrierType.WATER:
         return removeBarrierFromState(event, state);
-      case ceilType.SAND:
+      case BarrierType.SAND:
         return removeBarrierFromState(event, state);
-      case ceilType.START_POSITION:
+      case BarrierType.START_POSITION:
         return setStartToStore(index, state);
-      case ceilType.END_POSITION:
+      case BarrierType.END_POSITION:
         return setEndToStore(index, state);
-      case ceilType.EMPTY:
+      case BarrierType.EMPTY:
         return setBarrierToState(event, state);
     }
   }
 
   drowBarriersWithType(barriers, context) {
     for (let i = 0; i < barriers.length; i++) {
-      if (barriers[i].barrierType === ceilType.WATER) {
+      if (barriers[i].barrierType === BarrierType.WATER) {
         barriers[i].render(context, "#86c7e6");
       }
-      if (barriers[i].barrierType === ceilType.SAND) {
+      if (barriers[i].barrierType === BarrierType.SAND) {
         barriers[i].render(context, "#fae8c2");
       }
-      if (barriers[i].barrierType === ceilType.BARIER) {
+      if (barriers[i].barrierType === BarrierType.BARIER) {
         barriers[i].render(context);
       }
     }
   }
 
   clear() {
-    this.ceilType = null;
+    this.BarrierType = null;
   }
 }
 

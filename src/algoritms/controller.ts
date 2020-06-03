@@ -1,5 +1,12 @@
 export class AlgoritmController {
-  constructor(startIndex, endIndex) {
+  public count: number;
+  public processing: Array<{ vertex: number; siblings: number[] }>;
+  public dejkstra: number[];
+  public visited: (number | null)[];
+  public startIndex: number;
+  public endIndex: number;
+
+  constructor(startIndex: number, endIndex: number) {
     this.count = 0;
     this.processing = [];
     this.dejkstra = [];
@@ -12,13 +19,25 @@ export class AlgoritmController {
     this.count++;
   }
 
-  addVertex({ vertex, siblings, processing }, visited) {
+  addVertex(
+    {
+      vertex,
+      siblings,
+      processing,
+    }: {
+      vertex: number;
+      siblings: Array<{ vertex: number }>;
+      processing?: Array<{ vertex: number }>;
+    },
+    visited: number | null
+  ) {
     const updateProcessing = {
       vertex,
       siblings: ((processing && Object.values(processing)) || siblings).map(
         (item) => item.vertex
       ),
     };
+
     this.processing.push(updateProcessing);
     this.visited.push(visited);
   }
