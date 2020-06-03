@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "downlevelIteration": true,
+    "strict": true,
+    "strictFunctionTypes": false,
+    "types": ["node"],
+    "sourceMap": true,
+    "allowJs": true,
+    "allowUnreachableCode": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noUnusedLocals": true,
+    "baseUrl": "./src",
+    "skipLibCheck": true,
+    "jsx": "react",
+    "outDir": "./tsout",
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": ["node_modules", "build"],
+  "compileOnSave": false
+}
