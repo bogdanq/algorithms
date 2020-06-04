@@ -1,12 +1,4 @@
-import {
-  sample,
-  guard,
-  restore,
-  createDomain,
-  combine,
-  Event,
-  Store,
-} from "effector";
+import { sample, guard, restore, createDomain, combine, Store } from "effector";
 import _ from "lodash";
 import { AlgoritmController } from "algoritms/controller";
 import {
@@ -32,7 +24,7 @@ export enum GameStatus {
   RESET = "RESET",
 }
 
-type Path = {
+export type Path = {
   path: number[];
   timeEnd: number;
 } & AlgoritmController;
@@ -55,24 +47,24 @@ type HistoryGame = {
 
 const gameDomain = createDomain("game");
 
-export const setGameStatus: Event<GameStatus> = gameDomain.event();
+export const setGameStatus = gameDomain.event<GameStatus>();
 
-export const setTimer: Event<number> = gameDomain.event();
+export const setTimer = gameDomain.event<number>();
 
-export const setHistoryGame: Event<SetHistoryGame> = gameDomain.event();
+export const setHistoryGame = gameDomain.event<SetHistoryGame>();
 
-export const recoveryHistoryGame: Event<number> = gameDomain.event();
+export const recoveryHistoryGame = gameDomain.event<number>();
 
-export const setCurrentGame: Event<number> = gameDomain.event();
+export const setCurrentGame = gameDomain.event<number>();
 
-export const $path: Store<Path | null> = gameDomain
-  .store(null)
+export const $path = gameDomain
+  .store<Path | null>(null)
   .reset(resetStore, clearCanvas);
 
-export const $historyGame: Store<Array<HistoryGame>> = gameDomain.store([]);
+export const $historyGame = gameDomain.store<Array<HistoryGame>>([]);
 
-export const $currentTimer: Store<number> = gameDomain
-  .store(15)
+export const $currentTimer = gameDomain
+  .store<number>(15)
   .on(setTimer, filtredFps);
 
 const $stateForRecoverHistory = combine({
@@ -100,27 +92,26 @@ $historyGame.on(
   }
 );
 
-export const $currentGame: Store<number | null> = restore(
-  setCurrentGame,
-  null
-).reset(resetStore);
+export const $currentGame = restore<number | null>(setCurrentGame, null).reset(
+  resetStore
+);
 
-export const $gameState: Store<GameStatus> = restore(
+export const $gameState = restore<GameStatus>(
   setGameStatus,
   GameStatus.RESET
 ).reset(resetStore);
 
-export const startGame: Event<GameStatus> = guard({
+export const startGame = guard<GameStatus>({
   source: $gameState,
   filter: $gameState.map((state) => state === GameStatus.START),
 });
 
-export const resumeGame: Event<GameStatus> = guard({
+export const resumeGame = guard<GameStatus>({
   source: $gameState,
   filter: $gameState.map((state) => state === GameStatus.RESUME),
 });
 
-export const endGame: Event<GameStatus> = guard({
+export const endGame = guard<GameStatus>({
   source: $gameState,
   filter: $gameState.map((state) => state === GameStatus.END_GAME),
 });

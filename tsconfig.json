@@ -6,7 +6,9 @@
     "downlevelIteration": true,
     "strict": true,
     "strictFunctionTypes": false,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "sourceMap": true,
     "allowJs": true,
     "allowUnreachableCode": true,
@@ -15,10 +17,26 @@
     "noUnusedLocals": true,
     "baseUrl": "./src",
     "skipLibCheck": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "outDir": "./tsout",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
   },
-  "exclude": ["node_modules", "build"],
-  "compileOnSave": false
+  "exclude": [
+    "node_modules",
+    "build"
+  ],
+  "compileOnSave": false,
+  "include": [
+    "src"
+  ]
 }

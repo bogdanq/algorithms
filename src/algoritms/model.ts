@@ -4,8 +4,6 @@ import {
   createEvent,
   restore,
   createDomain,
-  Store,
-  Event,
 } from "effector";
 import { clearCanvas, resetStore, BarierItem } from "../graph";
 import { setGameStatus, GameStatus } from "../game";
@@ -27,29 +25,27 @@ type ProcessedVertex = {
 
 const algoritmsDomain = createDomain("algoritmsDomain");
 
-export const selectAlgoritm: Event<string> = createEvent();
+export const selectAlgoritm = createEvent<string>();
 
-export const addVisitedVertex: Event<BarierItem> = createEvent();
+export const addVisitedVertex = createEvent<BarierItem>();
 
-export const addProcessedVertex: Event<ProcessedVertex> = createEvent();
+export const addProcessedVertex = createEvent<ProcessedVertex>();
 
-export const addCustomAlgoritm: Event<any> = createEvent();
+export const addCustomAlgoritm = createEvent<any>();
 
-export const $currentAlgoritm: Store<string> = restore(
+export const $currentAlgoritm = restore<string>(
   selectAlgoritm,
   "bredth first search"
 );
 
-export const $visitedVertex: Store<Array<BarierItem>> = algoritmsDomain.store(
-  []
-);
+export const $visitedVertex = algoritmsDomain.store<Array<BarierItem>>([]);
 
-export const $processedVertex: Store<ProcessedVertex> = algoritmsDomain.store({
+export const $processedVertex = algoritmsDomain.store<ProcessedVertex>({
   vertex: null,
   siblings: [],
 });
 
-export const $algoritms: Store<Algoritms> = createStore([
+export const $algoritms = createStore<Algoritms>([
   {
     searchFunction: breadthFirstSearch,
     name: "bredth first search",
