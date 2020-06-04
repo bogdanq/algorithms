@@ -1,11 +1,22 @@
-import { sample, guard, restore, createDomain, combine, Event } from "effector";
+import {
+  sample,
+  guard,
+  restore,
+  createDomain,
+  combine,
+  Event,
+  Store,
+} from "effector";
 import _ from "lodash";
+import { AlgoritmController } from "algoritms/controller";
 import {
   $graph,
   resetStore,
   clearCanvas,
   $barriers,
   $startEndPosition,
+  BarierItem,
+  CombidenGraphType,
 } from "../graph";
 import { $searchAlgoritm, $currentAlgoritm } from "../algoritms/model";
 import { graphControll } from "../graph/controller";
@@ -21,17 +32,48 @@ export enum GameStatus {
   RESET = "RESET",
 }
 
+type Path = {
+  path: number[];
+  timeEnd: number;
+} & AlgoritmController;
+
+type SetHistoryGame = {
+  path: Path | null;
+  currentAlgoritm: string;
+  graph: CombidenGraphType;
+};
+
+type HistoryGame = {
+  barrier: Array<BarierItem>;
+  startEndPosition: [number, number];
+  currentAlgoritm: string;
+  index: string;
+  timeEnd?: string;
+  path?: number[];
+  count?: number;
+};
+
 const gameDomain = createDomain("game");
 
 export const setGameStatus: Event<GameStatus> = gameDomain.event();
-export const setTimer = gameDomain.event();
-export const setHistoryGame = gameDomain.event();
-export const recoveryHistoryGame = gameDomain.event();
-export const setCurrentGame = gameDomain.event();
 
-export const $path = gameDomain.store({}).reset(resetStore, clearCanvas);
-export const $historyGame = gameDomain.store([]);
-export const $currentTimer = gameDomain.store(15).on(setTimer, filtredFps);
+export const setTimer: Event<number> = gameDomain.event();
+
+export const setHistoryGame: Event<SetHistoryGame> = gameDomain.event();
+
+export const recoveryHistoryGame: Event<number> = gameDomain.event();
+
+export const setCurrentGame: Event<number> = gameDomain.event();
+
+export const $path: Store<Path | null> = gameDomain
+  .store(null)
+  .reset(resetStore, clearCanvas);
+
+export const $historyGame: Store<Array<HistoryGame>> = gameDomain.store([]);
+
+export const $currentTimer: Store<number> = gameDomain
+  .store(15)
+  .on(setTimer, filtredFps);
 
 const $stateForRecoverHistory = combine({
   path: $path,
@@ -41,22 +83,15 @@ const $stateForRecoverHistory = combine({
 
 $historyGame.on(
   setHistoryGame,
-  (
-    state,
-    {
-      currentAlgoritm,
-      path: { count, path, timeEnd },
-      graph: { barrier, startEndPosition },
-    }
-  ) => {
+  (state, { currentAlgoritm, path, graph: { barrier, startEndPosition } }) => {
     const nextGame = {
       barrier,
       startEndPosition,
       currentAlgoritm,
-      index: timeEnd.toFixed(1) + currentAlgoritm,
-      timeEnd: timeEnd.toFixed(1),
-      path,
-      count,
+      index: path?.timeEnd.toFixed(1) + currentAlgoritm,
+      timeEnd: path?.timeEnd.toFixed(1),
+      path: path?.path,
+      count: path?.count,
     };
 
     const findedGame = _.find(state, nextGame);
@@ -65,23 +100,27 @@ $historyGame.on(
   }
 );
 
-export const $currentGame = restore(setCurrentGame, null).reset(resetStore);
+export const $currentGame: Store<number | null> = restore(
+  setCurrentGame,
+  null
+).reset(resetStore);
 
-export const $gameState = restore(setGameStatus, GameStatus.RESET).reset(
-  resetStore
-);
+export const $gameState: Store<GameStatus> = restore(
+  setGameStatus,
+  GameStatus.RESET
+).reset(resetStore);
 
-export const startGame = guard({
+export const startGame: Event<GameStatus> = guard({
   source: $gameState,
   filter: $gameState.map((state) => state === GameStatus.START),
 });
 
-export const resumeGame = guard({
+export const resumeGame: Event<GameStatus> = guard({
   source: $gameState,
   filter: $gameState.map((state) => state === GameStatus.RESUME),
 });
 
-export const endGame = guard({
+export const endGame: Event<GameStatus> = guard({
   source: $gameState,
   filter: $gameState.map((state) => state === GameStatus.END_GAME),
 });
@@ -112,13 +151,17 @@ sample({
 });
 
 sample({
-  source: {
+  source: combine({
     graph: $graph,
     algoritm: $searchAlgoritm,
-  },
+  }),
   clock: startGame,
   target: $path,
   fn: ({ graph, algoritm }) => {
+    if (!algoritm) {
+      return {};
+    }
+
     const [start, end] = graph.startEndPosition;
 
     const time = window.performance.now();
@@ -137,20 +180,24 @@ sample({
   },
 });
 
-sampleForHistoryGame($barriers, "barrier");
-sampleForHistoryGame($startEndPosition, "startEndPosition");
-sampleForHistoryGame($currentGame, "index");
-sampleForHistoryGame($currentAlgoritm, "currentAlgoritm");
+sampleForHistoryGame<Array<BarierItem>>($barriers, "barrier");
+sampleForHistoryGame<[number, number]>($startEndPosition, "startEndPosition");
+sampleForHistoryGame<number | null>($currentGame, "index");
+sampleForHistoryGame<string>($currentAlgoritm, "currentAlgoritm");
 
-function sampleForHistoryGame(target, key) {
+function sampleForHistoryGame<T>(target: Store<T>, key: keyof HistoryGame) {
   return sample({
+    //@ts-ignore
     source: $historyGame,
     clock: restoredHistoryGame,
+    //@ts-ignore
     target,
     fn: (historyGame, index) => {
-      const findedGame = historyGame.find((game) => game.index === index);
+      const findedGame = historyGame.find(
+        (game) => Number(game.index) === index
+      );
 
-      return findedGame[key];
+      return findedGame ? findedGame[key] : null;
     },
   });
 }

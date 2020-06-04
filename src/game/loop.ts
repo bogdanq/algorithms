@@ -6,6 +6,8 @@ import {
   guard,
   combine,
   merge,
+  Store,
+  Event,
 } from "effector";
 import { clearCanvas, resetStore } from "../graph";
 import { checkGameStatus } from "./utils";
@@ -19,11 +21,14 @@ import {
 import { animatedVisitedVertex } from "./animated-vertex";
 
 const tickFx = createEffect().use(
-  (fps) => new Promise((rs) => setTimeout(rs, 1000 / (fps * 2)))
+  (fps: number) => new Promise((rs) => setTimeout(rs, 1000 / (fps * 2)))
 );
 
-export function createTick($state, context) {
-  const $animationCount = createStore(0).reset(clearCanvas, resetStore);
+export function createTick($state: any, context: any) {
+  const $animationCount: Store<number> = createStore(0).reset(
+    clearCanvas,
+    resetStore
+  );
 
   const tickWithParams = attach({
     effect: tickFx,

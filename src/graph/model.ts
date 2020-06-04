@@ -8,13 +8,21 @@ import {
   Store,
 } from "effector";
 import { startPosition, endPosition, BarrierType } from "../config";
-import { graphControll } from "./controller";
+import { graphControll, GraphType } from "./controller";
 import {
   setBarrierToGraph,
   setStartPositionToGraph,
   setEndPositionToGraph,
 } from "./utils";
 import { BarierItem } from "./barrier";
+
+export type CombidenGraphType = {
+  graph: GraphType;
+  barrier: BarierItem[];
+  barrierType: string;
+  startEndPosition: [number, number];
+  canMoveDiagonal: boolean;
+};
 
 const graphDomain = createDomain("graph");
 

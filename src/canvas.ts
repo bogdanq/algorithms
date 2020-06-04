@@ -22,7 +22,7 @@ const $state = combine({
   barrierType: $barrierType,
 });
 
-export function renderCanvas(canvas, context) {
+export function renderCanvas(canvas: any, context: any) {
   const localSize = getLocalSize(pageWidth, pageHeight);
   const globalSize = getGlobalSize(localSize.w, localSize.h);
   const gridData = buildGrid(context);

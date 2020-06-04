@@ -4,11 +4,16 @@ import { renderPath } from "../render/render-path";
 import { getPositionByIndex, drawSquare } from "../config";
 
 class AnimatedVisitedVertex {
+  public context: null | number;
+
   constructor() {
     this.context = null;
   }
 
-  setVertex({ animationCount, state }, context) {
+  setVertex(
+    { animationCount, state }: { animationCount: number; state: any },
+    context: any
+  ) {
     if (!this.context) {
       this.context = context;
     }
