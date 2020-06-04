@@ -50,8 +50,8 @@ export function depthFirstSearch(
       ) {
         stack.unshift(sibling.vertex);
         visited.push(sibling.vertex);
-
         path[sibling.vertex] = currentIndex;
+
         aInfo.increment();
       }
 

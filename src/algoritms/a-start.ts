@@ -73,9 +73,16 @@ export function aStar(
             nextWeight +
               heuristic(positionByEndIndex, getPositionByIndex(sibling.vertex)),
           ]);
+
           path[sibling.vertex] = currentIndex;
           visited.set(sibling.vertex, nextWeight);
+
           aInfo.increment();
+
+          // if (endIndex === sibling.vertex) {
+          //   isWork = false;
+          //   break;
+          // }
         }
       }
     }
