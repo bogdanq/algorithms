@@ -10,7 +10,7 @@ import {
 import { clearCanvas, resetStore } from "../graph";
 import { checkGameStatus } from "./utils";
 import {
-  gameStatus,
+  GameStatus,
   $gameState,
   $currentTimer,
   startGame,
@@ -46,7 +46,7 @@ export function createTick($state, context) {
   guard({
     source: merge([startGame, resumeGame, tickWithParams.done]),
     filter: $gameState.map((state) =>
-      checkGameStatus(state, [gameStatus.RESUME, gameStatus.START])
+      checkGameStatus(state, [GameStatus.RESUME, GameStatus.START])
     ),
     target: tickWithParams,
   });

@@ -1,5 +1,5 @@
 import { getTargetIndex } from "./config";
-import { $gameState, gameStatus, checkGameStatus } from "./game";
+import { $gameState, GameStatus, checkGameStatus } from "./game";
 
 class Controll {
   constructor() {
@@ -15,9 +15,9 @@ class Controll {
     $gameState.watch((state) => {
       if (
         checkGameStatus(state, [
-          gameStatus.START,
-          gameStatus.PAUSE,
-          gameStatus.RESUME,
+          GameStatus.START,
+          GameStatus.PAUSE,
+          GameStatus.RESUME,
         ])
       ) {
         this.disabledListener();

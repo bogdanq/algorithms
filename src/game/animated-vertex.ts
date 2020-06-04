@@ -1,5 +1,5 @@
 import { addProcessedVertex, addVisitedVertex } from "../algoritms";
-import { setGameStatus, gameStatus } from "./model";
+import { setGameStatus, GameStatus } from "./model";
 import { renderPath } from "../render/render-path";
 import { getPositionByIndex, drawSquare } from "../config";
 
@@ -22,7 +22,7 @@ class AnimatedVisitedVertex {
         addVisitedVertex(processing[animationCount - 1].vertex);
       }
     } else {
-      setGameStatus(gameStatus.END_GAME);
+      setGameStatus(GameStatus.END_GAME);
 
       renderPath({
         path: state.path,

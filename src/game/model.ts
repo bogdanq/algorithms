@@ -1,4 +1,4 @@
-import { sample, guard, restore, createDomain, combine } from "effector";
+import { sample, guard, restore, createDomain, combine, Event } from "effector";
 import _ from "lodash";
 import {
   $graph,
@@ -11,19 +11,19 @@ import { $searchAlgoritm, $currentAlgoritm } from "../algoritms/model";
 import { graphControll } from "../graph/controller";
 import { filtredFps } from "./utils";
 
-export const gameStatus = {
-  START: "START",
-  RESTART: "RESTART",
-  PAUSE: "PAUSE",
-  RESUME: "RESUME",
-  CLEAR: "CLEAR",
-  END_GAME: "END_GAME",
-  RESET: "RESET",
-};
+export enum GameStatus {
+  START = "START",
+  RESTART = "RESTART",
+  PAUSE = "PAUSE",
+  RESUME = "RESUME",
+  CLEAR = "CLEAR",
+  END_GAME = "END_GAME",
+  RESET = "RESET",
+}
 
 const gameDomain = createDomain("game");
 
-export const setGameStatus = gameDomain.event();
+export const setGameStatus: Event<GameStatus> = gameDomain.event();
 export const setTimer = gameDomain.event();
 export const setHistoryGame = gameDomain.event();
 export const recoveryHistoryGame = gameDomain.event();
@@ -67,41 +67,41 @@ $historyGame.on(
 
 export const $currentGame = restore(setCurrentGame, null).reset(resetStore);
 
-export const $gameState = restore(setGameStatus, gameStatus.RESET).reset(
+export const $gameState = restore(setGameStatus, GameStatus.RESET).reset(
   resetStore
 );
 
 export const startGame = guard({
   source: $gameState,
-  filter: $gameState.map((state) => state === gameStatus.START),
+  filter: $gameState.map((state) => state === GameStatus.START),
 });
 
 export const resumeGame = guard({
   source: $gameState,
-  filter: $gameState.map((state) => state === gameStatus.RESUME),
+  filter: $gameState.map((state) => state === GameStatus.RESUME),
 });
 
 export const endGame = guard({
   source: $gameState,
-  filter: $gameState.map((state) => state === gameStatus.END_GAME),
+  filter: $gameState.map((state) => state === GameStatus.END_GAME),
 });
 
 const restoredHistoryGame = guard({
   source: recoveryHistoryGame,
   filter: $gameState.map(
-    (state) => state === gameStatus.END_GAME || state === gameStatus.RESET
+    (state) => state === GameStatus.END_GAME || state === GameStatus.RESET
   ),
 });
 
 guard({
   source: $gameState,
-  filter: $gameState.map((state) => state === gameStatus.CLEAR),
+  filter: $gameState.map((state) => state === GameStatus.CLEAR),
   target: resetStore,
 });
 
 guard({
   source: $gameState,
-  filter: $gameState.map((state) => state === gameStatus.START),
+  filter: $gameState.map((state) => state === GameStatus.START),
   target: clearCanvas,
 });
 

@@ -1,5 +1,5 @@
-import { BarrierType } from "../config";
 import { Vertex } from "graph";
+import { BarrierType } from "../config";
 
 export const canVisitedVertex = (vertex: { type: BarrierType }) => {
   if (vertex.type !== BarrierType.BARIER) {
@@ -25,7 +25,7 @@ export function restorePath(
 }
 
 export function getVertexWeight(vertex: Vertex | null) {
-  if (vertex.weight) {
+  if (vertex && vertex.weight) {
     return vertex.weight;
   }
 

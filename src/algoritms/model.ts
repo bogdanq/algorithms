@@ -4,32 +4,52 @@ import {
   createEvent,
   restore,
   createDomain,
+  Store,
+  Event,
 } from "effector";
+import { clearCanvas, resetStore, BarierItem } from "../graph";
+import { setGameStatus, GameStatus } from "../game";
+import { aStar } from "./a-start";
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";
 import { dijkstra } from "./dijkstra";
-import { clearCanvas, resetStore } from "../graph";
-import { setGameStatus, gameStatus } from "../game";
-import { aStar } from "./a-start";
 
-const algoritmsDomain = createDomain();
+type Algoritms = Array<{
+  searchFunction: any;
+  name: string;
+  modal?: boolean;
+}>;
 
-export const selectAlgoritm = createEvent();
-export const addVisitedVertex = createEvent();
-export const addProcessedVertex = createEvent();
-export const addCustomAlgoritm = createEvent();
+type ProcessedVertex = {
+  vertex: null | number;
+  siblings: number[];
+};
 
-export const $currentAlgoritm = restore(selectAlgoritm, "bredth first search");
-export const $visitedVertex = algoritmsDomain.store([]);
-export const $processedVertex = algoritmsDomain.store({
+const algoritmsDomain = createDomain("algoritmsDomain");
+
+export const selectAlgoritm: Event<string> = createEvent();
+
+export const addVisitedVertex: Event<BarierItem> = createEvent();
+
+export const addProcessedVertex: Event<ProcessedVertex> = createEvent();
+
+export const addCustomAlgoritm: Event<any> = createEvent();
+
+export const $currentAlgoritm: Store<string> = restore(
+  selectAlgoritm,
+  "bredth first search"
+);
+
+export const $visitedVertex: Store<Array<BarierItem>> = algoritmsDomain.store(
+  []
+);
+
+export const $processedVertex: Store<ProcessedVertex> = algoritmsDomain.store({
   vertex: null,
   siblings: [],
 });
 
-$visitedVertex.on(addVisitedVertex, (state, vertex) => [...state, vertex]);
-$processedVertex.on(addProcessedVertex, (_, processed) => processed);
-
-export const $algoritms = createStore([
+export const $algoritms: Store<Algoritms> = createStore([
   {
     searchFunction: breadthFirstSearch,
     name: "bredth first search",
@@ -66,6 +86,10 @@ export const $searchAlgoritm = combine(
     algoritms.find((algoritm) => algoritm.name === currentAlgoritm)
 );
 
+$visitedVertex.on(addVisitedVertex, (state, vertex) => [...state, vertex]);
+
+$processedVertex.on(addProcessedVertex, (_, processed) => processed);
+
 algoritmsDomain.onCreateStore((store) => store.reset(clearCanvas, resetStore));
 
-selectAlgoritm.watch(() => setGameStatus(gameStatus.RESET));
+selectAlgoritm.watch(() => setGameStatus(GameStatus.RESET));
