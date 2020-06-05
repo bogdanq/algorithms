@@ -4,32 +4,40 @@ import {
   setBarrierToState,
   setEndToStore,
   setStartToStore,
+  BarrierItem,
+  CombidenGraphType,
 } from "../graph";
 
 class Barrier {
+  private barrierType: null | string;
+  protected context: null | CanvasRenderingContext2D;
+
   constructor() {
-    this.BarrierType = null;
+    this.barrierType = null;
     this.context = null;
     this.setBarrierToStateWithType = this.setBarrierToStateWithType.bind(this);
     this.clear = this.clear.bind(this);
   }
 
-  setBarrierToStateWithType(event, state) {
+  setBarrierToStateWithType(
+    event: MouseEvent,
+    state: { graph: CombidenGraphType }
+  ) {
     const { w, h } = getLocalSize(event.clientX, event.clientY);
     const index = getIndexByPosition([w, h]);
     const { graph } = state;
 
-    if (!this.BarrierType) {
-      this.BarrierType = graph.graph[index].type;
+    if (!this.barrierType) {
+      this.barrierType = graph.graph[index].type;
     }
 
-    switch (this.BarrierType) {
+    switch (this.barrierType) {
       case BarrierType.BARIER:
-        return removeBarrierFromState(event, state);
+        return removeBarrierFromState(event);
       case BarrierType.WATER:
-        return removeBarrierFromState(event, state);
+        return removeBarrierFromState(event);
       case BarrierType.SAND:
-        return removeBarrierFromState(event, state);
+        return removeBarrierFromState(event);
       case BarrierType.START_POSITION:
         return setStartToStore(index, state);
       case BarrierType.END_POSITION:
@@ -39,7 +47,10 @@ class Barrier {
     }
   }
 
-  drowBarriersWithType(barriers, context) {
+  drowBarriersWithType(
+    barriers: Array<BarrierItem>,
+    context: CanvasRenderingContext2D
+  ) {
     for (let i = 0; i < barriers.length; i++) {
       if (barriers[i].barrierType === BarrierType.WATER) {
         barriers[i].render(context, "#86c7e6");
@@ -54,7 +65,7 @@ class Barrier {
   }
 
   clear() {
-    this.BarrierType = null;
+    this.barrierType = null;
   }
 }
 

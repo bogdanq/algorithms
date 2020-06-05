@@ -1,9 +1,9 @@
 import React from "react";
 import { sample, createStore } from "effector";
 import { useStore } from "effector-react";
-import { $path, endGame } from "../../../game";
+import { $path, endGame, Path } from "../../../game";
 
-const $graphState = createStore({});
+const $graphState = createStore<Path | null>(null);
 
 sample({
   source: $path,

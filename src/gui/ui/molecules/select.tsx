@@ -1,8 +1,8 @@
 import React from "react";
+import { useStore } from "effector-react";
 import { Select as DefaultSelect, MenuItem } from "@material-ui/core";
 import { BarrierType } from "../../../config";
 import { setBarrierType, $barrierType } from "../../../graph";
-import { useStore } from "effector-react";
 
 export function SelectBarrierType() {
   const barrierType = useStore($barrierType);

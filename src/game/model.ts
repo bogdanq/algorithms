@@ -35,7 +35,7 @@ type SetHistoryGame = {
   graph: CombidenGraphType;
 };
 
-type HistoryGame = {
+export type HistoryGame = {
   barrier: Array<BarrierItem>;
   startEndPosition: [number, number];
   currentAlgoritm: string;
@@ -136,6 +136,7 @@ guard({
 });
 
 sample({
+  // @ts-ignore
   source: $stateForRecoverHistory,
   clock: endGame,
   target: setHistoryGame,

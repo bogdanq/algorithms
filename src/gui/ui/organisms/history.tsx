@@ -2,7 +2,12 @@ import React from "react";
 import { FaHistory } from "react-icons/fa";
 import styled, { css } from "styled-components";
 import { useStore } from "effector-react";
-import { $historyGame, recoveryHistoryGame, $currentGame } from "../../../game";
+import {
+  $historyGame,
+  recoveryHistoryGame,
+  $currentGame,
+  HistoryGame,
+} from "../../../game";
 import { ModalWrapper } from "../molecules";
 import { Icon } from "../atoms";
 
@@ -30,7 +35,13 @@ export function History() {
   );
 }
 
-function HistoryList({ historyGame, setOpen }) {
+function HistoryList({
+  historyGame,
+  setOpen,
+}: {
+  historyGame: Array<HistoryGame>;
+  setOpen: (param: boolean) => void;
+}) {
   const currentGame = useStore($currentGame);
   const handleChangeItem = React.useCallback(
     (item) => {
@@ -45,14 +56,14 @@ function HistoryList({ historyGame, setOpen }) {
       <>
         {historyGame.map((item, index) => (
           <HistoryItem
-            active={currentGame === item.index}
+            active={currentGame === parseInt(item.index)}
             onClick={() => handleChangeItem(item)}
             key={index.toString()}
           >
             <p>Алгоритм: {item.currentAlgoritm}</p>
-            <p>Путь: {item.path.length}</p>
-            <p>Время: {item.timeEnd} ms</p>
-            <p>Баррьеры: {item.barrier.length}</p>
+            <p>Путь: {item?.path?.length || 0}</p>
+            <p>Время: {item.timeEnd || 0} ms</p>
+            <p>Баррьеры: {item.barrier.length || 0}</p>
             <p>
               Старт - Конец: {item.startEndPosition[0]} /{" "}
               {item.startEndPosition[1]}
@@ -64,7 +75,7 @@ function HistoryList({ historyGame, setOpen }) {
   );
 }
 
-const HistoryItem = styled.div`
+const HistoryItem = styled.div<{ active: boolean }>`
   border: 2px solid #666666;
   border-radius: 10px;
   padding: 5px 10px;
@@ -88,7 +99,7 @@ const HistoryListWrapper = styled.div`
   max-height: 500px;
 `;
 
-const HistoryIcon = styled.div`
+const HistoryIcon = styled.div<{ historyCount: number }>`
   position: relative;
   &:after {
     ${({ historyCount }) =>

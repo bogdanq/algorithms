@@ -1,12 +1,12 @@
 import React from "react";
 import { combine } from "effector";
 import { useStore } from "effector-react";
-import { ModalWrapper } from "../molecules";
 import {
   $algoritms,
   selectAlgoritm,
   $currentAlgoritm,
 } from "../../../algoritms";
+import { ModalWrapper } from "../molecules";
 import { CodeArea } from "./code-area";
 
 const $state = combine({
@@ -37,13 +37,18 @@ export function AlgoritmsList() {
           </li>
         ))}
       </ul>
-
       <CustomAlgoritmModal isOpen={isOpen} setOpen={setOpen} />
     </>
   );
 }
 
-const CustomAlgoritmModal = ({ isOpen, setOpen }) => {
+const CustomAlgoritmModal = ({
+  isOpen,
+  setOpen,
+}: {
+  isOpen: boolean;
+  setOpen: (param: boolean) => void;
+}) => {
   return (
     <ModalWrapper
       width={700}

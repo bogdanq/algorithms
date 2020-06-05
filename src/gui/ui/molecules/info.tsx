@@ -7,6 +7,7 @@ import { FlexContainer } from "../templates";
 
 export function Info() {
   const [isOpen, setOpen] = React.useState(false);
+
   return (
     <>
       <Icon onClick={() => setOpen(true)}>
@@ -18,7 +19,13 @@ export function Info() {
   );
 }
 
-function InfoModal({ isOpen, setOpen }) {
+function InfoModal({
+  isOpen,
+  setOpen,
+}: {
+  isOpen: boolean;
+  setOpen: (param: boolean) => void;
+}) {
   return (
     <ModalWrapper
       width={500}

@@ -20,7 +20,7 @@ export function breadthFirstSearch(
   while (isWork && queue.length > 0) {
     const currentIndex = queue.shift();
 
-    if (!currentIndex) {
+    if (currentIndex === undefined) {
       isWork = false;
       break;
     }

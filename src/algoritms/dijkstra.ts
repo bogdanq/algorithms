@@ -27,7 +27,7 @@ export function dijkstra(
   while (isWork && !priorityQueue.isEmpty()) {
     const [currentIndex] = priorityQueue.poll() || [];
 
-    if (!currentIndex || currentIndex === endIndex) {
+    if (currentIndex === undefined || currentIndex === endIndex) {
       isWork = false;
       break;
     }
@@ -75,10 +75,10 @@ export function dijkstra(
 
           aInfo.increment();
 
-          // if (endIndex === sibling.vertex) {
-          //   isWork = false;
-          //   break;
-          // }
+          if (endIndex === sibling.vertex) {
+            isWork = false;
+            break;
+          }
         }
       }
     }

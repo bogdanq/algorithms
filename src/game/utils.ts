@@ -1,11 +1,12 @@
 import { ru } from "date-fns/locale";
 import { formatWithOptions } from "date-fns/fp";
+import { GameStatus } from "./model";
 
-export function checkGameStatus(target, status) {
+export function checkGameStatus(target: GameStatus, status: Array<GameStatus>) {
   return status.some((item) => target === item);
 }
 
-export function filtredFps(_, fps) {
+export function filtredFps(_: number, fps: number) {
   const fpsVariant = {
     min: 1,
     max: 30,

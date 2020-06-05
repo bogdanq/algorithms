@@ -1,20 +1,37 @@
 import React from "react";
 import { css } from "styled-components";
 
-export const WithTag = ({ as, children, to, onClick, ...props }) =>
+type TagsProps = {
+  as: React.ComponentType<any>;
+  to?: string;
+  children: React.ReactNode;
+  onClick?: React.Dispatch<void>;
+};
+
+export type MixinsProps = {
+  alignContent?: string;
+  align?: string;
+  basis?: string;
+  grow?: string;
+  shrink?: string;
+  justify?: string;
+  order?: string;
+  padding?: string;
+  width?: string;
+  maxW?: string;
+};
+
+export const WithTag = ({ as, children, to, onClick, ...props }: TagsProps) =>
   React.createElement(as, { to, onClick, ...props }, children);
 
 WithTag.defaultProps = {
   as: "div",
 };
 
-const is = (value) => Boolean(value);
-const prop = (value) => (is(value) ? value : "initial");
-export const ifProps = (name, styles) => (props) => is(props[name]) && styles;
-export const getStyle = (propsName, styles) => (props) =>
-  props[propsName] && styles[props[propsName]];
+const is = (value?: string) => typeof value !== "undefined";
+const prop = (value?: string) => (is(value) ? value : "initial");
 
-export const mixins = (props) => css`
+export const mixins = (props: MixinsProps) => css`
   align-content: ${prop(props.alignContent)};
   align-items: ${prop(props.align)};
   flex-basis: ${prop(props.basis)};

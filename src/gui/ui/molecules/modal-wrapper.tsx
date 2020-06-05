@@ -4,7 +4,19 @@ import ReactModal from "react-modal";
 
 ReactModal.setAppElement("#root");
 
-export function ModalWrapper({ isOpen, onRequestClose, children, width }) {
+type Props = {
+  isOpen: boolean;
+  onRequestClose: () => void;
+  children: React.ReactNode;
+  width?: number;
+};
+
+export function ModalWrapper({
+  isOpen,
+  onRequestClose,
+  children,
+  width,
+}: Props) {
   return (
     <ReactModal
       isOpen={isOpen}
@@ -23,7 +35,7 @@ export function ModalWrapper({ isOpen, onRequestClose, children, width }) {
   );
 }
 
-export const StyledInner = styled.div`
+export const StyledInner = styled.div<{ width?: number }>`
   background: #fff;
   padding: 25px;
   display: inline-block;

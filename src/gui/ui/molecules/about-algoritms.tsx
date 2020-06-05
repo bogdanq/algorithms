@@ -5,6 +5,7 @@ import { Icon } from "../atoms";
 
 export function AboutAlgoritms() {
   const [isOpen, setOpen] = React.useState(false);
+
   return (
     <>
       <Icon onClick={() => setOpen(true)}>

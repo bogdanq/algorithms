@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { WithTag, mixins } from "../../lib/styled-components-layout";
+import { mixins, MixinsProps } from "../../lib/styled-components-layout";
 
-export const FlexContainer = styled(WithTag)`
-  ${mixins}
+export const FlexContainer = styled.div<{ direction?: string } & MixinsProps>`
+  ${mixins as any}
   display: flex;
   flex-direction: ${({ direction }) => direction || "row"};
   align-items: center;

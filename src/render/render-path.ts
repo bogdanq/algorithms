@@ -5,7 +5,7 @@ import {
 } from "../config";
 
 type RenderPath = {
-  context: any;
+  context: CanvasRenderingContext2D;
   path: number[];
   color?: string;
 };

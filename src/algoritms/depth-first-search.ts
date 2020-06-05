@@ -20,7 +20,7 @@ export function depthFirstSearch(
   while (isWork && stack.length > 0) {
     const currentIndex = stack.shift();
 
-    if (!currentIndex) {
+    if (currentIndex === undefined) {
       isWork = false;
       break;
     }

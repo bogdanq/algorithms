@@ -4,7 +4,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { Button } from "../atoms";
 
-export function InfoAboutAlgoritmApi({ codeString }) {
+export function InfoAboutAlgoritmApi({ codeString }: { codeString: string }) {
   const [isOpen, toggle] = React.useReducer((prev) => !prev, false);
 
   return (
@@ -27,7 +27,7 @@ export function InfoAboutAlgoritmApi({ codeString }) {
   );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ isOpen: boolean }>`
   ${({ isOpen }) =>
     isOpen
       ? css`

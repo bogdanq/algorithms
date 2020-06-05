@@ -19,7 +19,7 @@ const graphControll = newGraph;
 
 let foo = null;
 
-export function CodeArea({ onRequestClose }) {
+export function CodeArea({ onRequestClose }: { onRequestClose: () => void }) {
   const code = useStore($code);
 
   const handleChangeAlgoritm = React.useCallback(() => {
