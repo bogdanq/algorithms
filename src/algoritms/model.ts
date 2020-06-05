@@ -5,43 +5,51 @@ import {
   restore,
   createDomain,
 } from "effector";
-import { clearCanvas, resetStore, BarierItem } from "../graph";
+import { clearCanvas, resetStore } from "../graph";
 import { setGameStatus, GameStatus } from "../game";
 import { aStar } from "./a-start";
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";
 import { dijkstra } from "./dijkstra";
 
-type Algoritms = Array<{
+export type AlgoritmName =
+  | "bredth first search"
+  | "depth first search"
+  | "dijkstra"
+  | "a-star"
+  | "custom function";
+
+export type Algoritms = Array<{
   searchFunction: any;
-  name: string;
+  name: AlgoritmName;
+
   modal?: boolean;
 }>;
 
-type ProcessedVertex = {
-  vertex: null | number;
-  siblings: number[];
+export type ProcessedVertex = {
+  vertex: number;
+  siblings: Array<number>;
 };
 
 const algoritmsDomain = createDomain("algoritmsDomain");
 
-export const selectAlgoritm = createEvent<string>();
+export const selectAlgoritm = createEvent<AlgoritmName>();
 
-export const addVisitedVertex = createEvent<BarierItem>();
+export const addVisitedVertex = createEvent<number>();
 
 export const addProcessedVertex = createEvent<ProcessedVertex>();
 
 export const addCustomAlgoritm = createEvent<any>();
 
-export const $currentAlgoritm = restore<string>(
+export const $currentAlgoritm = restore<AlgoritmName>(
   selectAlgoritm,
   "bredth first search"
 );
 
-export const $visitedVertex = algoritmsDomain.store<Array<BarierItem>>([]);
+export const $visitedVertex = algoritmsDomain.store<Array<number>>([]);
 
 export const $processedVertex = algoritmsDomain.store<ProcessedVertex>({
-  vertex: null,
+  vertex: 0,
   siblings: [],
 });
 
@@ -67,19 +75,21 @@ export const $algoritms = createStore<Algoritms>([
     name: "custom function",
     modal: true,
   },
-]).on(addCustomAlgoritm, (state, foo) =>
-  state.map((algoritm) =>
-    algoritm.name === "custom function"
-      ? { ...algoritm, searchFunction: foo }
-      : algoritm
-  )
-);
+]);
 
 export const $searchAlgoritm = combine(
   $currentAlgoritm,
   $algoritms,
   (currentAlgoritm, algoritms) =>
     algoritms.find((algoritm) => algoritm.name === currentAlgoritm)
+);
+
+$algoritms.on(addCustomAlgoritm, (state, foo) =>
+  state.map((algoritm) =>
+    algoritm.name === "custom function"
+      ? { ...algoritm, searchFunction: foo }
+      : algoritm
+  )
 );
 
 $visitedVertex.on(addVisitedVertex, (state, vertex) => [...state, vertex]);

@@ -8,7 +8,12 @@ import {
   pageWidth,
 } from "../config";
 
-export function buildGrid(context) {
+export type Grid = {
+  grid: Path2D;
+  applyStyles: () => void;
+};
+
+export function buildGrid(context: CanvasRenderingContext2D) {
   const grid = new Path2D();
 
   const localSize = getLocalSize(pageWidth, pageHeight);

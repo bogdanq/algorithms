@@ -4,11 +4,12 @@ import {
   setBarrier,
   triggerEndPosition,
   triggerStartPosition,
+  CombidenGraphType,
 } from "./model";
 import { Graph } from "./controller";
-import { BarierItem } from "./barrier";
+import { BarrierItem } from "./barrier";
 
-export function setBarrierToGraph(graph: Graph, barriers: Array<BarierItem>) {
+export function setBarrierToGraph(graph: Graph, barriers: Array<BarrierItem>) {
   barriers.forEach((barrier) => {
     if (barrier.barrierType === BarrierType.BARIER) {
       graph.updateGraph({
@@ -44,15 +45,18 @@ export function setEndPositionToGraph(graph: Graph, endIndex: number) {
   graph.updateGraph({ index: endIndex, type: BarrierType.END_POSITION });
 }
 
-export function setBarrierToState(event, state) {
+export function setBarrierToState(
+  event: MouseEvent,
+  state: { graph: CombidenGraphType }
+) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
 
   const {
     graph: {
       startEndPosition: [startIndex, endIndex],
+      barrierType,
     },
-    barrierType,
   } = state;
 
   if (index !== startIndex && index !== endIndex) {
@@ -60,14 +64,17 @@ export function setBarrierToState(event, state) {
   }
 }
 
-export function removeBarrierFromState(event) {
+export function removeBarrierFromState(event: MouseEvent) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
 
   removeBarrierItem(index);
 }
 
-export function setStartToStore(index: number, { graph }) {
+export function setStartToStore(
+  index: number,
+  { graph }: { graph: CombidenGraphType }
+) {
   const findIndex = graph.barrier.find((barrier) => barrier.index === index);
   const [, endIndex] = graph.startEndPosition;
 
@@ -76,7 +83,10 @@ export function setStartToStore(index: number, { graph }) {
   }
 }
 
-export function setEndToStore(index: number, { graph }) {
+export function setEndToStore(
+  index: number,
+  { graph }: { graph: CombidenGraphType }
+) {
   const findIndex = graph.barrier.find((barrier) => barrier.index === index);
   const [startIndex] = graph.startEndPosition;
 

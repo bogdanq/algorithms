@@ -6,7 +6,6 @@ import {
   $graph,
   resetStore,
   clearCanvas,
-  $barrierType,
   removeBarrierFromState,
 } from "./graph";
 import { executeLogic } from "./render/render";
@@ -19,10 +18,12 @@ const $state = combine({
   visitedVertex: $visitedVertex,
   graph: $graph,
   processedVertex: $processedVertex,
-  barrierType: $barrierType,
 });
 
-export function renderCanvas(canvas: any, context: any) {
+export function renderCanvas(
+  canvas: HTMLCanvasElement,
+  context: CanvasRenderingContext2D
+) {
   const localSize = getLocalSize(pageWidth, pageHeight);
   const globalSize = getGlobalSize(localSize.w, localSize.h);
   const gridData = buildGrid(context);
@@ -42,17 +43,19 @@ export function renderCanvas(canvas: any, context: any) {
   createTick($path, context);
 }
 
-function addEventsToCanvas() {
+function addEventsToCanvas(canvas: HTMLCanvasElement) {
   canvasControl.registerClickEventToCanvas(canvas);
   canvasControl.addMouseMoveEvent(barrier.setBarrierToStateWithType);
   canvasControl.addMouseClickEvent(removeBarrierFromState);
   canvasControl.addMouseUpEvent(barrier.clear);
 }
 
-const canvas = document.getElementById("viewport");
+const canvas = document.querySelector("canvas");
 
 if (canvas) {
   const context = canvas.getContext("2d");
 
-  renderCanvas(canvas, context);
+  if (context) {
+    renderCanvas(canvas, context);
+  }
 }

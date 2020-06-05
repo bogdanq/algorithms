@@ -1,15 +1,25 @@
+import { CombidenGraphType } from "graph";
 import { getTargetIndex } from "./config";
 import { $gameState, GameStatus, checkGameStatus } from "./game";
 
+type EventListener = (
+  event?: MouseEvent,
+  state?: { [key: string]: any },
+  lastIndex?: number | null
+) => void;
+
+type Listener = {
+  type: string;
+  eventListener: EventListener;
+};
+
 class Controll {
-  constructor() {
-    this.isMouseDown = false;
-    this.isMouseMove = false;
-    this.listeners = [];
-    this.state = {};
-    this.lastIndex = null;
-    this.disabledListeners = [];
-  }
+  private isMouseDown: boolean = false;
+  private isMouseMove: boolean = false;
+  private listeners: Array<Listener> = [];
+  private state: { graph: CombidenGraphType } | {} = {};
+  private lastIndex: null | number = null;
+  private disabledListeners: Array<Listener> = [];
 
   init() {
     $gameState.watch((state) => {
@@ -29,8 +39,8 @@ class Controll {
     return this;
   }
 
-  registerClickEventToCanvas(canvas) {
-    canvas.addEventListener("mousedown", (event) => {
+  registerClickEventToCanvas(canvas: HTMLCanvasElement) {
+    canvas.addEventListener("mousedown", (event: MouseEvent) => {
       this.listeners
         .filter((userEvent) => userEvent.type === "mousedown")
         .forEach((userEvent) => userEvent.eventListener());
@@ -39,14 +49,14 @@ class Controll {
       this.isMouseMove = false;
     });
 
-    canvas.addEventListener("mouseup", (event) => {
+    canvas.addEventListener("mouseup", (event: MouseEvent) => {
       this.isMouseDown = false;
       this.listeners
         .filter((userEvent) => userEvent.type === "mouseup")
         .forEach((userEvent) => userEvent.eventListener(event, this.state));
     });
 
-    canvas.addEventListener("click", (event) => {
+    canvas.addEventListener("click", (event: MouseEvent) => {
       this.listeners
         .filter((userEvent) => userEvent.type === "click")
         .forEach((userEvent) => {
@@ -56,7 +66,7 @@ class Controll {
         });
     });
 
-    canvas.addEventListener("mousemove", (event) => {
+    canvas.addEventListener("mousemove", (event: MouseEvent) => {
       const index = getTargetIndex(event);
 
       if (this.isMouseDown && index !== this.lastIndex) {
@@ -79,23 +89,23 @@ class Controll {
     this.listeners = this.disabledListeners;
   }
 
-  addMouseDownEvent(eventListener) {
+  addMouseDownEvent<T extends EventListener>(eventListener: T) {
     this.listeners.push({ type: "mousedown", eventListener });
   }
 
-  addMouseUpEvent(eventListener) {
+  addMouseUpEvent<T extends EventListener>(eventListener: T) {
     this.listeners.push({ type: "mouseup", eventListener });
   }
 
-  addMouseMoveEvent(eventListener) {
+  addMouseMoveEvent<T extends EventListener>(eventListener: T) {
     this.listeners.push({ type: "mousemove", eventListener });
   }
 
-  addMouseClickEvent(eventListener) {
+  addMouseClickEvent<T extends EventListener>(eventListener: T) {
     this.listeners.push({ type: "click", eventListener });
   }
 
-  setState(state) {
+  setState(state: Controll["state"]) {
     this.state = state;
 
     return this;

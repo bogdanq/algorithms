@@ -4,8 +4,18 @@ import {
   cellSize,
 } from "../config";
 
-let prev = null;
-export function renderPath({ context, path = [], color = "green" }) {
+type RenderPath = {
+  context: any;
+  path: number[];
+  color?: string;
+};
+
+let prev: null | [number, number] = null;
+export function renderPath({
+  context,
+  path = [],
+  color = "green",
+}: RenderPath) {
   for (let i = 0; i < path.length; i++) {
     const position = getPositionByIndex(path[i]);
     const [x, y] = convertLocalPositionToGlobal(position);

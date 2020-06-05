@@ -2,17 +2,15 @@ export class AlgoritmController {
   public count: number;
   public processing: Array<{
     vertex: number;
-    siblings: (number | undefined)[];
+    siblings: Array<number>;
   }>;
-  public dejkstra: number[];
-  public visited: (number | null)[];
+  public visited: Array<number | null>;
   public startIndex: number;
   public endIndex: number;
 
   constructor(startIndex: number, endIndex: number) {
     this.count = 0;
     this.processing = [];
-    this.dejkstra = [];
     this.visited = [];
     this.startIndex = startIndex;
     this.endIndex = endIndex;
@@ -26,30 +24,21 @@ export class AlgoritmController {
     {
       vertex,
       siblings,
-      processing,
     }: {
-      vertex?: number;
-      siblings: (
-        | {
-            vertex: number;
-          }
-        | undefined
-      )[];
-      processing?: Array<{ vertex: number }>;
+      vertex: number;
+      siblings: Array<{
+        vertex: number;
+      }>;
     },
     visited: number | null
   ) {
-    if (vertex) {
-      const updateProcessing = {
-        vertex,
-        siblings: ((processing && Object.values(processing)) || siblings)
-          .map((item) => item && item.vertex)
-          .filter(Boolean),
-      };
+    const updateProcessing = {
+      vertex,
+      siblings: siblings.map((item) => item.vertex),
+    };
 
-      this.processing.push(updateProcessing);
-      this.visited.push(visited);
-    }
+    this.processing.push(updateProcessing);
+    this.visited.push(visited);
   }
 
   getAlgotitmResult() {

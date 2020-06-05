@@ -2,7 +2,7 @@ import { BarrierType, pageWidth, getLocalSize, pageHeight } from "../config";
 
 export type Vertex = {
   type: BarrierType;
-  siblings: ({ vertex: number } | undefined)[];
+  siblings: Array<{ vertex: number }>;
   weight?: number;
 };
 
@@ -25,11 +25,9 @@ export class Graph {
     for (let index = 0; index < this.cellCount; index++) {
       this.graph[index] = {
         type: BarrierType.EMPTY,
-        siblings: this.getSiblings(index, canMoveDiagonal)
-          .map((item) =>
-            typeof item !== "undefined" ? { vertex: item } : undefined
-          )
-          .filter(Boolean),
+        siblings: (this.getSiblings(index, canMoveDiagonal).filter(
+          Boolean
+        ) as number[]).map((item) => ({ vertex: item })),
       };
     }
 

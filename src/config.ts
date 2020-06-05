@@ -21,21 +21,28 @@ export enum BarrierType {
   SAND = "SAND",
 }
 
-export function getLocalSize(w, h) {
+type DrawSquare = {
+  color?: string;
+  position: [number, number];
+  context: any;
+  width?: number;
+};
+
+export function getLocalSize(w: number, h: number) {
   return {
     w: Math.floor(w / cellSize),
     h: Math.floor(h / cellSize),
   };
 }
 
-export function getGlobalSize(w, h) {
+export function getGlobalSize(w: number, h: number) {
   return {
     w: Math.floor(w * cellSize),
     h: Math.floor(h * cellSize),
   };
 }
 
-export function convertLocalPositionToGlobal([x, y]) {
+export function convertLocalPositionToGlobal([x, y]: [number, number]) {
   return [x * cellSize, y * cellSize];
 }
 
@@ -44,12 +51,7 @@ export function drawSquare({
   position,
   context,
   width,
-}: {
-  color?: string;
-  position: [number, number];
-  context: any;
-  width?: number;
-}) {
+}: DrawSquare) {
   const [x, y] = convertLocalPositionToGlobal(position);
   const size = width || cellSize - borderSize * 2;
 
@@ -57,11 +59,11 @@ export function drawSquare({
   context.fillRect(x + borderSize * 2, y + borderSize * 2, size, size);
 }
 
-export function clearALlCanvas(context, canvas) {
+export function clearALlCanvas(context: any, canvas: any) {
   return context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-export function getIndexByPosition([x, y]) {
+export function getIndexByPosition([x, y]: [number, number]) {
   const { w } = getLocalSize(pageWidth, pageHeight);
 
   return y * w + x;
@@ -75,14 +77,18 @@ export function getPositionByIndex(index: number): [number, number] {
   return [x, y];
 }
 
-export function getTargetIndex(event) {
+export function getTargetIndex(event: any) {
   const { w, h } = getLocalSize(event.clientX, event.clientY);
   const index = getIndexByPosition([w, h]);
 
   return index;
 }
 
-export function drawMark({ color = "#e84a4a", position, context }) {
+export function drawMark({
+  color = "#e84a4a",
+  position,
+  context,
+}: Exclude<DrawSquare, "width">) {
   const [x, y] = convertLocalPositionToGlobal(position);
 
   context.strokeStyle = color;

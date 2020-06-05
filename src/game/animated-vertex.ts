@@ -1,7 +1,8 @@
 import { addProcessedVertex, addVisitedVertex } from "../algoritms";
-import { setGameStatus, GameStatus } from "./model";
 import { renderPath } from "../render/render-path";
 import { getPositionByIndex, drawSquare } from "../config";
+import { ProcessedVertex } from "../algoritms";
+import { setGameStatus, GameStatus, Path } from "./model";
 
 class AnimatedVisitedVertex {
   public context: null | number;
@@ -11,20 +12,27 @@ class AnimatedVisitedVertex {
   }
 
   setVertex(
-    { animationCount, state }: { animationCount: number; state: any },
+    { animationCount, state }: { animationCount: number; state: Path | null },
     context: any
   ) {
     if (!this.context) {
       this.context = context;
     }
 
+    if (!state) {
+      return;
+    }
+
     const { processing = [] } = state;
 
     if (animationCount < processing.length) {
-      addProcessedVertex(processing[animationCount]);
+      const processed = processing[animationCount];
+      const visited = processing[animationCount - 1];
 
-      if (processing[animationCount - 1]) {
-        addVisitedVertex(processing[animationCount - 1].vertex);
+      addProcessedVertex(processed);
+
+      if (visited) {
+        addVisitedVertex(visited.vertex);
       }
     } else {
       setGameStatus(GameStatus.END_GAME);
@@ -36,7 +44,7 @@ class AnimatedVisitedVertex {
     }
   }
 
-  animatedVertexWithArray(barriers, context, color = "#000") {
+  animatedVertexWithArray(barriers: number[], context: any, color = "#000") {
     for (let i = 0; i < barriers.length; i++) {
       const [x, y] = getPositionByIndex(barriers[i]);
 
@@ -48,7 +56,7 @@ class AnimatedVisitedVertex {
     }
   }
 
-  animatedVertex(barrier, context, color = "#000") {
+  animatedVertex(barrier: number, context: any, color = "#000") {
     if (barrier) {
       const [x, y] = getPositionByIndex(barrier);
 
@@ -60,7 +68,11 @@ class AnimatedVisitedVertex {
     }
   }
 
-  drawVertexWithLoop(processedVertex) {
+  drawVertexWithLoop(processedVertex: ProcessedVertex) {
+    if (!processedVertex.vertex) {
+      return;
+    }
+
     this.animatedVertexWithArray(
       processedVertex.siblings,
       this.context,
@@ -69,7 +81,7 @@ class AnimatedVisitedVertex {
     this.animatedVertex(processedVertex.vertex, this.context, "#f3fc23");
   }
 
-  drawVisitedVertexWithLoop(visitedVertex) {
+  drawVisitedVertexWithLoop(visitedVertex: number[]) {
     this.animatedVertexWithArray(visitedVertex, this.context, "#00bcd4");
   }
 }

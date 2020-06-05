@@ -6,12 +6,12 @@ import {
   setStartPositionToGraph,
   setEndPositionToGraph,
 } from "./utils";
-import { BarierItem } from "./barrier";
+import { BarrierItem } from "./barrier";
 
 export type CombidenGraphType = {
   graph: GraphType;
-  barrier: BarierItem[];
-  barrierType: string;
+  barrier: BarrierItem[];
+  barrierType: BarrierType;
   startEndPosition: [number, number];
   canMoveDiagonal: boolean;
 };
@@ -46,7 +46,7 @@ export const $canMoveDiagonal = graphDomain.store(false);
 
 export const $barrierType = restore(setBarrierType, BarrierType.BARIER);
 
-export const $barriers = graphDomain.store<Array<BarierItem>>([]);
+export const $barriers = graphDomain.store<Array<BarrierItem>>([]);
 
 $canMoveDiagonal.on(changeDirection, (state) => !state);
 
@@ -61,11 +61,11 @@ export const removedBarrier = guard({
   filter: Boolean,
 });
 
-removedBarrier.watch((barrier: BarierItem) => barrier.remove());
+removedBarrier.watch((barrier: BarrierItem) => barrier.remove());
 
 $barriers
   .on(setBarrier, (state, { index, barrierType }) => {
-    const barrier = new BarierItem(index, barrierType);
+    const barrier = new BarrierItem(index, barrierType);
 
     const isFindIndex = state.find((item) => item.getIndex() === index);
 

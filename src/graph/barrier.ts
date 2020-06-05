@@ -6,13 +6,13 @@ import {
 } from "../config";
 import { drawSquareWithAnimation, drawMarkerWithAnimation } from "./animations";
 
-export class BarierItem {
+export class BarrierItem {
   public barrierType: BarrierType;
   public index: number;
   public canDrawe: boolean;
-  public context: null | any;
+  public context: null | CanvasRenderingContext2D;
   public canRemove: boolean;
-  public position: boolean | [number, number];
+  public position: null | [number, number];
 
   constructor(index: number, barrierType: BarrierType) {
     this.barrierType = barrierType;
@@ -20,7 +20,7 @@ export class BarierItem {
     this.canDrawe = false;
     this.context = null;
     this.canRemove = false;
-    this.position = false;
+    this.position = null;
   }
 
   getBarier() {
@@ -58,10 +58,12 @@ export class BarierItem {
   remove() {
     this.canRemove = true;
 
-    drawMarkerWithAnimation({
-      position: this.position,
-      context: this.context,
-    });
+    if (this.position && this.context) {
+      drawMarkerWithAnimation({
+        position: this.position,
+        context: this.context,
+      });
+    }
 
     this.canRemove = false;
   }

@@ -2,7 +2,7 @@ import { drawSquare, drawMark, cellSize } from "../config";
 
 export function drawSquareWithAnimation(params: {
   position: [number, number];
-  context: any;
+  context: CanvasRenderingContext2D;
   color?: string;
   width: number;
   scale?: number;
@@ -40,7 +40,11 @@ export function drawSquareWithAnimation(params: {
   }
 }
 
-export function drawMarkerWithAnimation(params) {
+export function drawMarkerWithAnimation(params: {
+  position: [number, number];
+  context: CanvasRenderingContext2D;
+  width?: number;
+}) {
   let { width = cellSize - 10 } = params;
   let animateId;
 
@@ -65,6 +69,8 @@ export function drawMarkerWithAnimation(params) {
       width: 0,
     });
 
-    cancelAnimationFrame(animateId);
+    if (animateId) {
+      cancelAnimationFrame(animateId);
+    }
   }
 }

@@ -7,7 +7,7 @@ import {
   clearCanvas,
   $barriers,
   $startEndPosition,
-  BarierItem,
+  BarrierItem,
   CombidenGraphType,
 } from "../graph";
 import { $searchAlgoritm, $currentAlgoritm } from "../algoritms/model";
@@ -36,7 +36,7 @@ type SetHistoryGame = {
 };
 
 type HistoryGame = {
-  barrier: Array<BarierItem>;
+  barrier: Array<BarrierItem>;
   startEndPosition: [number, number];
   currentAlgoritm: string;
   index: string;
@@ -171,7 +171,7 @@ sample({
   },
 });
 
-sampleForHistoryGame<Array<BarierItem>>($barriers, "barrier");
+sampleForHistoryGame<Array<BarrierItem>>($barriers, "barrier");
 sampleForHistoryGame<[number, number]>($startEndPosition, "startEndPosition");
 sampleForHistoryGame<number | null>($currentGame, "index");
 sampleForHistoryGame<string>($currentAlgoritm, "currentAlgoritm");
