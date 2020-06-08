@@ -5,8 +5,8 @@ import {
   restore,
   createDomain,
 } from "effector";
-import { clearCanvas, resetStore } from "../graph";
-import { setGameStatus, GameStatus } from "../game";
+import { clearCanvas, resetStore } from "graph";
+import { setGameStatus, GameStatus } from "game";
 import { aStar } from "./a-start";
 import { breadthFirstSearch } from "./bred-first-search";
 import { depthFirstSearch } from "./depth-first-search";

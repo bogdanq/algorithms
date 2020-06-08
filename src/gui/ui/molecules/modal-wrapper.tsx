@@ -18,20 +18,22 @@ export function ModalWrapper({
   width,
 }: Props) {
   return (
-    <ReactModal
-      isOpen={isOpen}
-      closeTimeoutMS={200}
-      onRequestClose={onRequestClose}
-    >
-      <StyledRootWrapper onClick={onRequestClose}>
-        <StyledWrapper>
-          <StyledInner width={width} onClick={(e) => e.stopPropagation()}>
-            {children}
-            <CloseModal onClick={onRequestClose} />
-          </StyledInner>
-        </StyledWrapper>
-      </StyledRootWrapper>
-    </ReactModal>
+    <div onMouseDown={(e) => e.stopPropagation()}>
+      <ReactModal
+        isOpen={isOpen}
+        closeTimeoutMS={200}
+        onRequestClose={onRequestClose}
+      >
+        <StyledRootWrapper onClick={onRequestClose}>
+          <StyledWrapper>
+            <StyledInner width={width} onClick={(e) => e.stopPropagation()}>
+              {children}
+              <CloseModal onClick={onRequestClose} />
+            </StyledInner>
+          </StyledWrapper>
+        </StyledRootWrapper>
+      </ReactModal>
+    </div>
   );
 }
 

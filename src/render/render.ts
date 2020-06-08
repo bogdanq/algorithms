@@ -2,7 +2,7 @@ import { CombidenGraphType } from "graph";
 import { ProcessedVertex } from "algoritms";
 import { clearALlCanvas } from "../config";
 import { canvasControl } from "../control-canvas";
-import { animatedVisitedVertex } from "../game/animated-vertex";
+import { animatedVisitedVertex } from "../game";
 import { barrier } from "./render-barrier-with-type";
 import { drowStartEndPositions } from "./drow-start-end-position";
 import { Grid } from "./build-grid";

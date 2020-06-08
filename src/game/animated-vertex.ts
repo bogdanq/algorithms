@@ -1,11 +1,14 @@
-import { addProcessedVertex, addVisitedVertex } from "../algoritms";
-import { renderPath } from "../render/render-path";
+import {
+  addProcessedVertex,
+  addVisitedVertex,
+  ProcessedVertex,
+} from "../algoritms";
+import { renderPath } from "../render";
 import { getPositionByIndex, drawSquare } from "../config";
-import { ProcessedVertex } from "../algoritms";
 import { setGameStatus, GameStatus, Path } from "./model";
 
 class AnimatedVisitedVertex {
-  public context: null | number;
+  public context: null | CanvasRenderingContext2D;
 
   constructor() {
     this.context = null;
@@ -13,7 +16,7 @@ class AnimatedVisitedVertex {
 
   setVertex(
     { animationCount, state }: { animationCount: number; state: Path | null },
-    context: any
+    context: CanvasRenderingContext2D
   ) {
     if (!this.context) {
       this.context = context;
@@ -44,7 +47,11 @@ class AnimatedVisitedVertex {
     }
   }
 
-  animatedVertexWithArray(barriers: number[], context: any, color = "#000") {
+  animatedVertexWithArray(
+    barriers: number[],
+    context: CanvasRenderingContext2D,
+    color = "#000"
+  ) {
     for (let i = 0; i < barriers.length; i++) {
       const [x, y] = getPositionByIndex(barriers[i]);
 
@@ -56,7 +63,11 @@ class AnimatedVisitedVertex {
     }
   }
 
-  animatedVertex(barrier: number, context: any, color = "#000") {
+  animatedVertex(
+    barrier: number,
+    context: CanvasRenderingContext2D,
+    color = "#000"
+  ) {
     if (barrier) {
       const [x, y] = getPositionByIndex(barrier);
 
@@ -69,7 +80,7 @@ class AnimatedVisitedVertex {
   }
 
   drawVertexWithLoop(processedVertex: ProcessedVertex) {
-    if (!processedVertex.vertex) {
+    if (!processedVertex.vertex || !this.context) {
       return;
     }
 
@@ -78,11 +89,14 @@ class AnimatedVisitedVertex {
       this.context,
       "#d2ef99"
     );
+
     this.animatedVertex(processedVertex.vertex, this.context, "#f3fc23");
   }
 
   drawVisitedVertexWithLoop(visitedVertex: number[]) {
-    this.animatedVertexWithArray(visitedVertex, this.context, "#00bcd4");
+    if (this.context) {
+      this.animatedVertexWithArray(visitedVertex, this.context, "#00bcd4");
+    }
   }
 }
 

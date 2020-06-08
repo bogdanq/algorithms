@@ -44,6 +44,7 @@ export function renderCanvas(
 }
 
 function addEventsToCanvas(canvas: HTMLCanvasElement) {
+  canvasControl.init();
   canvasControl.registerClickEventToCanvas(canvas);
   canvasControl.addMouseMoveEvent(barrier.setBarrierToStateWithType);
   canvasControl.addMouseClickEvent(removeBarrierFromState);

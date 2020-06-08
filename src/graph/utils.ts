@@ -17,6 +17,8 @@ export function setBarrierToGraph(graph: Graph, barriers: Array<BarrierItem>) {
         type: barrier.barrierType,
         siblings: [],
       });
+
+      return;
     }
 
     if (barrier.barrierType === BarrierType.WATER) {
@@ -25,6 +27,8 @@ export function setBarrierToGraph(graph: Graph, barriers: Array<BarrierItem>) {
         type: barrier.barrierType,
         weight: 10,
       });
+
+      return;
     }
 
     if (barrier.barrierType === BarrierType.SAND) {
@@ -33,6 +37,8 @@ export function setBarrierToGraph(graph: Graph, barriers: Array<BarrierItem>) {
         type: barrier.barrierType,
         weight: 3,
       });
+
+      return;
     }
   });
 }

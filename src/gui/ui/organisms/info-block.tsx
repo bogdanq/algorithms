@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Draggable from "react-draggable";
 import { Settings, Info, AboutAlgoritms } from "../molecules";
-import { History } from "./history";
 
 const Wrapper = styled.div`
   display: flex;
@@ -34,7 +33,7 @@ export function InfoDraggable() {
         <Info />
         <Settings />
         <AboutAlgoritms />
-        <History />
+        {/* <History /> */}
       </Wrapper>
     </Draggable>
   );

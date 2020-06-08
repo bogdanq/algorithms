@@ -11,7 +11,3 @@ ReactDOM.render(
   </>,
   rootElement
 );
-
-export * from "./algoritms";
-export * from "./graph";
-export * from "./game";

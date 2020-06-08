@@ -123,4 +123,3 @@ class Controll {
 }
 
 export const canvasControl = new Controll();
-canvasControl.init();
