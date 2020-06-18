@@ -1,6 +1,6 @@
 ## Визуализация алгоритмов поиска по графу
 
-- [Try it](https://bogdanq.github.io/algorithms/)
+[Try it](https://bogdanq.github.io/algorithms/)
 
 * [Поиск в глубину](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/depth-first-search.ts)
 * [Поиск в ширину](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/bred-first-search.ts)
