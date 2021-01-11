@@ -37,7 +37,7 @@
     "@types/react-syntax-highlighter": "11.0.4",
     "@types/styled-components": "5.1.0",
     "install": "0.13.0",
-    "npm": "6.14.5",
+    "npm": "6.14.6",
     "typescript": "3.8.3"
   },
   "scripts": {
