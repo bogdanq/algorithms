@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { combine } from "effector";
 import { useStore } from "effector-react";
+
 import {
   $algoritms,
   selectAlgoritm,
   $currentAlgoritm,
 } from "../../../algoritms";
+
 import { ModalWrapper } from "../molecules";
+
 import { CodeArea } from "./code-area";
 
 const $state = combine({
@@ -15,8 +18,8 @@ const $state = combine({
 });
 
 export function AlgoritmsList() {
+  const [isOpen, setOpen] = useState(false);
   const { algoritms, currentAlgoritm } = useStore($state);
-  const [isOpen, setOpen] = React.useState(false);
 
   return (
     <>
@@ -26,6 +29,7 @@ export function AlgoritmsList() {
           <li
             onClick={() => {
               selectAlgoritm(algoritm.name);
+
               if (algoritm.modal) {
                 setOpen(true);
               }
@@ -51,7 +55,7 @@ const CustomAlgoritmModal = ({
 }) => {
   return (
     <ModalWrapper
-      width={700}
+      width={1100}
       isOpen={isOpen}
       onRequestClose={() => setOpen(false)}
     >

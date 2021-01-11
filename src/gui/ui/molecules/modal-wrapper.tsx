@@ -43,7 +43,6 @@ export const StyledInner = styled.div<{ width?: number }>`
   display: inline-block;
   vertical-align: middle;
   text-align: left;
-  max-width: 800px;
   margin: 10px;
   width: ${({ width }) => (width ? `${width}px` : "auto")};
   position: relative;

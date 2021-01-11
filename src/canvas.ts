@@ -50,13 +50,3 @@ function addEventsToCanvas(canvas: HTMLCanvasElement) {
   canvasControl.addMouseClickEvent(removeBarrierFromState);
   canvasControl.addMouseUpEvent(barrier.clear);
 }
-
-const canvas = document.querySelector("canvas");
-
-if (canvas) {
-  const context = canvas.getContext("2d");
-
-  if (context) {
-    renderCanvas(canvas, context);
-  }
-}
