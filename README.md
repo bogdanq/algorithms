@@ -2,10 +2,10 @@
 
 [Try it](https://bogdanq.github.io/algorithms/)
 
-* [Поиск в глубину](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/depth-first-search.ts)
-* [Поиск в ширину](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/bred-first-search.ts)
-* [Алгоритм Дейкстры](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/dijkstra.ts)
-* [Алгоритм A - star](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/a-start.ts)
+- [Поиск в глубину](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/depth-first-search.ts)
+- [Поиск в ширину](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/bred-first-search.ts)
+- [Алгоритм Дейкстры](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/dijkstra/dijkstra.md)
+- [Алгоритм A - star](https://github.com/bogdanq/algorithms/blob/master/src/algoritms/a-start/a-start.md)
 
 ## Структура графа
 

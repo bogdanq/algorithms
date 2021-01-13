@@ -1,7 +1,7 @@
 import PriorityQueue from "fastpriorityqueue";
 import { GraphType, Graph } from "graph";
-import { canVisitedVertex, restorePath, getVertexWeight } from "./utils";
-import { AlgoritmController } from "./controller";
+import { canVisitedVertex, restorePath, getVertexWeight } from "../utils";
+import { AlgoritmController } from "../controller";
 
 export function dijkstra(
   startIndex: number,

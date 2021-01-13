@@ -1,8 +1,10 @@
 import PriorityQueue from "fastpriorityqueue";
 import { GraphType, Graph } from "graph";
-import { getPositionByIndex } from "../config";
-import { AlgoritmController } from "./controller";
-import { canVisitedVertex, restorePath, getVertexWeight } from "./utils";
+
+import { getPositionByIndex } from "../../config";
+
+import { AlgoritmController } from "../controller";
+import { canVisitedVertex, restorePath, getVertexWeight } from "../utils";
 
 function heuristic([x, y]: number[], [x1, y1]: number[]) {
   return Math.abs(x - x1) + Math.abs(y - y1);
