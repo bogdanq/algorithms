@@ -1,65 +1,57 @@
-import React, { useState } from "react";
-import { combine } from "effector";
+import React, { useCallback, useReducer, useState } from "react";
 import { useStore } from "effector-react";
+import { combine } from "effector";
 
 import {
-  $algoritms,
-  selectAlgoritm,
   $currentAlgoritm,
+  selectAlgoritm,
+  Algoritm,
+  $algoritms,
 } from "../../../algoritms";
 
-import { ModalWrapper } from "../molecules";
-
-import { CodeArea } from "./code-area";
+import { AlgoritmsList } from "../molecules";
+import { CodeAreaModal } from "./code-area";
 
 const $state = combine({
-  algoritms: $algoritms,
   currentAlgoritm: $currentAlgoritm,
+  algoritms: $algoritms,
 });
 
-export function AlgoritmsList() {
-  const [isOpen, setOpen] = useState(false);
-  const { algoritms, currentAlgoritm } = useStore($state);
+export function AlgoritmsBlock() {
+  const [isOpenCodeArea, setOpenCodeArea] = useState(false);
+  const [isOpenAlgoritmList, toggleAlgoritmList] = useReducer(
+    (state) => !state,
+    false
+  );
+
+  const { currentAlgoritm, algoritms } = useStore($state);
+
+  const handleChangeAlgoritm = useCallback((algoritm: Algoritm) => {
+    selectAlgoritm(algoritm.name);
+    toggleAlgoritmList();
+
+    if (algoritm.modal) {
+      setOpenCodeArea(true);
+    }
+  }, []);
 
   return (
     <>
-      <h2 className="select-bar_title">Выбирите алгоритм:</h2>
+      <h2>Выбирите алгоритм:</h2>
       <ul>
-        {algoritms.map((algoritm) => (
-          <li
-            onClick={() => {
-              selectAlgoritm(algoritm.name);
-
-              if (algoritm.modal) {
-                setOpen(true);
-              }
-            }}
-            className={currentAlgoritm === algoritm.name ? "isActive" : ""}
-            key={algoritm.name}
-          >
-            {algoritm.name}
-          </li>
-        ))}
+        <li className="isActive" onClick={toggleAlgoritmList}>
+          {currentAlgoritm}
+        </li>
       </ul>
-      <CustomAlgoritmModal isOpen={isOpen} setOpen={setOpen} />
+
+      <AlgoritmsList
+        currentAlgoritm={currentAlgoritm}
+        isOpenAlgoritmList={isOpenAlgoritmList}
+        algoritms={algoritms}
+        handleChangeAlgoritm={handleChangeAlgoritm}
+      />
+
+      <CodeAreaModal isOpen={isOpenCodeArea} setOpen={setOpenCodeArea} />
     </>
   );
 }
-
-const CustomAlgoritmModal = ({
-  isOpen,
-  setOpen,
-}: {
-  isOpen: boolean;
-  setOpen: (param: boolean) => void;
-}) => {
-  return (
-    <ModalWrapper
-      width={1100}
-      isOpen={isOpen}
-      onRequestClose={() => setOpen(false)}
-    >
-      <CodeArea onRequestClose={() => setOpen(false)} />
-    </ModalWrapper>
-  );
-};

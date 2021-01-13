@@ -10,7 +10,7 @@ import { Left, FlexContainer } from "../templates";
 import { Switch } from "../atoms";
 import { GameControllButtons } from "./game-controll-buttons";
 import { AlgotitmResult } from "./algoritm-result";
-import { AlgoritmsList } from "./algoritms";
+import { AlgoritmsBlock } from "./algoritms";
 
 const $state = combine({
   currentTimer: $currentTimer,
@@ -25,7 +25,7 @@ export function RightSideBar() {
       <div className="select-bar">
         <h2 className="select-bar_title">Информация:</h2>
         <AlgotitmResult />
-        <AlgoritmsList />
+        <AlgoritmsBlock />
         <GameControllButtons />
         <div className="info-wrapper" style={{ borderTop: "2px solid #fff" }}>
           <FlexContainer>

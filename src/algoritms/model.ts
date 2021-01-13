@@ -19,12 +19,11 @@ export type AlgoritmName =
   | "a-star"
   | "custom function";
 
-export type Algoritms = Array<{
+export type Algoritm = {
   searchFunction: any;
   name: AlgoritmName;
-
   modal?: boolean;
-}>;
+};
 
 export type ProcessedVertex = {
   vertex: number;
@@ -53,7 +52,7 @@ export const $processedVertex = algoritmsDomain.store<ProcessedVertex>({
   siblings: [],
 });
 
-export const $algoritms = createStore<Algoritms>([
+export const $algoritms = createStore<Algoritm[]>([
   {
     searchFunction: breadthFirstSearch,
     name: "bredth first search",

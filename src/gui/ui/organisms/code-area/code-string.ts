@@ -1,16 +1,18 @@
 export const code = `
 /*
-// что бы работала визуализация, функция должна следовать общему api
+Что бы работала визуализация, функция должна следовать общему api
+
   type youAlgoritmFunction = (
     startIndex: number,
     endIndex: number,
-    graph: Graph
+    graph: { [key: string]: { type: BarrierType , siblings: Array<number> } },
+    graphControll: Graph,
   ) => {
     path: Array<number>,
-    AlgoritmController
+    ...getAlgotitmResult
   }
 
-// метод нужен, что бы каждую итерацию алгоритма сохранять его данные
+Метод нужен, что бы каждую итерацию алгоритма сохранять его данные
 
   type AlgoritmController = {
     increment: () => void;
@@ -28,9 +30,6 @@ export const code = `
 
   const algoritmController = new AlgoritmController(startIndex: number, endIndex: number)
 
-
-// GraphControll - создает граф, может вернуть вершину по индексу
-
   enum BarrierType {
     START_POSITION = "START_POSITION",
     END_POSITION = "END_POSITION",
@@ -39,14 +38,8 @@ export const code = `
     VISITED = "VISITED",
   };
 
-  type Graph = { [key: string]: { type: BarrierType , siblings: Array<number> } }
-
-  type GraphControll = {
-    getVertexByIndex: (index: number) => Graph
-  }
-
-// функция restorePath восстановить путь, по переданному обьекту. 
-// Содержит путь от предыдущего к следующей вершине
+Функция restorePath восстановить путь, по переданному обьекту.
+Содержит путь от предыдущего к следующей вершине
 
   type RestorePath = (
     endIndex: number,
@@ -54,10 +47,11 @@ export const code = `
     parent: { [key: string]: number }
   ) => Array<number>
 
-// сanVisitedVertex проверяет, можно ли прайти на указанную вершину
-    type CanVisitedVertex = (
-      vertex: { type: BarrierType , siblings: Array<number> }
-    ) => boolean
+CanVisitedVertex проверяет, можно ли прайти на указанную вершину
+
+  type CanVisitedVertex = (
+    vertex: { type: BarrierType , siblings: Array<number> }
+  ) => boolean
 */
 
 const { AlgoritmController, canVisitedVertex, restorePath } = utils

@@ -3,3 +3,4 @@ export * from "./settings";
 export * from "./info";
 export * from "./about-algoritms";
 export * from "./select";
+export * from "./algoritm-list";
