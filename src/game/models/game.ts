@@ -1,7 +1,8 @@
 import { sample, guard, restore, createDomain, combine } from "effector";
 import { AlgoritmController, $searchAlgoritm } from "algoritms";
-import { $graph, resetStore, clearCanvas, graphControll } from "../graph";
-import { filtredFps } from "./utils";
+
+import { $graph, resetStore, clearCanvas, graphControll } from "../../graph";
+import { filtredFps } from "../utils";
 
 export enum GameStatus {
   START = "START",
@@ -89,7 +90,7 @@ sample({
 
     return {
       ...result,
-      timeEnd,
+      timeEnd: timeEnd.toFixed(4) || 0,
     };
   },
 });

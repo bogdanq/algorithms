@@ -1,4 +1,4 @@
 export * from "./loop";
 export * from "./utils";
-export * from "./model";
+export * from "./models";
 export * from "./animated-vertex";

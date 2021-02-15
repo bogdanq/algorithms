@@ -16,6 +16,7 @@ const globalCss = css`
       overflow: hidden;
       opacity: 1;
       transform: translateX(0);
+      overflow-y: auto;
     }
   }
   .ReactModal__Content--before-close {

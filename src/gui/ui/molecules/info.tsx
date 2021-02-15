@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { FiInfo } from "react-icons/fi";
-import { ModalWrapper } from "./modal-wrapper";
+
 import { Icon, Text } from "../atoms";
 import { FlexContainer } from "../templates";
+import { ModalWrapper } from "./modal-wrapper";
 
 export function Info() {
   const [isOpen, setOpen] = React.useState(false);
@@ -28,7 +29,7 @@ function InfoModal({
 }) {
   return (
     <ModalWrapper
-      width={500}
+      width="500px"
       isOpen={isOpen}
       onRequestClose={() => setOpen(false)}
     >

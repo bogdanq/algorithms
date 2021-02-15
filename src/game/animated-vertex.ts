@@ -5,7 +5,7 @@ import {
 } from "../algoritms";
 import { renderPath } from "../render";
 import { getPositionByIndex, drawSquare } from "../config";
-import { setGameStatus, GameStatus, Path } from "./model";
+import { setGameStatus, GameStatus, Path } from "./models";
 
 class AnimatedVisitedVertex {
   public context: null | CanvasRenderingContext2D;

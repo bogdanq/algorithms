@@ -40,6 +40,7 @@ li:hover {
 
 body {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  overflow: hidden;
 }
 
 .select-bar {

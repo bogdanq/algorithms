@@ -1,7 +1,8 @@
 import React from "react";
 import { FiBook } from "react-icons/fi";
-import { ModalWrapper } from "./modal-wrapper";
+
 import { Icon } from "../atoms";
+import { ModalWrapper } from "./modal-wrapper";
 
 export function AboutAlgoritms() {
   const [isOpen, setOpen] = React.useState(false);
@@ -12,7 +13,7 @@ export function AboutAlgoritms() {
         <FiBook color="#fff" size="35" />
       </Icon>
       <ModalWrapper
-        width={700}
+        width="700px"
         isOpen={isOpen}
         onRequestClose={() => setOpen(false)}
       >

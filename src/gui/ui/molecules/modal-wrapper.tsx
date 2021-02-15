@@ -8,7 +8,9 @@ type Props = {
   isOpen: boolean;
   onRequestClose: () => void;
   children: React.ReactNode;
-  width?: number;
+  width?: string;
+  height?: string;
+  className?: string;
 };
 
 export function ModalWrapper({
@@ -16,6 +18,8 @@ export function ModalWrapper({
   onRequestClose,
   children,
   width,
+  className,
+  height,
 }: Props) {
   return (
     <div onMouseDown={(e) => e.stopPropagation()}>
@@ -26,7 +30,12 @@ export function ModalWrapper({
       >
         <StyledRootWrapper onClick={onRequestClose}>
           <StyledWrapper>
-            <StyledInner width={width} onClick={(e) => e.stopPropagation()}>
+            <StyledInner
+              className={className}
+              width={width}
+              height={height}
+              onClick={(e) => e.stopPropagation()}
+            >
               {children}
               <CloseModal onClick={onRequestClose} />
             </StyledInner>
@@ -37,14 +46,15 @@ export function ModalWrapper({
   );
 }
 
-export const StyledInner = styled.div<{ width?: number }>`
+export const StyledInner = styled.div<{ width?: string; height?: string }>`
   background: #fff;
   padding: 25px;
   display: inline-block;
   vertical-align: middle;
   text-align: left;
   margin: 10px;
-  width: ${({ width }) => (width ? `${width}px` : "auto")};
+  width: ${({ width }) => (width ? `${width}` : "auto")};
+  height: ${({ height }) => (height ? `${height}` : "height")};
   position: relative;
   border-radius: 10px;
   opacity: 0;
@@ -54,7 +64,6 @@ export const StyledInner = styled.div<{ width?: number }>`
 
 export const StyledRootWrapper = styled.div`
   overflow-x: hidden;
-  overflow-y: auto;
   top: 0;
   left: 0;
   width: 100%;

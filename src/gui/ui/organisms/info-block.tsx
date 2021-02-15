@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import Draggable from "react-draggable";
-import { Settings, Info, AboutAlgoritms } from "../molecules";
+import { useStore } from "effector-react";
+import { $gameHistory } from "game";
+
+import { History, Info, AboutAlgoritms } from "../molecules";
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,13 +30,14 @@ const Wrapper = styled.div`
 `;
 
 export function InfoDraggable() {
+  const gameHistory = useStore($gameHistory);
+
   return (
     <Draggable>
       <Wrapper>
         <Info />
-        <Settings />
+        <History history={gameHistory} />
         <AboutAlgoritms />
-        {/* <History /> */}
       </Wrapper>
     </Draggable>
   );

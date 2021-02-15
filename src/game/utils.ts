@@ -1,6 +1,6 @@
 import { ru } from "date-fns/locale";
 import { formatWithOptions } from "date-fns/fp";
-import { GameStatus } from "./model";
+import type { GameStatus } from "./models";
 
 export function checkGameStatus(target: GameStatus, status: Array<GameStatus>) {
   return status.some((item) => target === item);
@@ -25,3 +25,9 @@ export const formatter = formatWithOptions(
   { locale: ru },
   " dd-MM-yyyy | HH:mm:ss"
 );
+
+export const screenCanvas = () => {
+  const canvas = document.querySelector("canvas");
+
+  return canvas?.toDataURL() || "";
+};

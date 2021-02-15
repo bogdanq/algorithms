@@ -11,7 +11,7 @@ export const CodeAreaModal = ({
 }) => {
   return (
     <ModalWrapper
-      width={1100}
+      width="1100px"
       isOpen={isOpen}
       onRequestClose={() => setOpen(false)}
     >

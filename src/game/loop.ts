@@ -9,6 +9,7 @@ import {
   Store,
   Effect,
 } from "effector";
+
 import { clearCanvas, resetStore } from "../graph";
 import { checkGameStatus } from "./utils";
 import {
@@ -18,7 +19,7 @@ import {
   startGame,
   resumeGame,
   Path,
-} from "./model";
+} from "./models";
 import { animatedVisitedVertex } from "./animated-vertex";
 
 const tickFx = createEffect<number, number>().use(

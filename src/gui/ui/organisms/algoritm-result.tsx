@@ -21,7 +21,7 @@ export function AlgotitmResult() {
       </h3>
       <h3 className="select-bar_info">
         Время прохождения:
-        <span> {graphState?.timeEnd?.toFixed(4) || 0} ms</span>
+        <span> {graphState?.timeEnd} ms</span>
       </h3>
       <h3 className="select-bar_info">
         Длина пути: <span>{graphState?.path?.length || 0}</span>
