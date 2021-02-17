@@ -29,13 +29,12 @@ li:hover {
   color: #fff;
 }
 .isActive:after {
-  content: "✔";
+  content: "...";
   position: absolute;
   color: #b9ecb9;
-  right: 0;
-  top: 40%;
+  right: 20px;
+  top: 0;
   font-size: 30px;
-  transform: translateY(-50%);
 }
 
 body {

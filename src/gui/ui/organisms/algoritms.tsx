@@ -37,7 +37,7 @@ export function AlgoritmsBlock() {
 
   return (
     <>
-      <h2>Выбирите алгоритм:</h2>
+      <h2>Выберите алгоритм:</h2>
       <ul>
         <li className="isActive" onClick={toggleAlgoritmList}>
           {currentAlgoritm}

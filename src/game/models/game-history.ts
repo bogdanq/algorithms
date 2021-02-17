@@ -1,6 +1,19 @@
-import { createEvent, createStore, combine, sample } from "effector";
+import {
+  createEvent,
+  createStore,
+  combine,
+  sample,
+  createEffect,
+  forward,
+} from "effector";
 import { $currentAlgoritm, AlgoritmName } from "algoritms";
-import { $graph, GraphType, BarrierItem } from "graph";
+import {
+  $graph,
+  GraphType,
+  BarrierItem,
+  $barriers,
+  $startEndPosition,
+} from "graph";
 
 import { screenCanvas } from "../utils";
 import { $path, endGame, Path } from "./game";
@@ -25,6 +38,10 @@ export const recoveryGameHistory = createEvent<number>();
 
 export const $gameHistory = createStore<CompletedGameState[]>([]);
 
+export const recoveryGameHistoryFx = createEffect().use(
+  () => new Promise((rs) => setTimeout(rs, 0))
+);
+
 export const $completedGameState = combine({
   path: $path,
   currentAlgoritm: $currentAlgoritm,
@@ -42,19 +59,16 @@ $gameHistory.on(setGameHistory, (state, result) => {
 
 sample({
   source: $completedGameState,
-  clock: endGame,
+  clock: recoveryGameHistoryFx.done,
   target: setGameHistory.prepend((state: CompletedGameState) => ({
     ...state,
     image: screenCanvas(),
   })),
 });
 
-// @TODO need refactor
-sample({
-  // @ts-ignore
+const findedGameEvent = sample({
   source: $gameHistory,
   clock: recoveryGameHistory,
-  target: $currentAlgoritm,
   fn: (history, id) => {
     const findedGame = history.find((_, index) => index === id);
 
@@ -62,44 +76,19 @@ sample({
       return null;
     }
 
-    const { currentAlgoritm } = findedGame;
-
-    return currentAlgoritm;
+    return findedGame;
   },
 });
 
-sample({
-  // @ts-ignore
-  source: $gameHistory,
-  clock: recoveryGameHistory,
-  target: $graph,
-  fn: (history, id) => {
-    const findedGame = history.find((_, index) => index === id);
+$currentAlgoritm.on(findedGameEvent, (_, game) => game?.currentAlgoritm);
+$barriers.on(findedGameEvent, (_, game) => game?.graph.barrier);
+$startEndPosition.on(
+  findedGameEvent,
+  (_, game) => game?.graph.startEndPosition
+);
+$path.on(findedGameEvent, (_, game) => game?.path);
 
-    if (!findedGame) {
-      return null;
-    }
-
-    const { graph } = findedGame;
-
-    return graph;
-  },
-});
-
-sample({
-  // @ts-ignore
-  source: $gameHistory,
-  clock: recoveryGameHistory,
-  target: $path,
-  fn: (history, id) => {
-    const findedGame = history.find((_, index) => index === id);
-
-    if (!findedGame) {
-      return null;
-    }
-
-    const { path } = findedGame;
-
-    return path;
-  },
+forward({
+  from: endGame,
+  to: recoveryGameHistoryFx,
 });

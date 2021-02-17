@@ -17,7 +17,7 @@ export type AlgoritmName =
   | "depth first search"
   | "dijkstra"
   | "a-star"
-  | "custom function";
+  | "свой алгоритм";
 
 export type Algoritm = {
   searchFunction: any;
@@ -71,7 +71,7 @@ export const $algoritms = createStore<Algoritm[]>([
   },
   {
     searchFunction: null,
-    name: "custom function",
+    name: "свой алгоритм",
     modal: true,
   },
 ]);
@@ -85,7 +85,7 @@ export const $searchAlgoritm = combine(
 
 $algoritms.on(addCustomAlgoritm, (state, foo) =>
   state.map((algoritm) =>
-    algoritm.name === "custom function"
+    algoritm.name === "свой алгоритм"
       ? { ...algoritm, searchFunction: foo }
       : algoritm
   )
